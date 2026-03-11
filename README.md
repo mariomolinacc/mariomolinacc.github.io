@@ -28,6 +28,7 @@ Desarrollo y diseño íntegramente sobre **Debian**, utilizando un stack de herr
 ![QGIS](https://img.shields.io)
 ![HTML5](https://img.shields.io)
 
+
 ---
 📫 **Contacto:** [Mi Sitio Web](https://mariomolinacc.github.io)
 
