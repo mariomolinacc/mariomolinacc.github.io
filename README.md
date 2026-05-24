@@ -14,16 +14,11 @@ Integro tecnologías de diseño y análisis como — BIM, CAD, CAE, impresión 3
 - **Logística e Industria:** Depósitos, naves industriales y centros logísticos.
 - **Formación:** Instructor y capacitador en software de diseño Comercial y Open Source, como AutoCAD, FreeCAD y otros.
 
-### 🐧 Filosofía Open Source & Web
+### 💻 Infraestructura y Entorno de Trabajo
 
-Diseña y desarrolla proyectos íntegramente sobre entornos Debian GNU/Linux, promoviendo un flujo de trabajo basado en software libre en su estudio, para proyectos de Diseño y Construcción:
-
-- **Modelado 3D & BIM:** FreeCAD y Bonsai Blender (BlenderBIM).
-- **Ingeniería 2D:** QCAD para planos 2D de ingeniería civil.
-- **Geomática:** QGIS / QAD (Quantum Aided Design) planos de topografía y mapas cartograficos.
-- **Web:** HTML5, CSS3, JavaScript para presentaciones visuales arquitectónicas.
-
-Nota: Mantiene **interoperabilidad** con estándares corporativos con **formatos IFC, DWG y RVT**, utilizando **AutoCAD Civil 3D, Revit y SAP**, cuando los requerimientos del proyecto lo exigen.
+- **Trabaja con estaciones multisistema (Debian, macOS y Windows). Para clientes corporativos utiliza AutoCAD, Civil 3D, Revit y SAP según cada proyecto. 
+- **Para clientes privados emplea FreeCAD, BonsaiBIM, QCAD y QGIS sobre Debian, reduciendo costos sin perder precisión. 
+- **Mantiene compatibilidad con formatos IFC, DWG y RVT, y crea visualizaciones web con HTML, CSS y JavaScript para proyectos arquitectónicos.
 
 ---
 
