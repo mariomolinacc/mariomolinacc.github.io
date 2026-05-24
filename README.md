@@ -4,7 +4,7 @@ Con más de tres décadas de experiencia en ingeniería, tecnología y construcc
 
 Integro tecnologías de diseño 3D y análisis como — BIM, CAD, CAE, impresión 3D y Geomática— para optimizar proyectos, con capacidad para operar en entornos complejos y de alcance global.
 
-Actualmente, dirijp mi estudio, proporcionando soluciones holísticas que abarcan desde la concepción del diseño hasta la dirección técnica de la obra, con un marcado énfasis en la innovación y la eficiencia. 
+Actualmente, lidero mi estudio, proporcionando soluciones holísticas que abarcan desde la concepción del diseño hasta la dirección técnica de la obra, con un marcado énfasis en la innovación y la eficiencia. 
 
 ---
 
