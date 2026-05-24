@@ -1,6 +1,6 @@
 # Hola, soy Mario Molina 👋 
 
-Soy Mario Molina, — Constructor Civil — (Titulado en 1986) con mas de tres décadas de experiencia en ingeniería y construcción. Durante mi desarrollo profesional, he colaborado con prestigiosos estudios de arquitectura y corporaciones tanto nacionales como internacionales, participando activamente en la materialización de proyectos de índole residencial, comercial e industrial.
+Soy Mario Molina, — Constructor Civil — con mas de tres décadas de experiencia en ingeniería y construcción. Durante mi desarrollo profesional, he colaborado con prestigiosos estudios de arquitectura y corporaciones tanto nacionales como internacionales, participando activamente en la materialización de proyectos de índole residencial, comercial e industrial.
 
 — Actualmente, ejerzo de forma independiente, gestionando —desde el diseño conceptual hasta la dirección técnica de obras— para clientes privados y empresas, incluyendo viviendas, centros comerciales y depositos logísticos, con un marcado énfasis en la innovación y la eficiencia.
 
@@ -34,9 +34,9 @@ Integro tecnologías de diseño y análisis como — BIM, CAD, CAE, impresión 3
 ### 🏢 Software Comercial (Entornos Corporativos)
 
 **CAD & BIM:** 
-- **[AutoCAD Civil 3D]**(https://www.autodesk.com/latam/products/civil-3d/overview)
-- **[SketchUp]**(https://sketchup.trimble.com/es/products/sketchup-for-web)
-- **[Revit]**(https://www.autodesk.com/latam/products/revit/overview)
+- **[AutoCAD Civil 3D]** (https://www.autodesk.com/latam/products/civil-3d/overview)
+- **[SketchUp]** (https://sketchup.trimble.com/es/products/sketchup-for-web)
+- **[Revit]** (https://www.autodesk.com/latam/products/revit/overview)
 
 
 ---
