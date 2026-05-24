@@ -16,9 +16,10 @@ Integro tecnologías de diseño y análisis como — BIM, CAD, CAE, impresión 3
 
 ### 💻 Infraestructura y Entorno de Trabajo
 
-**Trabaja con estaciones multisistema (Debian, macOS y Windows). Para clientes corporativos utiliza AutoCAD, Civil 3D, Revit y SAP según cada proyecto. 
-**Para clientes privados emplea FreeCAD, BonsaiBIM, QCAD y QGIS sobre Debian, reduciendo costos sin perder precisión. 
-**Mantiene compatibilidad con formatos IFC, DWG y RVT, y crea visualizaciones web con HTML, CSS y JavaScript para proyectos arquitectónicos.
+- **Trabaja con estaciones multisistema** (Debian, macOS y Windows). 
+- **Para clientes corporativos** utiliza AutoCAD, Civil 3D, Revit y SAP según cada proyecto. 
+- **Para clientes privados** emplea FreeCAD, BonsaiBIM, QCAD y QGIS sobre Debian, reduciendo costos sin perder precisión. 
+- **Mantiene compatibilidad** con formatos IFC, DWG y RVT, y crea visualizaciones web con HTML, CSS y JavaScript para proyectos arquitectónicos.
 
 ---
 
