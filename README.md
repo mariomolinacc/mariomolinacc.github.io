@@ -35,9 +35,9 @@ Integro tecnologías de diseño y análisis como — BIM, CAD, CAE, impresión 3
 ### 🏢 Software Comercial (Entornos Corporativos)
 
 **CAD & BIM:** 
-- **AutoCAD Civil 3D** (https://www.autodesk.com/latam/products/civil-3d/overview)
-- **[SketchUp]** (https://sketchup.trimble.com/es/products/sketchup-for-web)
-- **[Revit]** (https://www.autodesk.com/latam/products/revit/overview)
+- **AutoCAD Civil 3D** [AutoCAD Civil 3D](https://www.autodesk.com/latam/products/civil-3d/overview)
+- **SketchUp** [SketchUp](https://sketchup.trimble.com/es/products/sketchup-for-web)
+- **Revit** [Revit](https://www.autodesk.com/latam/products/revit/overview)
 
 
 ---
