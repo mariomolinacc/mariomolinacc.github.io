@@ -1,11 +1,14 @@
 # Hola, soy Mario Molina 👋 
 
-Profesional con mas de tres decadas de experiencia en diseño y dirección de proyectos de **Arquitectura, Ingeniería y Construcción** (AEC). Su práctica actual combina la gestión de proyectos con el manejo de tecnologías de diseño tridimensional y desarrollo web para crear visualizaciones y presentaciones avanzadas en infraestructura digital.
+Soy Mario Molina, — Constructor Civil — (Titulado en 1986) con mas de tres décadas de experiencia en ingeniería y construcción. Durante mi desarrollo profesional, he colaborado con prestigiosos estudios de arquitectura y corporaciones tanto nacionales como internacionales, participando activamente en la materialización de proyectos de índole residencial, comercial e industrial.
+
+— Actualmente, ejerzo de forma independiente, gestionando —desde el diseño conceptual hasta la dirección técnica de obras— para clientes privados y empresas, incluyendo viviendas, centros comerciales y depositos logísticos, con un marcado énfasis en la innovación y la eficiencia.
+
+Integro tecnologías de diseño y análisis como — BIM, CAD, CAE, impresión 3D y Geomática— para optimizar proyectos complejos de alcance global.
 
 ---
 
-### 🏛️ Diseño, Planificación y Dirección de Obras.
-Dirijo mi estudio de **Diseño y Construcción** especializado en:
+### 🏛️ Servicios de Diseño y Construcción.
 
 - **Diseño Residencial y Comercial:** Proyectos urbanos, rurales y comerciales.
 - **Logística e Industria:** Depósitos, naves industriales y centros logísticos.
