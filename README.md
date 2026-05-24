@@ -10,9 +10,10 @@ Integro tecnologías de diseño y análisis como — BIM, CAD, CAE, impresión 3
 
 ### 🏛️ Servicios de Diseño y Construcción.
 
-- **Diseño Residencial y Comercial:** Proyectos urbanos, rurales y comerciales.
-- **Logística e Industria:** Depósitos, naves industriales y centros logísticos.
-- **Formación:** Instructor y capacitador en software de diseño Comercial y Open Source, como AutoCAD, FreeCAD y otros.
+- **Diseño Residencial** — Diseño de viviendas (urbanas y rurales) y edificaciónes.
+- **Diseño Comercial** — Diseño de locales y centros comerciales.
+- **Ampliaciones y Remodelaciones** — Modificaciones para optimizar espacios.
+- **Logística e Industria** — Depósitos, naves industriales y centros logísticos.
 
 ### 💻 Infraestructura y Entorno de Trabajo
 
@@ -51,3 +52,4 @@ Este es mi sitio desarrollado con **HTML, CSS y JavaScript**.
 - VSCodium
 - GitHub Pages
 ---
+- **Formación:** Instructor y capacitador en software como AutoCAD, FreeCAD y otros (Comercial y Open Source).
