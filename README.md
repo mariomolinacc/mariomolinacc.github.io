@@ -39,11 +39,6 @@ Integro tecnologías de diseño y análisis como — BIM, CAD, CAE, impresión 3
 - **SketchUp:** [SketchUp](https://sketchup.trimble.com/es/products/sketchup-for-web)
 - **Revit:** [Revit](https://www.autodesk.com/latam/products/revit/overview)
 
-
----
-📫 **Contacto:** [Mi Sitio Web](https://mariomolinacc.github.io)
----
-
 # Mi Proyecto Web
 Este es mi sitio desarrollado con **HTML, CSS y JavaScript**.
 
@@ -53,3 +48,6 @@ Este es mi sitio desarrollado con **HTML, CSS y JavaScript**.
 - GitHub Pages
 ---
 - **Formación:** Instructor y capacitador en software como AutoCAD, FreeCAD y otros (Comercial y Open Source).
+---
+📫 **Contacto:** [Mi Sitio Web](https://mariomolinacc.github.io)
+---
