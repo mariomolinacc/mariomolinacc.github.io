@@ -1,10 +1,14 @@
 # Hola, soy Mario Molina 👋 
 
-**Constructor Civil** interdisciplinario, con más de tres décadas de experiencia en ingeniería y construcción, me especializo en el diseño, gestión y dirección de proyectos residenciales, comerciales e industriales.
+— Constructor Civil interdisciplinario —, con más de tres décadas de experiencia en el diseño, desarrollo y dirección de proyectos de ingeniería y construcción, abarcando desde viviendas individuales y edificaciones, hasta complejos industriales y logísticos.
 
-Integro tecnologías de diseño y análisis como —**BIM, CAD, CAE, impresión 3D y Geomática** — para optimizar proyectos, con capacidad para operar en entornos complejos y de alcance global.
+Tras iniciar su carrera en estudios de arquitectura y consolidarse en IRIBARNE y Asociados, trabajó en equipos de ingeniería de compañías notables como —Arcor, Philips, Whirlpool, Peabody—, llegando a ser Gerente de Ingeniería y Producción en — Philco—, con responsabilidad sobre equipos multidisciplinarios y operaciones, reportando a la Gerencia General.
 
-Actualmente, dirijo mi propio estudio brindando soluciones holísticas que abarcan desde el diseño hasta la dirección técnica de la obra, con un marcado énfasis en la innovación y la eficiencia. 
+Posteriormente, asesoró a inversores, family offices y empresas globales —entre ellas Daewoo, Sanyo, Newsan y Midas— en reconversión de activos y optimización de infraestructuras.
+
+—Actualmente dirige su propio estudio de Diseño y Construcción—, especializado en proyectos de viviendas, centros  comerciales y logísticos en la provincia de Buenos Aires, brindando soluciones desde el proyecto hasta la dirección técnica de obra.
+
+Integra tecnologías de diseño y análisis como —BIM, CAD, CAE, impresión 3D y Geomática — para optimizar proyectos, con capacidad para operar en entornos complejos y de alcance global.
 
 ---
 
