@@ -1,6 +1,6 @@
 # Hola, soy Mario Molina 👋 
 
-— Constructor Civil interdisciplinario —, con más de tres décadas de experiencia en el diseño, desarrollo y dirección de proyectos de ingeniería y construcción, abarcando desde viviendas individuales y edificaciones, hasta complejos industriales y logísticos.
+— Constructor Civil interdisciplinario —, con más de tres décadas de experiencia en el diseño, desarrollo y dirección de proyectos de ingeniería y construcción, abarcando desde viviendas hasta complejos industriales y logísticos.
 
 Tras iniciar su carrera en estudios de arquitectura y consolidarse en IRIBARNE y Asociados, trabajó como diseñador CAD/CAE en equipos de ingeniería de compañías notables como —Arcor, Philips, Whirlpool, Peabody—, llegando a ser Gerente de Ingeniería y Producción en — Philco—, con responsabilidad sobre equipos multidisciplinarios y operaciones, reportando a la Gerencia General.
 
