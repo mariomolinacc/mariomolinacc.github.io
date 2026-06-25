@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SOLUCIÓN DEFINITIVA: Evita que Dark Reader modifique los colores/fondos de la página -->
+    <meta name="darkreader-lock">
+
+    <title>Prensa - Coral 25</title>
+    <!-- Se añade ?v=2 para forzar la actualización de la caché del navegador -->
+    <link rel="stylesheet" href="css/style.css?v=2">
+    
+    <!-- Estilos específicos para Prensa -->
+    <style>
+        .prensa-card {
+            margin-bottom: 2.5rem;
+            padding-bottom: 2.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .prensa-card:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .prensa-medio {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .prensa-titulo {
+            font-family: var(--font-serif); /* Fuente nativa reemplazada */
+            font-size: 1.4rem;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .prensa-extracto {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            font-style: italic;
+            border-left: 3px solid var(--glass-border);
+            padding-left: 1.5rem;
+            margin: 1rem 0;
+            text-align: justify;
+        }
+
+        .prensa-link {
+            color: var(--gold);
+            font-size: 0.85rem;
+            text-decoration: none;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+
+        .prensa-link:hover {
+            color: var(--gold-light);
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Fondo de Gala -->
+    <div class="gala-bg" style="background-image: url('img/fondo_coro.jpg');"></div>
+
+    <!-- Navegación -->
+    <nav class="navbar">
+        <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
+            <img src="img/logo_coral.png" alt="Logo" class="logo-img">
+            <span>Coral 25</span>
+        </a>
+
+        <!-- BOTÓN HAMBURGUESA -->
+        <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <ul class="nav-links" id="nav-links">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="el_coro.html">El Coro</a></li>
+            <li><a href="historia.html">Historia</a></li>
+            <li><a href="repertorio.html">Repertorio</a></li>
+            <li><a href="galeria.html">Galería</a></li>
+            <li><a href="sucesos.html">Blog</a></li>
+            <li><a href="prensa.html" class="active">Prensa</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <!-- Contenido de la Página -->
+    <div class="page-content">
+        
+        <h1 class="page-title">Prensa</h1>
+        <p style="text-align: center; color: var(--text-muted); max-width: 600px; margin: -1rem auto 3rem auto;">Apariciones en medios y notas sobre la actividad del Coral 25.</p>
+
+        <div class="glass-card">
+            
+            <!-- Nota 1 -->
+            <div class="prensa-card">
+                <div class="prensa-medio">Diario La Voz de 25 de Mayo</div>
+                <div class="prensa-titulo">El Coral 25 celebró su aniversario con un concierto emotivo</div>
+                <div class="prensa-extracto">"Ayer por la noche, la agrupación dirigida por Silvia Blanco demostró por qué es un pilar de la cultura local, llenando el auditorio municipal de voces y colores en una noche que quedará en la memoria de la ciudad."</div>
+                <a href="#" class="prensa-link">Leer nota completa ↗</a>
+            </div>
+
+            <!-- Nota 2 -->
+            <div class="prensa-card">
+                <div class="prensa-medio">Radio FM Del Centro</div>
+                <div class="prensa-titulo">Entrevista a Silvia Blanco: "El canto es un abrazo comunitario"</div>
+                <div class="prensa-extracto">"En la mañana de hoy, conversamos con la directora del Coral 25 sobre la próxima gira a Córdoba y la importancia de mantener viva la cultura coral en el interior de la provincia."</div>
+                <a href="#" class="prensa-link">Escuchar entrevista ↗</a>
+            </div>
+
+            <!-- Nota 3 (Ejemplo adicional) -->
+            <div class="prensa-card">
+                <div class="prensa-medio">Portal Cultural Bonaerense</div>
+                <div class="prensa-titulo">25 de Mayo brilló en la Intercoraliada regional</div>
+                <div class="prensa-extracto">"La delegación local fue una de las más aplaudidas del encuentro que reunió a más de doscientos coralistas en la ciudad de Río Cuarto."</div>
+                <a href="#" class="prensa-link">Leer nota completa ↗</a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Pie de Página -->
+    <footer class="site-footer">
+        <div class="footer-line"></div>
+        <div class="footer-content">
+            <p class="footer-text">
+                <img src="img/logo_coral.png" alt="Coral 25" class="footer-logo"> 
+                ©2026 Coral 25 - Ciudad de 25 de Mayo, Buenos Aires, Argentina.
+            </p>
+            <p class="footer-firma">
+                <a href="https://wa.me." target="_blank">Design_MM_</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT PARA EL MENÚ MÓVIL -->
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+            hamburger.classList.toggle('active');
+        });
+
+        // Cerrar el menú al hacer clic en un enlace
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('open');
+                hamburger.classList.remove('active');
+            });
+        });
+    </script>
+
+</body>
+</html>

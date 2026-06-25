@@ -1,0 +1,17 @@
+/coral25/
+│
+├── css/
+│   └── style.css
+├── img/
+│   ├── logo_coral.png
+│   └── fondo_coro.jpg
+├── mp3/
+├── js/               <-- CREAR ESTA CARPETA
+│   └── main.js       <-- CREAR ESTE ARCHIVO
+├── fragments/        <-- CREAR ESTA CARPETA
+│   ├── navbar.html   <-- CREAR ESTE ARCHIVO
+│   └── footer.html   <-- CREAR ESTE ARCHIVO
+│
+├── index.html
+├── el_coro.html
+└── ... (resto de los .html)

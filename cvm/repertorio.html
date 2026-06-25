@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SOLUCIÓN DEFINITIVA: Evita que Dark Reader modifique los colores/fondos de la página -->
+    <meta name="darkreader-lock">
+
+    <title>Repertorio | Coral 25</title>
+    <!-- Se añade ?v=2 para forzar la actualización de la caché del navegador -->
+    <link rel="stylesheet" href="css/style.css?v=2">
+    
+    <!-- Estilos específicos para la tabla de repertorio y el visor -->
+    <style>
+        .tabla-repertorio {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5em;
+            font-family: var(--font-sans); /* Fuente nativa reemplazada */
+        }
+
+        .tabla-repertorio thead tr {
+            border-bottom: 2px solid var(--gold);
+            text-align: left;
+        }
+
+        .tabla-repertorio th {
+            padding: 12px 8px;
+            font-weight: 700;
+            color: var(--gold-light);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .tabla-repertorio tbody tr {
+            border-bottom: 1px solid var(--glass-border);
+            transition: background 0.2s;
+        }
+
+        .tabla-repertorio tbody tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .tabla-repertorio td {
+            padding: 15px 8px;
+            vertical-align: middle;
+        }
+
+        .tabla-repertorio .obra-nombre {
+            color: var(--text-main);
+            font-family: var(--font-serif); /* Fuente nativa reemplazada */
+            font-size: 1.1rem;
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        .tabla-repertorio .obra-autor {
+            font-size: 0.85em;
+            color: var(--text-muted);
+        }
+
+        .tabla-repertorio .link-pdf {
+            color: var(--gold-light);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: color 0.3s, border-color 0.3s, background 0.3s;
+            display: inline-block;
+            padding: 4px 8px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            cursor: pointer; 
+            background: none; 
+            font-family: var(--font-sans); /* Fuente nativa reemplazada */
+        }
+
+        .tabla-repertorio .link-pdf:hover {
+            color: var(--gold);
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .tabla-repertorio .proximamente {
+            font-size: 0.85em;
+            color: var(--text-muted);
+            font-style: italic;
+            opacity: 0.6;
+        }
+
+        /* Responsive para móviles (Tabla) */
+        @media (max-width: 600px) {
+            .tabla-repertorio th:nth-child(1), 
+            .tabla-repertorio td:nth-child(1) { min-width: 150px; }
+        }
+
+        /* ==================================================== */
+        /* --- ESTILOS DEL VISOR INTERACTIVO (MODAL) --------- */
+        /* ==================================================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.95); 
+            z-index: 9999;
+            display: none; 
+            flex-direction: column;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .modal-title {
+            font-family: var(--font-serif); /* Fuente nativa reemplazada */
+            color: var(--gold);
+            font-size: 1.5rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: 1px solid var(--text-muted);
+            color: var(--text-main);
+            font-size: 1.5rem;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .close-modal:hover {
+            background: rgba(255,255,255,0.1);
+            color: var(--gold);
+            border-color: var(--gold);
+        }
+
+        .lyrics-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 40px 20px;
+            scroll-behavior: smooth;
+        }
+
+        .lyrics-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 35vh 0; 
+        }
+
+        .lyric-line {
+            font-family: var(--font-sans); /* Fuente nativa reemplazada */
+            font-size: 2rem;
+            line-height: 1.6;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.3); 
+        }
+
+        .lyric-line.active {
+            color: #ffffff; 
+            background: rgba(212, 175, 55, 0.1); 
+            transform: scale(1.05);
+            font-weight: 700;
+            border-left: 4px solid var(--gold); 
+        }
+
+        .lyric-line:hover:not(.active) {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .modal-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-top: 1px solid var(--glass-border);
+            flex-wrap: wrap; /* Para que se adapte en móviles */
+        }
+
+        .ctrl-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid var(--glass-border);
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.2s;
+            font-family: var(--font-sans); /* Fuente nativa reemplazada */
+        }
+
+        .ctrl-btn:hover { 
+            background: rgba(255, 255, 255, 0.1); 
+            border-color: var(--gold); 
+            color: var(--gold);
+        }
+        
+        .ctrl-btn.active-btn {
+            background: var(--gold);
+            color: #000;
+            border-color: var(--gold);
+        }
+
+        .speed-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+
+        .speed-indicator {
+            font-family: var(--font-sans); /* Fuente nativa reemplazada */
+            font-weight: bold;
+            min-width: 35px;
+            text-align: center;
+            color: var(--gold-light);
+        }
+
+        .separator {
+            width: 1px;
+            height: 30px;
+            background: var(--glass-border);
+            margin: 0 5px;
+        }
+
+        /* Responsive para móviles (Modal) */
+        @media (max-width: 600px) {
+            .lyric-line { font-size: 1.4rem; }
+            .ctrl-btn { padding: 10px 15px; font-size: 0.9rem; }
+            .modal-controls { gap: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fondo de Gala -->
+    <div class="gala-bg" style="background-image: url('img/fondo_coro.jpg');"></div>
+
+    <!-- Navegación -->
+    <nav class="navbar">
+        <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
+            <img src="img/logo_coral.png" alt="Logo" class="logo-img">
+            <span>Coral 25</span>
+        </a>
+
+        <!-- BOTÓN HAMBURGUESA -->
+        <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <ul class="nav-links" id="nav-links">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="el_coro.html">El Coro</a></li>
+            <li><a href="historia.html">Historia</a></li>
+            <li><a href="repertorio.html" class="active">Repertorio</a></li>
+            <li><a href="galeria.html">Galería</a></li>
+            <li><a href="sucesos.html">Blog</a></li>
+            <li><a href="prensa.html">Prensa</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <section class="page-content">
+        
+        <h1 class="page-title">Nuestro Repertorio</h1>
+
+        <div class="glass-card" style="max-width: 900px; margin: 0 auto; padding: 2.5rem;">
+            
+            <h3 style="font-family: var(--font-serif); color: var(--gold); margin-bottom: 1rem;">Estudio y Adaptación Coral</h3>
+            
+            <p style="margin-bottom: 1.5em; line-height: 1.6; color: var(--text-muted); text-align: justify;">
+                El Coral 25 aborda un amplio y variado repertorio que abarca música folclórica argentina, cancionero popular y obras clásicas del canto comunitario. A continuación, compartimos el material de estudio para descarga:
+            </p>
+
+            <!-- Tabla de Repertorio Mejorada -->
+            <table class="tabla-repertorio">
+                <thead>
+                    <tr>
+                        <th>Obra / Canción</th>
+                        <th style="text-align: center;">Letra</th>
+                        <th style="text-align: center;">Partitura</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <!-- Fila 1 (Velocidad lenta: 3500ms) -->
+                    <tr>
+                        <td>
+                            <span class="obra-nombre">Noche de Paz</span>
+                            <span class="obra-autor">Villancico Navideño</span>
+                        </td>
+                        <td style="text-align: center;">
+                            <button class="link-pdf" onclick="openLyrics('Noche de Paz', ['Noche de paz, noche de amor,', 'Todo duerme en derredor,', 'Entre los astros que esparcen su luz,', 'Bella anunciando al niñito Jesús,', 'Brilla la estrella de paz,', 'Brilla la estrella de paz.'], 3500)">📄 Ver Letra</button>
+                        </td>
+                        <td style="text-align: center;">
+                            <a href="pdf/partituras/zamba_esperanza_partitura.pdf" target="_blank" class="link-pdf">🎼 Ver PDF</a>
+                        </td>
+                    </tr>
+
+                    <!-- Fila 2 (Velocidad media: 2500ms) -->
+                    <tr>
+                        <td>
+                            <span class="obra-nombre">La Cigarra</span>
+                            <span class="obra-autor">María Elena Walsh</span>
+                        </td>
+                        <td style="text-align: center;">
+                            <button class="link-pdf" onclick="openLyrics('La Cigarra', ['Hace mucho tiempo ya,', 'que no me decides nada,', 'y yo que creí en tu voz,', 'y en tu risa confesada.', '', 'Coro:', 'Soy la cigarra cantora,', 'que alegremente canta,', 'el sol que me da la vida,', 'y la luna que me guarda.'], 2500)">📄 Ver Letra</button>
+                        </td>
+                        <td style="text-align: center;">
+                            <a href="pdf/partituras/la_cigarra_partitura.pdf" target="_blank" class="link-pdf">🎼 Ver PDF</a>
+                        </td>
+                    </tr>
+
+                    <!-- Fila 3 (Velocidad rápida: 1800ms) -->
+                    <tr>
+                        <td>
+                            <span class="obra-nombre">Himno Nacional Argentino</span>
+                            <span class="obra-autor">Arreglo Coral Institucional</span>
+                        </td>
+                        <td style="text-align: center;">
+                            <button class="link-pdf" onclick="openLyrics('Himno Nacional Argentino', ['Oíd, mortales, el grito sagrado:', '¡Libertad, libertad, libertad!', 'Oíd el ruido de rotas cadenas,', 'ved en trono a la noble igualdad.', '', 'Se levanta a la faz de la tierra', 'una nueva y gloriosa Nación:', 'coronada su sén de laureles,', 'y a sus plantas rendido un león.'], 1800)">📄 Ver Letra</button>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="proximamente">Próximamente</span>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+
+    </section>
+
+    <!-- ==================================================== -->
+    <!-- --- VENTANA MODAL (VISOR DE LETRAS) --------------- -->
+    <!-- ==================================================== -->
+    <div class="modal-overlay" id="lyricsModal">
+        <div class="modal-header">
+            <h2 class="modal-title" id="modalTitle">Título de la Canción</h2>
+            <button class="close-modal" onclick="closeLyrics()">✕</button>
+        </div>
+        
+        <div class="lyrics-container" id="lyricsContainer">
+            <div class="lyrics-wrapper" id="lyricsWrapper">
+                <!-- Las líneas se inyectarán aquí con JavaScript -->
+            </div>
+        </div>
+
+        <div class="modal-controls">
+            <button class="ctrl-btn" onclick="prevLine()">⏮ Anterior</button>
+            <button class="ctrl-btn" id="autoScrollBtn" onclick="toggleAutoScroll()">▶ Auto-Scroll</button>
+            <button class="ctrl-btn" onclick="nextLine()">Siguiente ⏭</button>
+            
+            <div class="separator"></div>
+            
+            <div class="speed-controls">
+                <button class="ctrl-btn" onclick="changeSpeed(-200)" style="padding: 8px 12px;">🐢 -</button>
+                <span id="speedIndicator" class="speed-indicator">2.5s</span>
+                <button class="ctrl-btn" onclick="changeSpeed(200)" style="padding: 8px 12px;">🐇 +</button>
+            </div>
+        </div>
+    </div> 
+    <!-- FIN DEL MODAL -->
+
+    <!-- Pie de Página -->
+    <footer class="site-footer">
+        <div class="footer-line"></div>
+        <div class="footer-content">
+            <p class="footer-text">
+                <img src="img/logo_coral.png" alt="Coral 25" class="footer-logo"> 
+                ©2026 Coral 25 - Ciudad de 25 de Mayo, Buenos Aires, Argentina.
+            </p>
+            <p class="footer-firma">
+                <a href="https://wa.me." target="_blank">Design_MM</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- ==================================================== -->
+    <!-- --- JAVASCRIPT PARA EL MENÚ MÓVIL ----------------- -->
+    <!-- ==================================================== -->
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+            hamburger.classList.toggle('active');
+        });
+
+        // Cerrar el menú al hacer clic en un enlace
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('open');
+                hamburger.classList.remove('active');
+            });
+        });
+    </script>
+
+    <!-- ==================================================== -->
+    <!-- --- JAVASCRIPT PARA EL VISOR DE LETRAS ------------ -->
+    <!-- ==================================================== -->
+    <script>
+        let activeLineIndex = 0;
+        let currentLyrics = [];
+        let autoScrollInterval = null;
+        let currentSpeed = 2500; // Velocidad actual (se modifica con los botones)
+        let baseSpeed = 2500;    // Velocidad inicial de la canción elegida
+
+        const modal = document.getElementById('lyricsModal');
+        const wrapper = document.getElementById('lyricsWrapper');
+        const container = document.getElementById('lyricsContainer');
+        const modalTitle = document.getElementById('modalTitle');
+        const speedIndicator = document.getElementById('speedIndicator');
+        const autoScrollBtn = document.getElementById('autoScrollBtn');
+
+        // Función para abrir el modal y cargar la letra + velocidad
+        function openLyrics(title, lyricsArray, speed = 2500) {
+            modalTitle.innerText = "🎼 " + title;
+            currentLyrics = lyricsArray;
+            activeLineIndex = 0;
+            
+            // Configurar velocidad base de la canción
+            baseSpeed = speed;
+            currentSpeed = speed;
+            updateSpeedIndicator();
+            
+            renderLyrics();
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Bloquea el scroll del fondo
+        }
+
+        // Función para cerrar el modal
+        function closeLyrics() {
+            modal.classList.remove('active');
+            document.body.style.overflow = ''; // Restaura el scroll
+            if (autoScrollInterval) toggleAutoScroll(); // Pausa el auto-scroll al cerrar
+        }
+
+        // Renderizar las líneas en el DOM
+        function renderLyrics() {
+            wrapper.innerHTML = '';
+            currentLyrics.forEach((line, index) => {
+                const div = document.createElement('div');
+                div.className = 'lyric-line';
+                div.innerText = line === "" ? "\u00A0" : line; // Espacio invisible si la línea está vacía
+                div.onclick = () => setActiveLine(index);
+                wrapper.appendChild(div);
+            });
+            setActiveLine(0);
+        }
+
+        // Marcar línea como activa y hacer scroll
+        function setActiveLine(index) {
+            if (index < 0 || index >= currentLyrics.length) return;
+            
+            activeLineIndex = index;
+            const lines = document.querySelectorAll('.lyric-line');
+            
+            lines.forEach((line, i) => {
+                if (i === activeLineIndex) {
+                    line.classList.add('active');
+                } else {
+                    line.classList.remove('active');
+                }
+            });
+
+            // Scroll suave al centro
+            lines[activeLineIndex].scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
+
+        // Controles de navegación
+        function nextLine() { setActiveLine(activeLineIndex + 1); }
+        function prevLine() { setActiveLine(activeLineIndex - 1); }
+
+        // Controles de Velocidad
+        function changeSpeed(amountMs) {
+            let newSpeed = currentSpeed + amountMs;
+            // Límites de velocidad: mínimo 0.5s (500ms) y máximo 6s (6000ms)
+            if (newSpeed < 500) newSpeed = 500;
+            if (newSpeed > 6000) newSpeed = 6000;
+            
+            currentSpeed = newSpeed;
+            updateSpeedIndicator();
+
+            // Si el auto-scroll está corriendo, lo reiniciamos con la nueva velocidad
+            if (autoScrollInterval) {
+                clearInterval(autoScrollInterval);
+                autoScrollInterval = setInterval(nextLine, currentSpeed);
+            }
+        }
+
+        function updateSpeedIndicator() {
+            // Mostrar en segundos (ej: 2500ms -> 2.5s)
+            speedIndicator.innerText = (currentSpeed / 1000).toFixed(1) + "s";
+        }
+
+        // Auto-Scroll
+        function toggleAutoScroll() {
+            if (autoScrollInterval) {
+                clearInterval(autoScrollInterval);
+                autoScrollInterval = null;
+                autoScrollBtn.innerText = "▶ Auto-Scroll";
+                autoScrollBtn.classList.remove('active-btn');
+            } else {
+                autoScrollInterval = setInterval(nextLine, currentSpeed);
+                autoScrollBtn.innerText = "⏸ Pausar";
+                autoScrollBtn.classList.add('active-btn');
+            }
+        }
+
+        // Atajos de teclado
+        document.addEventListener('keydown', (e) => {
+            // Solo funcionan si el modal está abierto
+            if (!modal.classList.contains('active')) return;
+
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                nextLine();
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                prevLine();
+            } else if (e.key === ' ') {
+                e.preventDefault(); // Evita que la página baje
+                toggleAutoScroll();
+            } else if (e.key === 'Escape') {
+                closeLyrics();
+            } else if (e.key === '+' || e.key === '=') { // Tecla más
+                changeSpeed(200);
+            } else if (e.key === '-') { // Tecla menos
+                changeSpeed(-200);
+            }
+        });
+    </script>
+
+</body>
+</html>

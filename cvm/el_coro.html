@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="darkreader-lock">
+    <title>El Coro | Coral 25</title>
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        /* Estilo del contenedor para forzar el centro */
+        .contenedor-foto-360 {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Esto centra la imagen y el botón */
+            width: 100%;
+        }
+        
+        /* Estilo del botón */
+        .btn-360 {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        .btn-360:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fondo de Gala -->
+    <div class="gala-bg" style="background-image: url('img/fondo.jpg');"></div>
+
+    <!-- Navegación -->
+    <nav class="navbar">
+        <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
+            <img src="img/fondo_coral.jpg" alt="Logo" class="logo-img">
+            <span>Coral 25</span>
+        </a>
+
+        <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+            <span></span><span></span><span></span>
+        </button>
+
+        <ul class="nav-links" id="nav-links">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="el_coro.html" class="active">El Coro</a></li>
+            <li><a href="historia.html">Historia</a></li>
+            <li><a href="repertorio.html">Repertorio</a></li>
+            <li><a href="galeria.html">Galería</a></li>
+            <li><a href="sucesos.html">Blog</a></li>
+            <li><a href="prensa.html">Prensa</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <section class="page-content">
+
+        <h1 class="page-title">Integrantes</h1>
+
+        <!-- Sección de la Directora -->
+        <div class="director-section">
+            <div class="glass-card voice-card" style="text-align: center; padding: 20px;">
+                <h3 style="margin-bottom: 0.3em;">Silvia M. Blanco</h3>
+                <p style="margin-top: 0px; margin-bottom: 0px; font-weight: bold; opacity: 0.9; letter-spacing: 1px;">• Directora de Coro •</p>
+            </div>
+        </div>
+
+        <!-- Grilla de Voces -->
+        <div class="voice-grid">
+            <div class="glass-card voice-card">
+                <h3 class="voice-title">Sopranos</h3>
+                <ul class="member-list">
+                    <li>BONGIOVANNI, FLORENCIA</li>
+                    <li>CALDAS, MICAELA</li>
+                    <li>CARONELLO, LUISINA</li>
+                    <li>CASTILLO, ÉLIDA</li>
+                    <li>CINGOLANI GUIDO, LUDMILA</li>
+                    <li>CONSTANZO, MARÍA ESTER</li>
+                    <li>GARCÍA, MARISA</li>
+                    <li>GIECO, TERESITA</li>
+                    <li>MARCHESANI, SUSANA</li>
+                    <li>MELIÁN, NOEMÍ</li>
+                    <li>SCOTTI, LIDIA</li>
+                    <li>TRAFICANTE, MARTA</li>
+                    <li>VAUDAGNA, MARÍA FERNANDA</li>
+                </ul>
+            </div>
+            <div class="glass-card voice-card">
+                <h3 class="voice-title">Tenores</h3>
+                <ul class="member-list">
+                    <li>CASTRO, SANTIAGO</li>
+                    <li>IMPERATRICE, PABLO</li>
+                    <li>MELIÁN, WALTER</li>
+                    <li>PINILLA, ALBERTO</li>
+                    <li>SOSA, JUAN CARLOS</li>
+                </ul>
+            </div>
+            <div class="glass-card voice-card">
+                <h3 class="voice-title">Bajos</h3>
+                <ul class="member-list">
+                    <li>BAQUINI, OMAR</li>
+                    <li>FABIANO, JUAN CARLOS</li>
+                    <li>GILIO LÓPEZ, ENEAS</li>
+                    <li>MARTÍN, FEDERICO</li>
+                    <li>OLIVAN, FERNANDO</li>
+                    <li>SCLAVI, JUAN ENRIQUE</li>
+                </ul>
+            </div>
+            <div class="glass-card voice-card">
+                <h3 class="voice-title">Contraltos</h3>
+                <ul class="member-list">
+                    <li>ACOSTA, MARTA</li>
+                    <li>BOCCALATTE, ALICIA</li>
+                    <li>BOCCALATTE, ANA MARÍA</li>
+                    <li>CALDARELLI, ADRIANA</li>
+                    <li>CÁNEPA, MARITA</li>
+                    <li>CARRERA, ÁNGELA</li>
+                    <li>FELIPE, ESTELA</li>
+                    <li>GONZALEZ, EDITH</li>
+                    <li>GONZALEZ, NATALIA</li>
+                    <li>MIGLIERINI, MÓNICA</li>
+                    <li>PELLEGRINI, MARTA</li>
+                    <li>SCOTTI, SUSANA</li>
+                    <li>SILVA, GRACIELA</li>
+                    <li>VILLACORTA, GRACIELA</li>
+                    <li>ZABALA, OLGA</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SECCIÓN: Formación Actual + Botón 360 -->
+        <div class="formacion-container">
+            <h2 class="formacion-title">Formación Actual</h2>
+            
+            <!-- Nuevo contenedor forzando el centro -->
+            <div class="contenedor-foto-360">
+                <img src="img/formacion_actual.jpg" alt="Formación actual del Coral 25" class="formacion-img">
+         <!--       <a href="visor3d.html" class="btn-360">🌐 Ver en 360°</a>   -->
+                <a href="visor3d.html" class="btn-360" id="boton360">🌐 Ver en 360°</a> <!-- <--- id="boton360" -->
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Pie de Página -->
+    <footer class="site-footer">
+        <div class="footer-line"></div>
+        <div class="footer-content">
+            <p class="footer-text">
+                <img src="img/logo_coral.png" alt="Coral 25" class="footer-logo"> 
+                ©2026 Coral 25 - Ciudad de 25 de Mayo, Buenos Aires, Argentina.
+            </p>
+            <p class="footer-firma">
+                <a href="https://wa.me" target="_blank">Design_MM</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+            hamburger.classList.toggle('active');
+        });
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('open');
+                hamburger.classList.remove('active');
+            });
+        });
+    </script>
+
+</body>
+</html>

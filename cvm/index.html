@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SOLUCIÓN DEFINITIVA: Evita que Dark Reader modifique los colores/fondos de la página -->
+    <meta name="darkreader-lock">
+    
+    <title>Coral 25</title>
+    <!-- Subí la versión a ?v=4 para que el navegador actualice la caché del CSS -->
+    <link rel="stylesheet" href="css/style.css?v=4">
+</head>
+<body>
+    
+    <!-- Fondo de Gala (Restaurado) -->
+  <!--   <div class="gala-bg" style="background-image: url('img/fondo_coral25.webp');"></div>  -->
+   <div class="gala-bg" style="background-image: url('img/hero.webp');"></div>
+
+    <!-- Navegación -->
+    <nav class="navbar">
+        <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
+            <img src="img/logo_coral.png" alt="Logo" class="logo-img">
+            <span>Coral 25</span>
+        </a>
+
+        <!-- BOTÓN HAMBURGUESA -->
+        <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <ul class="nav-links" id="nav-links">
+            <li><a href="index.html" class="active">Inicio</a></li>
+            <li><a href="el_coro.html">El Coro</a></li>
+            <li><a href="historia.html">Historia</a></li>
+            <li><a href="repertorio.html">Repertorio</a></li>
+            <li><a href="galeria.html">Galería</a></li>
+            <li><a href="sucesos.html">Blog</a></li>
+            <li><a href="prensa.html">Prensa</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+    </nav> 
+
+    <!-- Hero Estilo Estudio Coral -->
+    <section class="hero-estudio">
+        <!-- Overlay restaurado -->
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-line"></div>
+            <p class="hero-subtitle">bienvenidos al sitio oficial de</p>
+            <h1 class="hero-title">
+                <img src="img/logo_coral.png" alt="Coral 25 Logo" class="hero-logo">
+            </h1>
+            <p class="hero-director">Dirigido por <strong>Silvia M. Blanco</strong></p>
+            <a href="el_coro.html" class="btn-gala">Conocé Nuestras Voces</a>
+        </div>
+    </section> 
+
+    <!-- Banner Próximo Concierto -->
+    <div class="announcement-bar">
+        <div class="marquee-container">
+            <div class="marquee-content">
+                <span>★ PRÓXIMO CONCIERTO: Sábado 15 de Julio a las 20:00 hs — Teatro Español de 25 de Mayo — Entrada gratuita ★&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span>★ PRÓXIMO CONCIERTO: Sábado 15 de Julio a las 20:00 hs — Teatro Español de 25 de Mayo — Entrada gratuita ★&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span>★ PRÓXIMO CONCIERTO: Sábado 15 de Julio a las 20:00 hs — Teatro Español de 25 de Mayo — Entrada gratuita ★&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span>★ PRÓXIMO CONCIERTO: Sábado 15 de Julio a las 20:00 hs — Teatro Español de 25 de Mayo — Entrada gratuita ★&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pie de Página -->
+    <footer class="site-footer">
+        <div class="footer-line"></div>
+        <div class="footer-content">
+            <p class="footer-text">
+                <img src="img/logo_coral.png" alt="Coral 25" class="footer-logo"> 
+                ©2026 Coral 25 - Ciudad de 25 de Mayo, Buenos Aires, Argentina.
+            </p>
+            <p class="footer-firma">
+                <a href="https://mariomolinacc.github.io" target="_blank">Design_by_MM</a>  <!-- Que quede centrado en la ultima linea--> 
+            </p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT PARA EL MENÚ MÓVIL -->
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+
+        hamburger.addEventListener('click', () => {
+            // Alterna la clase para abrir/cerrar el menú
+            navLinks.classList.toggle('open');
+            // Alterna la clase para animar la hamburguesa a una "X"
+            hamburger.classList.toggle('active');
+        });
+
+        // Opcional: Cerrar el menú al hacer clic en un enlace
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('open');
+                hamburger.classList.remove('active');
+            });
+        });
+    </script>
+
+</body>
+</html>

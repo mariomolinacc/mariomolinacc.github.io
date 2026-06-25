@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SOLUCIÓN DEFINITIVA: Evita que Dark Reader modifique los colores/fondos de la página -->
+    <meta name="darkreader-lock">
+
+    <title>Blog - Coral 25</title>
+    <!-- Se añade ?v=2 para forzar la actualización de la caché del navegador -->
+    <link rel="stylesheet" href="css/style.css?v=2">
+    
+    <!-- Estilos específicos para el Blog -->
+    <style>
+        .blog-card {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 2.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .blog-card:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .blog-fecha {
+            min-width: 80px;
+            text-align: center;
+            border-right: 1px solid var(--gold);
+            padding-right: 1.5rem;
+        }
+
+        .blog-fecha .dia {
+            font-size: 2.5rem;
+            font-family: var(--font-serif); /* Fuente nativa reemplazada */
+            color: var(--gold);
+            line-height: 1;
+        }
+
+        .blog-fecha .mes {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+        }
+
+        .blog-info h3 {
+            color: var(--gold-light);
+            font-family: var(--font-serif); /* Fuente nativa reemplazada */
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-info p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        .blog-link {
+            color: var(--gold);
+            font-size: 0.85rem;
+            text-decoration: none;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 0.8rem;
+            display: inline-block;
+            border-bottom: 1px solid transparent;
+            transition: border 0.3s;
+        }
+
+        .blog-link:hover {
+            border-bottom: 1px solid var(--gold);
+        }
+        
+        /* Responsive para celulares */
+        @media (max-width: 600px) {
+            .blog-card {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .blog-fecha {
+                border-right: none;
+                border-bottom: 1px solid var(--gold);
+                padding-right: 0;
+                padding-bottom: 1rem;
+                display: flex;
+                gap: 10px;
+                align-items: center;
+                justify-content: flex-start;
+            }
+            .blog-fecha .dia {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Fondo de Gala -->
+    <div class="gala-bg" style="background-image: url('img/fondo_coro.jpg');"></div>
+
+    <!-- Navegación -->
+    <nav class="navbar">
+        <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
+            <img src="img/logo_coral.png" alt="Logo" class="logo-img">
+            <span>Coral 25</span>
+        </a>
+
+        <!-- BOTÓN HAMBURGUESA -->
+        <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <ul class="nav-links" id="nav-links">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="el_coro.html">El Coro</a></li>
+            <li><a href="historia.html">Historia</a></li>
+            <li><a href="repertorio.html">Repertorio</a></li>
+            <li><a href="galeria.html">Galería</a></li>
+            <li><a href="sucesos.html" class="active">Blog</a></li>
+            <li><a href="prensa.html">Prensa</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <!-- Contenido de la Página -->
+    <div class="page-content">
+        
+        <h1 class="page-title">Sucesos</h1>
+        <p style="text-align: center; color: var(--text-muted); max-width: 600px; margin: -1rem auto 3rem auto;">Noticias, próximos conciertos y novedades del Coral 25.</p>
+        
+        <!-- Banner Próximo Concierto -->
+        <div class="announcement-bar">
+            <div class="marquee-container">
+                <div class="marquee-content">
+                    <span>★ PRÓXIMO CONCIERTO: Sábado 15 de Julio a las 20:00 hs — Teatro Español de 25 de Mayo — Entrada gratuita ★&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span>★ PRÓXIMO CONCIERTO: Sábado 15 de Julio a las 20:00 hs — Teatro Español de 25 de Mayo — Entrada gratuita ★&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span>★ PRÓXIMO CONCIERTO: Sábado 15 de Julio a las 20:00 hs — Teatro Español de 25 de Mayo — Entrada gratuita ★&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span>★ PRÓXIMO CONCIERTO: Sábado 15 de Julio a las 20:00 hs — Teatro Español de 25 de Mayo — Entrada gratuita ★&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            
+            <!-- Entrada 1 -->
+            <div class="blog-card">
+                <div class="blog-fecha">
+                    <div class="dia">15</div>
+                    <div class="mes">Oct</div>
+                </div>
+                <div class="blog-info">
+                    <h3>Participación en el Octubre Coral</h3>
+                    <p>El Coral 25 tuvo una destacada participación en la edición de este año del Octubre Coral regional, compartiendo escenario con agrupaciones de toda la provincia de Buenos Aires. Fue una jornada de intercambio musical y camaradería.</p>
+                    <a href="#" class="blog-link">Leer más</a>
+                </div>
+            </div>
+
+            <!-- Entrada 2 (Ejemplo adicional) -->
+            <div class="blog-card">
+                <div class="blog-fecha">
+                    <div class="dia">25</div>
+                    <div class="mes">May</div>
+                </div>
+                <div class="blog-info">
+                    <h3>Aniversario del Coro</h3>
+                    <p>Celebramos un nuevo aniversario de la agrupación con un concierto especial en el salón municipal, interpretando las obras más emblemáticas de nuestro repertorio histórico.</p>
+                    <a href="#" class="blog-link">Leer más</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Pie de Página -->
+    <footer class="site-footer">
+        <div class="footer-line"></div>
+        <div class="footer-content">
+            <p class="footer-text">
+                <img src="img/logo_coral.png" alt="Coral 25" class="footer-logo"> 
+                ©2026 Coral 25 - Ciudad de 25 de Mayo, Buenos Aires, Argentina.
+            </p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT PARA EL MENÚ MÓVIL -->
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+            hamburger.classList.toggle('active');
+        });
+
+        // Cerrar el menú al hacer clic en un enlace
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('open');
+                hamburger.classList.remove('active');
+            });
+        });
+    </script>
+
+</body>
+</html>

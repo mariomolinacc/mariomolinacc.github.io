@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Visor 360</title>
+    <!-- Importar A-Frame -->
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+
+    <!-- Estilo para el botón X -->
+    <style>
+        .btn-cerrar-visor {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 99999;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.6);
+            background: rgba(0,0,0,0.5);
+            color: #ffffff;
+            font-size: 28px;
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s ease;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .btn-cerrar-visor:hover {
+            background: rgba(255, 0, 0, 0.7);
+            border-color: #fff;
+        }
+    </style>
+  </head>
+  <body>
+
+    <!-- Botón X que regresa a El Coro -->
+    <a href="el_coro.html#boton360" class="btn-cerrar-visor" title="Cerrar y regresar">✕</a>
+
+    <!-- Escena de A-Frame -->
+    <a-scene>
+      <!-- Cielo 360 con animación de rotación suave -->
+      <a-sky 
+        src="coro_360.jpg" 
+        rotation="0 -130 0"
+        animation="property: rotation; to: 0 -490 0; dur: 60000; easing: linear; loop: true">
+      </a-sky>
+      
+      <!-- Cámara para navegar -->
+      <a-entity camera look-controls position="0 1.6 0"></a-entity>
+    </a-scene>
+
+  </body>
+</html>

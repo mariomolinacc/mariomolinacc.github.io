@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+        <!-- SOLUCIÓN DEFINITIVA: Evita que Dark Reader modifique los colores/fondos de la página -->
+    <meta name="darkreader-lock">
+    
+    <title>Historia - Coral 25</title>
+    <!-- Se añade ?v=2 para forzar la actualización de la caché del navegador -->
+    <link rel="stylesheet" href="css/style.css?v=2">
+    
+    <!-- Estilos específicos para esta página -->
+    <style>
+        /* Alineación del texto justificada para una lectura más literaria */
+        .historia-texto {
+            text-align: justify;
+            color: var(--text-muted);
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        /* Resaltado dorado para los hitos */
+        .hito-titulo {
+            color: var(--gold);
+            font-family: var(--font-serif); /* Fuente nativa reemplazada */
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .hito-descripcion {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            padding-left: 1rem;
+            border-left: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        /* Estilo para la tarjeta de la directora */
+        .directora-seccion {
+            text-align: center;
+            margin-top: 4rem;
+            margin-bottom: 2rem;
+        }
+
+        .directora-seccion .foto-directora {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--gold);
+            margin-bottom: 1.5rem;
+            filter: grayscale(20%);
+        }
+
+        .directora-seccion h3 {
+            font-family: var(--font-serif); /* Fuente nativa reemplazada */
+            font-size: 1.8rem;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .directora-seccion .rol {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        /* Lista de agrupaciones */
+        .lista-agrupaciones {
+            list-style: none;
+            padding: 0;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .lista-agrupaciones li {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .lista-agrupaciones li:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .lista-agrupaciones strong {
+            color: var(--gold-light);
+            font-family: var(--font-serif); /* Fuente nativa reemplazada */
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .lista-agrupaciones p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* Subtítulo estilo línea */
+        .subtitulo-seccion {
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-main);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Fondo de Gala -->
+    <div class="gala-bg" style="background-image: url('img/fondo.jpg');"></div>
+
+    <!-- Navegación -->
+    <nav class="navbar">
+        <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
+            <img src="img/logo_coral.png" alt="Logo" class="logo-img">
+            <span>Coral 25</span>
+        </a>
+
+        <!-- BOTÓN HAMBURGUESA -->
+        <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <ul class="nav-links" id="nav-links">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="el_coro.html">El Coro</a></li>
+            <li><a href="historia.html" class="active">Historia</a></li>
+            <li><a href="repertorio.html">Repertorio</a></li>
+            <li><a href="galeria.html">Galería</a></li>
+            <li><a href="sucesos.html">Blog</a></li>
+            <li><a href="prensa.html">Prensa</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <!-- Contenido de la Página -->
+    <div class="page-content">
+        
+        <h1 class="page-title">Historia</h1>
+
+        <!-- Introducción -->
+        <div class="glass-card" style="max-width: 800px; margin: 0 auto 3rem auto;">
+            <h2 style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--gold-light); margin-bottom: 1.5rem; text-align: center;">Acerca de Coral 25</h2>
+            <p class="historia-texto">
+                El Coral 25 es un histórico coro con sede en 25 de Mayo (provincia de Buenos Aires). Llevando adelante el canto comunitario, el grupo se destaca en la escena musical bonaerense bajo la dirección de la profesora Silvia Blanco, quien se encarga de la búsqueda, estudio y adaptación del amplio repertorio.
+            </p>
+        </div>
+
+        <!-- La Trayectoria -->
+        <div class="glass-card" style="max-width: 800px; margin: 0 auto 3rem auto;">
+            <h2 class="subtitulo-seccion">La historia y trayectoria del Coral 25</h2>
+            <p class="historia-texto">
+                El coro cuenta con un largo legado de música, habiendo celebrado su 70° aniversario. Durante décadas, ha sido un semillero de generaciones de voces locales, fomentando la pasión por el canto y la cultura coral.
+            </p>
+            <p class="historia-texto" style="margin-top: 1rem;">
+                Con Silvia Blanco en la dirección, la agrupación ha trascendido las fronteras de 25 de Mayo participando activamente en distintos encuentros, festivales y galas. Entre sus hitos más recientes se destacan:
+            </p>
+            
+            <!-- Hitos -->
+            <div style="margin-top: 2rem;">
+                <div class="hito-titulo">• Gala Patria</div>
+                <div class="hito-descripcion">Realizan emotivas presentaciones institucionales, incluyendo interpretaciones del Himno Nacional en importantes veladas locales.</div>
+                
+                <div class="hito-titulo">• Giras Nacionales</div>
+                <div class="hito-descripcion">Han representado a la ciudad en encuentros de gran magnitud como la Intercoraliada en Córdoba y el “Octubre Coral” en la región, así como en intercambios artísticos en Mendoza.</div>
+            </div>
+        </div>
+
+        <!-- Acerca de la Directora -->
+        <div class="directora-seccion">
+            <h2 class="subtitulo-seccion">Acerca de la Directora</h2>
+            
+            <div class="director-card" style="max-width: 800px; text-align: left;">
+                
+                <!-- Descomenta las líneas de abajo si tienes una foto de la directora en tu carpeta /img -->
+                <!-- <div style="text-align: center;">
+                    <img src="img/silvia_blanco.jpg" alt="Silvia M. Blanco" class="foto-directora">
+                </div> -->
+                
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <h3>Silvia M. Blanco</h3>
+                    <span class="rol">Directora Coral y Educadora Musical</span>
+                </div>
+
+                <p class="historia-texto">
+                    Silvia M. Blanco es una destacada directora coral y educadora musical radicada en la ciudad de Veinticinco de Mayo, Buenos Aires, con una amplia y reconocida trayectoria en la formación y dirección de agrupaciones corales en toda la región.
+                </p>
+
+                <!-- Trayectoria Agrupaciones -->
+                <h4 style="color: var(--gold); font-family: var(--font-serif); margin-top: 2.5rem; margin-bottom: 1.5rem; text-align: center; font-size: 1.2rem;">Trayectoria y Agrupaciones Destacadas</h4>
+                <p class="historia-texto" style="margin-bottom: 1.5rem;">
+                    La maestra Blanco ha liderado y formado múltiples coros en la provincia de Buenos Aires. Su trabajo se destaca por llevar el canto coral a distintos escenarios y promover el intercambio cultural entre comunidades:
+                </p>
+                
+                <ul class="lista-agrupaciones">
+                    <li>
+                        <strong>Coral del Norte (25 de Mayo)</strong>
+                        <p>Directora, representa a las localidades de Norberto de la Riestra, Pedernales y Ernestina.</p>
+                    </li>
+                    <li>
+                        <strong>Agrupación Coral Saladillo</strong>
+                        <p>Dirige este ensamble desde abril de 1992.</p>
+                    </li>
+                    <li>
+                        <strong>Agrupación Coral Dudignac</strong>
+                        <p>Asumió la dirección de esta agrupación en el año 2000.</p>
+                    </li>
+                    <li>
+                        <strong>Coro de Niños de 25 de Mayo</strong>
+                        <p>Fundadora y directora de este proyecto coral infantil desde 1990 junto a la Dirección de Cultura Municipal.</p>
+                    </li>
+                    <li>
+                        <strong>Agrupación Coral Alborada (Bragado)</strong>
+                        <p>Dirigida por Silvia Blanco entre 1991 y 1992.</p>
+                    </li>
+                </ul>
+
+                <!-- Formación y Docencia -->
+                <h4 style="color: var(--gold); font-family: var(--font-serif); margin-top: 2rem; margin-bottom: 1rem; text-align: center; font-size: 1.2rem;">Formación y Docencia</h4>
+                <p class="historia-texto">
+                    Además de su labor como directora, se ha desempeñado como educadora, destacando su paso como profesora de la cátedra de Dirección Coral en el conservatorio Alberto Williams de Chivilcoy. Sus agrupaciones participan frecuentemente en importantes encuentros, conciertos regionales y festivales.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Pie de Página -->
+    <footer class="site-footer">
+        <div class="footer-line"></div>
+        <div class="footer-content">
+            <p class="footer-text">
+                <img src="img/logo_coral.png" alt="Coral 25" class="footer-logo"> 
+                ©2026 Coral 25 - Ciudad de 25 de Mayo, Buenos Aires, Argentina.
+            </p>
+            <p class="footer-firma">
+                <a href="https://wa.me." target="_blank">Design_MM</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT PARA EL MENÚ MÓVIL -->
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+            hamburger.classList.toggle('active');
+        });
+
+        // Cerrar el menú al hacer clic en un enlace
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('open');
+                hamburger.classList.remove('active');
+            });
+        });
+    </script>
+
+</body>
+</html>
