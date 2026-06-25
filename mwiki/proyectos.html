@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyectos | Mario Molina — Constructor Civil</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f0f2f5;
+            --card: #ffffff;
+            --text: #202122;
+            --text-muted: #54595d;
+            --accent: #3366cc;
+            --accent-hover: #2850a8;
+            --wiki-blue: #364d7c;
+            --border: #c8cdd3;
+            --border-accent: #a2a9b1;
+            --infobox-header: #c8d8ea;
+            --infobox-header-text: #1a1a1a;
+            --infobox-section: #e8ecf0;
+            --infobox-section-text: #54595d;
+            --infobox-th-bg: #fafbfc;
+            --infobox-td-border: #eee;
+            --tag-bg: #edf2f8;
+            --tag-border: #cdd8e4;
+            --tag-text: #364d7c;
+            --tag-hover-bg: #dce6f2;
+            --tag-hover-border: #b0c4de;
+            --line-blue: #a4c0e4;
+            --exp-bg: #fafbfc;
+            --exp-hover: #f3f6fa;
+            --bullet-color: #a4c0e4;
+            --toc-bg: #f8f9fb;
+            --toggle-bg: #e8ecf0;
+            --toggle-icon: "☀️";
+            --shadow-card: 0 1px 4px rgba(0,0,0,0.06), 0 8px 30px rgba(0,0,0,0.04);
+            --shadow-infobox: 0 1px 3px rgba(0,0,0,0.04);
+            --img-placeholder: #d0d5dc;
+            --h1-color: #000;
+            --img-border: #dde1e6;
+            --tab-hover: #eaecf0;
+            --tab-active-bg: var(--card);
+            --step-num-bg: #e8ecf0;
+            --step-num-text: #364d7c;
+            --step-arrow: #a2a9b1;
+        }
+        [data-theme="dark"] {
+            --bg: #1c1d21;
+            --card: #282930;
+            --text: #c8cad0;
+            --text-muted: #94969e;
+            --accent: #7eaaff;
+            --accent-hover: #a0c4ff;
+            --wiki-blue: #8da6cc;
+            --border: #4a5a78;
+            --border-accent: #5a6f94;
+            --infobox-header: #2a3652;
+            --infobox-header-text: #b0c8e8;
+            --infobox-section: #2e3038;
+            --infobox-section-text: #8a8d96;
+            --infobox-th-bg: #252630;
+            --infobox-td-border: #3a3d48;
+            --tag-bg: #2a3044;
+            --tag-border: #3e4e6a;
+            --tag-text: #90b0d8;
+            --tag-hover-bg: #34405a;
+            --tag-hover-border: #506888;
+            --line-blue: #4a6090;
+            --exp-bg: #24252c;
+            --exp-hover: #2e2f38;
+            --bullet-color: #4a6090;
+            --toc-bg: #22232a;
+            --toggle-bg: #2a2b32;
+            --toggle-icon: "🌙";
+            --shadow-card: 0 1px 6px rgba(0,0,0,0.25), 0 10px 40px rgba(0,0,0,0.18);
+            --shadow-infobox: 0 1px 4px rgba(0,0,0,0.25);
+            --img-placeholder: #222330;
+            --h1-color: #dce0e8;
+            --img-border: #3a4a64;
+            --tab-hover: #2e2f38;
+            --tab-active-bg: var(--card);
+            --step-num-bg: #2a3044;
+            --step-num-text: #90b0d8;
+            --step-arrow: #5a6f94;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg); color: var(--text);
+            line-height: 1.65; font-size: 15px;
+            -webkit-font-smoothing: antialiased;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+        .theme-toggle {
+            position: fixed; top: 18px; right: 18px; z-index: 1000;
+            width: 44px; height: 44px; border: 1px solid var(--border);
+            background: var(--toggle-bg); border-radius: 50%; cursor: pointer;
+            font-size: 1.15rem; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            transition: background 0.3s, border-color 0.3s, transform 0.2s;
+        }
+        .theme-toggle:hover { transform: scale(1.1); }
+        .theme-toggle:active { transform: scale(0.95); }
+        .theme-toggle::after { content: var(--toggle-icon); }
+        .wiki-wrapper { max-width: 1060px; margin: 24px auto; }
+        .wiki-header {
+            display: flex; align-items: flex-end; justify-content: space-between;
+            padding: 0 4px; margin-bottom: 0; gap: 16px; flex-wrap: wrap;
+        }
+        .wiki-logo {
+            font-family: 'Libre Baskerville', Georgia, serif;
+            font-size: 1.25rem; font-weight: 700; color: var(--text);
+            text-decoration: none; padding-bottom: 10px; white-space: nowrap;
+            transition: color 0.4s; letter-spacing: -0.02em;
+        }
+        .wiki-logo:hover { color: var(--accent); }
+        .wiki-nav { display: flex; gap: 0; flex-shrink: 0; }
+        .wiki-tab {
+            display: block; padding: 9px 18px; font-size: 0.84rem;
+            color: var(--text-muted); text-decoration: none;
+            border: 1px solid transparent; border-bottom: none;
+            border-radius: 3px 3px 0 0; background: transparent;
+            transition: color 0.2s, background 0.2s, border-color 0.2s;
+            font-weight: 400; position: relative; top: 1px;
+        }
+        .wiki-tab:hover { color: var(--text); background: var(--tab-hover); }
+        .wiki-tab.active {
+            color: var(--text); background: var(--tab-active-bg);
+            border-color: var(--border); font-weight: 500;
+        }
+        .wiki-container {
+            background: var(--card); padding: 48px 52px;
+            box-shadow: var(--shadow-card); border: 1px solid var(--border);
+            border-radius: 0 0 2px 2px;
+            transition: background-color 0.4s, border-color 0.4s, box-shadow 0.4s;
+        }
+        h1 {
+            font-family: 'Libre Baskerville', Georgia, serif;
+            font-size: 2.4rem; font-weight: 700; color: var(--h1-color);
+            border-bottom: 1px solid var(--border); padding-bottom: 6px;
+            margin-bottom: 4px; line-height: 1.15;
+            transition: color 0.4s, border-color 0.4s;
+        }
+        .role-subtitle {
+            font-size: 1.05rem; color: var(--text-muted); font-weight: 300;
+            margin-bottom: 28px; letter-spacing: -0.01em; transition: color 0.4s;
+        }
+        h2 {
+            font-family: 'Libre Baskerville', Georgia, serif;
+            font-size: 1.35rem; font-weight: 700;
+            border-bottom: 1px solid var(--border-accent); padding-bottom: 5px;
+            margin-top: 36px; margin-bottom: 14px; color: var(--h1-color);
+            transition: color 0.4s, border-color 0.4s;
+        }
+        h2 .section-emoji { font-family: 'Inter', sans-serif; margin-right: 6px; font-size: 1.2rem; vertical-align: middle; }
+        .toc {
+            display: inline-block; background: var(--toc-bg); border: 1px solid var(--border);
+            border-radius: 3px; padding: 14px 22px; margin-bottom: 26px;
+            font-size: 0.88rem; min-width: 260px;
+            transition: background 0.4s, border-color 0.4s;
+        }
+        .toc-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 8px; text-align: center; color: var(--text); transition: color 0.4s; }
+        .toc ul { list-style: none; }
+        .toc li { padding: 2px 0; }
+        .toc a { color: var(--accent); text-decoration: none; font-weight: 400; transition: color 0.2s; }
+        .toc a:hover { text-decoration: underline; }
+        .toc .toc-number { margin-right: 6px; color: var(--text-muted); }
+        .toc .toc-emoji { margin-right: 4px; font-size: 0.9rem; vertical-align: middle; }
+        .infobox {
+            float: right; width: 300px; border: 1px solid var(--border-accent);
+            background: var(--card); margin: 0 0 20px 28px; font-size: 0.84rem;
+            line-height: 1.55; border-radius: 2px; overflow: hidden;
+            box-shadow: var(--shadow-infobox);
+            transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;
+        }
+        .infobox-header {
+            background: var(--infobox-header); color: var(--infobox-header-text);
+            text-align: center; font-weight: 600; padding: 12px 14px;
+            font-size: 1.05rem; font-family: 'Libre Baskerville', Georgia, serif;
+            letter-spacing: -0.01em; transition: background 0.4s, color 0.4s;
+        }
+        .infobox table { width: 100%; border-collapse: collapse; }
+        .infobox th {
+            text-align: left; padding: 7px 10px; width: 38%; vertical-align: top;
+            background: var(--infobox-th-bg); border-bottom: 1px solid var(--infobox-td-border);
+            font-weight: 500; color: var(--text-muted);
+            transition: background 0.4s, border-color 0.4s, color 0.4s;
+        }
+        .infobox td {
+            padding: 7px 10px; border-bottom: 1px solid var(--infobox-td-border);
+            color: var(--text); transition: border-color 0.4s, color 0.4s;
+        }
+        .infobox-link a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+        .infobox-link a:hover { text-decoration: underline; }
+        .wiki-container p { margin-bottom: 14px; color: var(--text); transition: color 0.4s; }
+        .wiki-container p strong { color: var(--h1-color); transition: color 0.4s; }
+        .wiki-bullets { list-style: none; padding: 0; }
+        .wiki-bullets li {
+            padding: 3px 0 3px 16px; position: relative; margin-bottom: 4px;
+            color: var(--text); transition: color 0.4s;
+        }
+        .wiki-bullets li::before {
+            content: ''; position: absolute; left: 0; top: 11px;
+            width: 6px; height: 6px; background: var(--bullet-color);
+            border-radius: 50%; transition: background 0.4s;
+        }
+        .wiki-bullets li strong { color: var(--h1-color); transition: color 0.4s; }
+        .tag-cloud { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 18px; }
+        .tag {
+            display: inline-block; background: var(--tag-bg); padding: 4px 14px;
+            border-radius: 20px; font-size: 0.78rem; border: 1px solid var(--tag-border);
+            color: var(--tag-text); font-weight: 500;
+            transition: background 0.25s, border-color 0.25s, color 0.25s; cursor: default;
+        }
+        .tag:hover { background: var(--tag-hover-bg); border-color: var(--tag-hover-border); }
+        .clearfix::after { content: ''; display: table; clear: both; }
+
+        /* === Flujo de trabajo visual === */
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr auto 1fr;
+            align-items: start;
+            gap: 0;
+            margin: 20px 0 24px;
+        }
+        .workflow-step {
+            text-align: center;
+        }
+        .workflow-step-img {
+            position: relative;
+            overflow: hidden;
+            background: var(--img-placeholder);
+            border: 1px solid var(--img-border);
+            border-radius: 3px;
+            aspect-ratio: 4/3;
+            transition: background 0.4s, border-color 0.4s;
+        }
+        .workflow-step-img img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+        .workflow-step-img img.loaded { opacity: 1; }
+        .workflow-step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--step-num-bg);
+            color: var(--step-num-text);
+            font-size: 0.78rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            transition: background 0.4s, color 0.4s;
+        }
+        .workflow-step-title {
+            font-weight: 600;
+            font-size: 0.88rem;
+            color: var(--h1-color);
+            margin-bottom: 3px;
+            transition: color 0.4s;
+        }
+        .workflow-step-desc {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            padding: 0 4px;
+            transition: color 0.4s;
+        }
+        .workflow-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: calc(4 / 3 * 50% - 26px);
+            color: var(--step-arrow);
+            font-size: 1.3rem;
+            transition: color 0.4s;
+        }
+
+        .inner-gallery {
+            display: flex; flex-direction: column; gap: 0; margin-top: 10px;
+        }
+        .inner-gallery figure {
+            position: relative; margin: 0; overflow: hidden;
+            background: var(--img-placeholder); border: 1px solid var(--img-border);
+            border-radius: 3px; transition: background 0.4s, border-color 0.4s;
+        }
+        .inner-gallery figure + figure { margin-top: 12px; }
+        .inner-gallery img {
+            display: block; width: 100%; height: auto; max-height: 600px;
+            object-fit: contain; opacity: 0; transition: opacity 0.6s ease;
+        }
+        .inner-gallery img.loaded { opacity: 1; }
+        .inner-gallery figcaption {
+            padding: 10px 14px; background: var(--infobox-th-bg);
+            color: var(--text-muted); font-size: 0.84rem; font-style: italic;
+            border-top: 1px solid var(--img-border);
+            transition: background 0.4s, color 0.4s, border-color 0.4s;
+        }
+        .gallery-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px;
+        }
+        .gallery-grid figure {
+            position: relative; margin: 0; overflow: hidden;
+            background: var(--img-placeholder); border: 1px solid var(--img-border);
+            border-radius: 3px; transition: background 0.4s, border-color 0.4s;
+        }
+        .gallery-grid img {
+            display: block; width: 100%; height: auto; max-height: 360px;
+            object-fit: cover; opacity: 0; transition: opacity 0.6s ease;
+        }
+        .gallery-grid img.loaded { opacity: 1; }
+        .gallery-grid figcaption {
+            padding: 8px 12px; background: var(--infobox-th-bg);
+            color: var(--text-muted); font-size: 0.78rem; font-style: italic;
+            border-top: 1px solid var(--img-border);
+            transition: background 0.4s, color 0.4s, border-color 0.4s;
+        }
+        .wiki-footer {
+            border-top: 1px solid var(--border); margin-top: 36px; padding-top: 14px;
+            font-size: 0.78rem; color: var(--text-muted); text-align: center;
+            transition: border-color 0.4s, color 0.4s;
+        }
+        @media (max-width: 860px) {
+            .wiki-wrapper { margin: 12px; }
+            .wiki-container { padding: 28px 20px; }
+            h1 { font-size: 1.8rem; }
+            .infobox { float: none; width: 100%; margin: 0 0 24px 0; }
+            .toc { width: 100%; min-width: unset; }
+            .inner-gallery img { max-height: 400px; }
+            .gallery-grid { grid-template-columns: 1fr; }
+            .gallery-grid img { max-height: 400px; }
+            .theme-toggle { top: 12px; right: 12px; width: 40px; height: 40px; font-size: 1rem; }
+            .wiki-header { padding: 0 8px; }
+            .wiki-tab { padding: 8px 12px; font-size: 0.8rem; }
+            .wiki-logo { font-size: 1.1rem; }
+            .workflow-steps {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .workflow-arrow {
+                padding-top: 0;
+                transform: rotate(90deg);
+                font-size: 1.1rem;
+            }
+        }
+        @media (max-width: 480px) {
+            body { font-size: 14px; }
+            h1 { font-size: 1.55rem; }
+            h2 { font-size: 1.15rem; }
+            .inner-gallery img { max-height: 280px; }
+            .gallery-grid img { max-height: 280px; }
+            .wiki-header { flex-direction: column; align-items: flex-start; }
+            .wiki-nav { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .wiki-tab { flex-shrink: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle" aria-label="Cambiar modo claro/oscuro"></button>
+
+<div class="wiki-wrapper">
+    <header class="wiki-header">
+        <a href="index.html" class="wiki-logo">Estudio de Diseño y Construcción</a>
+        <nav class="wiki-nav">
+            <a href="index.html" class="wiki-tab">Inicio</a>
+            <a href="servicios.html" class="wiki-tab">Servicios</a>
+            <a href="proyectos.html" class="wiki-tab active">Proyectos</a> 
+           <!-- Pestaña Sobre mí agregada -->
+            <a href="sobre_mi.html" class="wiki-tab">Sobre mí</a>
+            <a href="blog.html" class="wiki-tab">Bitácora</a>
+            <a href="contacto.html" class="wiki-tab">Contacto</a>
+        </nav>
+    </header>
+
+    <div class="wiki-container">
+
+        <h1>Proyectos</h1>
+        <div class="role-subtitle">Portafolio de trabajos de diseño, construcción y visualización arquitectónica</div>
+
+        <aside class="infobox">
+            <div class="infobox-header">Estadísticas de Proyectos</div>
+            <table>
+                <tr><th>Total proyectos</th><td>50+</td></tr>
+                <tr><th>Viviendas</th><td>20+</td></tr>
+                <tr><th>Comerciales</th><td>10+</td></tr>
+                <tr><th>Industriales</th><td>15+</td></tr>
+                <tr><th>Internacionales</th><td>4 países</td></tr>
+                <tr><th>Período</th><td>1986 – Presente</td></tr>
+            </table>
+            <table>
+                <tr><th>Ver inicio</th><td class="infobox-link"><a href="index.html">Biografía completa →</a></td></tr>
+            </table>
+        </aside>
+
+        <nav class="toc">
+            <div class="toc-title">Índice</div>
+            <ul>
+                <li><a href="#residenciales"><span class="toc-number">1</span><span class="toc-emoji">🏠</span>Proyectos Residenciales</a></li>
+                <li><a href="#comerciales"><span class="toc-number">2</span><span class="toc-emoji">🏢</span>Proyectos Comerciales</a></li>
+                <li><a href="#industriales"><span class="toc-number">3</span><span class="toc-emoji">🏭</span>Proyectos Industriales</a></li>
+                <li><a href="#internacionales"><span class="toc-number">4</span><span class="toc-emoji">🌎</span>Proyectos Internacionales</a></li>
+                <li><a href="#visualizaciones"><span class="toc-number">5</span><span class="toc-emoji">🖼️</span>Visualizaciones 3D</a></li>
+            </ul>
+        </nav>
+
+        <h2 id="residenciales"><span class="section-emoji">🏠</span>Proyectos Residenciales</h2>
+        <p>Diseño de viviendas unifamiliares en la provincia de Buenos Aires. Cada proyecto se aborda con un enfoque personalizado que integra las necesidades del cliente, las condiciones del terreno y las normativas locales.</p>
+
+        <div class="inner-gallery">
+            <figure>
+                <img src="img/proyecto_ca_00.webp" alt="Casa Ayacucho" onload="this.classList.add('loaded')">
+                <figcaption>🏠 Casa Ayacucho — Vivienda unifamiliar, San Isidro (BA)</figcaption>
+            </figure>
+        </div>
+
+        <h2 id="comerciales"><span class="section-emoji">🏢</span>Proyectos Comerciales</h2>
+        <p>El diseño de un inmueble de uso mixto en Punta del Este, Uruguay, que incorpora componentes residenciales, comerciales y de oficinas. Los proyectos comerciales requieren un análisis exhaustivo de los flujos de circulación, la accesibilidad, la imagen corporativa y la viabilidad económica.</p>
+
+        <div class="inner-gallery">
+            <figure>
+                <img src="img/proyecto_pe_01.webp" alt="Proyecto Punta del Este" onload="this.classList.add('loaded')">
+                <figcaption>🏢 Proyecto residencial y comercial — Punta del Este, Uruguay</figcaption>
+            </figure>
+        </div>
+
+        <h2 id="industriales"><span class="section-emoji">🏭</span>Proyectos Industriales</h2>
+        <p>Contamos con experiencia en el diseño de naves industriales, depósitos logísticos y plantas de producción. Estos proyectos fueron desarrollados para empresas líderes del sector tecnológico argentino e internacional.</p>
+        <ul class="wiki-bullets">
+            <li><strong>Arcor</strong> — Obra civil de naves industriales e infraestructuras, Grupo ARCOR, San Luis.</li>
+            <li><strong>Philips</strong> — Diseño de áreas logísticas.</li>
+            <li><strong>Whirlpool</strong> — Rediseño de espacios de manufactura y depósitos.</li>
+            <li><strong>Philco</strong> — Gerenciamiento integral de plantas de producción (2002–2010).</li>
+            <li><strong>Daewoo / Newsan / Midas</strong> — Reconversión y adecuación de naves industriales.</li>
+        </ul>
+        <div class="tag-cloud">
+            <span class="tag">Plantas de producción</span>
+            <span class="tag">Depósitos logísticos</span>
+            <span class="tag">Naves industriales</span>
+            <span class="tag">Centros de distribución</span>
+            <span class="tag">Reconversión industrial</span>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <h2 id="internacionales"><span class="section-emoji">🌎</span>Proyectos Internacionales</h2>
+        <p>La vinculación con empresas globales permitió participar en proyectos en <strong>Brasil, Chile, China y Corea del Sur</strong>, aportando experiencia en diseño industrial, adecuación de plantas y transferencia tecnológica.</p>
+        <ul class="wiki-bullets">
+            <li><strong>Brasil</strong> — Asesoría en diseño de instalaciones de naves industriales.</li>
+            <li><strong>Chile</strong> — Evaluación y diseño de centros logísticos.</li>
+            <li><strong>China</strong> — Evaluación y diseño de depósitos y naves industriales con estándares internacionales.</li>
+            <li><strong>Corea del Sur</strong> — Transferencia tecnológica y adaptación de diseños para el mercado asiático.</li>
+            <li><strong>Uruguay</strong> — Proyecto residencial y comercial en Punta del Este.</li>
+        </ul>
+
+        <!-- ===== VISUALIZACIÓN ARQUITECTÓNICA ===== -->
+        <h2 id="visualizaciones"><span class="section-emoji">🖼️</span>Visualización Arquitectónica de Autor</h2>
+        <p>Visualización que fusiona la sensibilidad del trazo manual con el renderizado digital. Un flujo de trabajo diferenciado en tres etapas:</p>
+
+        <div class="workflow-steps">
+            <div class="workflow-step">
+                <div class="workflow-step-img">
+                    <img src="img/proyecto_ct_00.webp" alt="Boceto a mano alzada en tablero de dibujo" onload="this.classList.add('loaded')">
+                </div>
+                <div style="margin-top:10px">
+                    <div class="workflow-step-num">1</div>
+                    <div class="workflow-step-title">Boceto / Ilustración Arquitectónica</div>
+                    <div class="workflow-step-desc">Exploración volumétrica y perspectivas a lápiz, sin las limitaciones del software.</div>
+                </div>
+            </div>
+
+            <div class="workflow-arrow">→</div>
+
+            <div class="workflow-step">
+                <div class="workflow-step-img">
+                    <img src="img/proyecto_ct_01.webp" alt="Render digital sobre base de dibujo escaneado" onload="this.classList.add('loaded')">
+                </div>
+                <div style="margin-top:10px">
+                    <div class="workflow-step-num">2</div>
+                    <div class="workflow-step-title">Escaneo y render</div>
+                    <div class="workflow-step-desc">El dibujo manual (Ilustracion Arquitectónica) se digitaliza como base para generar un render digital.</div>
+                </div>
+            </div>
+
+            <div class="workflow-arrow">→</div>
+
+            <div class="workflow-step">
+                <div class="workflow-step-img">
+                    <img src="img/proyecto_ct_02.webp" alt="Modelado 3D con simulación de luz nocturna" onload="this.classList.add('loaded')">
+                </div>
+                <div style="margin-top:10px">
+                    <div class="workflow-step-num">3</div>
+                    <div class="workflow-step-title">Precisión 3D</div>
+                    <div class="workflow-step-desc">Modelado espacial, recorridos virtuales y simulación de luz para validar el proyecto.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CASA MARTINEZ ===== -->
+        <h2 id="proyecto-martinez"><span class="section-emoji">🖼️</span>Proyecto Casa Martinez (120 m2), San Isidro (BA)</h2>
+        <p>Sistema mixto de dibujo a mano (Ilustración Arquitectónica) y la potencia del renderizado digital.</p>
+
+        <div class="inner-gallery">
+            <figure>
+                <img src="img/proyecto_ct_00.webp" alt="Perspectiva conceptual a mano" onload="this.classList.add('loaded')">
+                <figcaption>🏛️ Perspectiva conceptual a mano (Ilustración Arquitectónica).</figcaption>
+            </figure>
+            <figure>
+                <img src="img/proyecto_ct_01.webp" alt="Renderizado diurno sobre base manual" onload="this.classList.add('loaded')">
+                <figcaption>🏛️ Renderizado sobre base manual — diurno.</figcaption>
+            </figure>
+            <figure>
+                <img src="img/proyecto_ct_02.webp" alt="Renderizado nocturno sobre base manual" onload="this.classList.add('loaded')">
+                <figcaption>🏛️ Renderizado sobre base manual — nocturno.</figcaption>
+            </figure>
+        </div>
+
+        <!-- ===== CASA DUFAUR ===== -->
+        <h2 id="proyecto-dufaur"><span class="section-emoji">🖼️</span>Proyecto Casa Dufaur (160 m2), San Isidro (BA)</h2>
+        <p>Sistema mixto de dibujo a mano (Ilustración Arquitectónica) y la potencia del renderizado digital.</p>
+
+        <div class="inner-gallery">
+            <figure>
+                <img src="img/proyecto_df_00.webp" alt="Perspectiva conceptual a mano" onload="this.classList.add('loaded')">
+                <figcaption>🏛️ Perspectiva conceptual a mano (Ilustración Arquitectónica).</figcaption>
+            </figure>
+            <figure>
+                <img src="img/proyecto_df_01.webp" alt="Renderizado diurno sobre base manual" onload="this.classList.add('loaded')">
+                <figcaption>🏛️ Renderizado sobre base manual — diurno.</figcaption>
+            </figure>
+            <figure>
+                <img src="img/proyecto_df_02.webp" alt="Renderizado nocturno sobre base manual" onload="this.classList.add('loaded')">
+                <figcaption>🏛️ Renderizado sobre base manual — nocturno.</figcaption>
+            </figure>
+        </div>
+
+<!-- ===== CASA AYACUCHO (ID CORREGIDO) ===== -->
+        <h2 id="proyecto-ayacucho"><span class="section-emoji">🖼️</span>Proyecto Casa Ayacucho (150 m2), San Isidro (BA)</h2>
+        <p>Sistema mixto de dibujo a mano (Ilustración Arquitectónica) y la potencia del renderizado digital.</p> <!-- Etiqueta P cerrada correctamente -->
+        <div class="inner-gallery">
+            <figure>
+                <img src="img/proyecto_ca_00.webp" alt="Perspectiva conceptual a mano" onload="this.classList.add('loaded')">
+                <figcaption>🏛️ Perspectiva conceptual a mano (Ilustración Arquitectónica).</figcaption>
+            </figure>
+            <figure>
+                <img src="img/proyecto_ca_01.webp" alt="Renderizado diurno sobre base manual" onload="this.classList.add('loaded')">
+                <figcaption>🏛️ Renderizado sobre base manual — diurno.</figcaption>
+            </figure>
+            <figure>
+                <img src="img/proyecto_ca_02.webp" alt="Renderizado nocturno sobre base manual" onload="this.classList.add('loaded')">
+                <figcaption>🏛️ Renderizado sobre base manual — nocturno.</figcaption>
+            </figure>
+        </div>
+
+<!-- ===== EDIFICIO PUNTA DEL ESTE (ID CORREGIDO) ===== -->
+        <h2 id="proyecto-puntadeleste"><span class="section-emoji">🖼️</span>Edificio multifamiliar y comercial (6000 m2) - Punta del Este, Uruguay</h2>
+        <p>Sistema mixto de dibujo a mano (Ilustración Arquitectónica) y la potencia del renderizado digital.</p>
+
+        <div class="inner-gallery">
+            <figure>
+                <img src="img/proyecto_pe_00.webp" alt="Perspectiva conceptual a mano" onload="this.classList.add('loaded')">
+                <figcaption>🏛️ Perspectiva conceptual a mano (Ilustración Arquitectónica).</figcaption>
+            </figure>
+            <figure>
+                <img src="img/proyecto_pe_01.webp" alt="Renderizado diurno sobre base manual" onload="this.classList.add('loaded')">
+                <figcaption>🏛️ Renderizado sobre base manual — diurno.</figcaption>
+            </figure>
+            <figure>
+                <img src="img/proyecto_pe_02.webp" alt="Renderizado nocturno sobre base manual" onload="this.classList.add('loaded')">
+                <figcaption>🏛️ Renderizado sobre base manual — nocturno.</figcaption>
+            </figure>
+        </div>
+<!-- ===== FIN VISUALIZACIONES 3D ===== -->
+
+
+        <!-- ===== CTA: Contacto después de proyectos ===== -->
+        <div class="g-cta" style="text-align:center; margin-top:44px; padding-top:24px; border-top:1px solid var(--border-accent);">
+            <div style="font-family:'Libre Baskerville',Georgia,serif; font-size:1.25rem; color:var(--h1-color); margin-bottom:6px; transition: color 0.4s;">¿Le gustó algún proyecto?</div>
+            <div style="font-size:.9rem; color:var(--text-muted); margin-bottom:22px; transition: color 0.4s;">Conversemos cómo podemos materializar una idea similar para usted.</div>
+            <a href="contacto.html" class="btn" style="display:inline-block; background:var(--accent); color:#fff; padding:12px 32px; border-radius:3px; font-size:.92rem; font-weight:500; text-decoration:none; transition:background .25s,transform .15s,box-shadow .25s; box-shadow:0 2px 8px rgba(51,102,204,.2);">
+                Ir a Contacto →
+            </a>
+        </div>
+
+        <footer class="wiki-footer">
+            © 2026 Mario Molina - Diseño y Construcción - Todos los derechos reservados · Buenos Aires, Argentina 
+        </footer>
+
+    </div>
+</div>
+
+<script>
+    (function() {
+        const toggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        function getPreferredTheme() {
+            const saved = localStorage.getItem('theme');
+            if (saved) return saved;
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        function applyTheme(theme) {
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        }
+        applyTheme(getPreferredTheme());
+        toggle.addEventListener('click', function() {
+            const current = html.getAttribute('data-theme');
+            applyTheme(current === 'dark' ? 'light' : 'dark');
+        });
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+            if (!localStorage.getItem('theme')) applyTheme(e.matches ? 'dark' : 'light');
+        });
+    })();
+</script>
+
+</body>
+</html>
