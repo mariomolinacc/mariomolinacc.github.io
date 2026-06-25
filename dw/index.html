@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mario Molina | Gestión Digital y Visualización 3D</title>
+  <style>
+    /* --- MODO OSCURO FIJO (Basado en tu referencia) --- */
+    :root {
+      --primary-dark: #12141a;
+      --section-grey: #1e222c;
+      --bg-white: #1a1c22;
+      --bg-light: #22252e;
+      --accent-copper: #B57D45;
+      --accent-copper-hover: #CA9E72;
+      --text-dark: #e0e0e0;
+      --text-muted: #a0a0a0;
+      --text-light: #FFFFFF;
+      --shadow-btn: 7px 7px 4px -5px rgba(0, 0, 0, 0.6);
+      --visorgreen: #007acc;
+      --glass-blur: 8px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Trebuchet MS', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-white);
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+
+    a { color: var(--accent-copper); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: var(--accent-copper-hover); }
+
+    /* --- NAV --- */
+    .main-nav {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+      background-color: var(--primary-dark); padding: 0 40px; height: 70px;
+      display: flex; justify-content: space-between; align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease;
+    }
+    
+    .nav-logo-link { display: flex; align-items: center; gap: 12px; }
+    .nav-logo-img { height: 50px; width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+    .nav-logo-text { font-size: 1rem; font-weight: bold; color: var(--text-light); }
+    .nav-logo-text span { color: var(--accent-copper); }
+
+    nav ul { list-style: none; display: flex; gap: 30px; }
+    nav a { color: var(--text-light); font-weight: normal; font-size: 0.9rem; transition: color 0.2s; letter-spacing: 0.5px; }
+    nav a:hover { color: var(--accent-copper-hover); }
+    .menu-icon { display: none; font-size: 2rem; color: #fff; cursor: pointer; }
+
+    /* --- HERO --- */
+    .hero {
+      margin-top: 0; 
+      min-height: 100vh; 
+      height: auto; 
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      text-align: center;
+      color: var(--text-light);
+      background-image: url('building.jpg'); 
+      background-size: cover;
+      background-position: center top; 
+      background-attachment: fixed;
+      position: relative;
+      border-bottom: 5px solid var(--accent-copper);
+      padding-top: 70px; 
+      padding-bottom: 0; 
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(to bottom, rgba(18, 20, 26, 0.75) 0%, rgba(18, 20, 26, 0.80) 100%);
+      z-index: 1;
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      max-width: 800px;
+      padding: 40px 20px 0 20px; 
+      width: 100%;
+    }
+    
+    .hero-logo { 
+      width: 180px; 
+      margin-bottom: 5px; 
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.7)); 
+    }
+
+    .hero h1 { font-size: 3.5rem; margin-bottom: 1px; letter-spacing: 1px; }
+    .hero h2 { font-size: 1.8rem; color: var(--accent-copper); font-weight: normal; letter-spacing: 3px; margin-bottom: 5px; }
+    .hero .profesion { font-size: 1.2rem; max-width: 600px; margin: 0 auto 40px auto; line-height: 1.6; opacity: 0.9; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+    
+    .botones-hero { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin-top: 30px; margin-bottom: 0; }
+    .btn {
+      display: inline-block; padding: 12px 30px; background-color: var(--accent-copper); 
+      color: var(--text-light); font-size: 1rem; font-weight: bold; border-radius: 4px;
+      box-shadow: var(--shadow-btn); transition: all 0.2s; border: none; cursor: pointer;
+    }
+    .btn:hover { background-color: var(--accent-copper-hover); color: #fff; transform: translateY(-2px); }
+    .btn-outline { background: transparent; border: 2px solid var(--text-light); color: var(--text-light); box-shadow: none; }
+    .btn-outline:hover { background: var(--text-light); color: var(--primary-dark); }
+
+    /* ENVOLTORIO DEL BANNER CON DEGRADADO */
+    .bim-flow-wrapper {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding-bottom: 100px; 
+    }
+    .bim-flow-wrapper::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 250px; 
+      background: linear-gradient(to bottom, transparent 0%, rgba(30, 34, 44, 0.85) 100%);
+      z-index: 3;
+      pointer-events: none; 
+    }
+
+    /* BANNER MARCAS */
+    .marcas-banner { 
+      position: relative; 
+      width: 100%; 
+      background-color: rgba(30, 34, 44, 0.85); 
+      backdrop-filter: blur(8px); 
+      padding: 20px 0; 
+      overflow: hidden; 
+      border-top: 1px solid rgba(255,255,255,0.1); 
+      z-index: 4; 
+      margin-top: -80px; 
+    }
+    .linea-fija { text-align: center; font-size: 1rem; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 1px; }
+    .linea-animada-container { height: 30px; overflow: hidden; }
+    .marcas-scroll { display: flex; width: max-content; animation: scroll-left 20s linear infinite; }
+    .marcas-grupo span { font-size: 1.3rem; font-weight: 700; color: var(--text-light); padding: 0 30px; }
+    @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+    /* SECCIONES GENERALES */
+    .section { padding: 80px 40px; max-width: 1200px; margin: 0 auto; }
+    .section-full-dark { background-color: var(--primary-dark); color: var(--text-light); }
+    .section-full-grey { background-color: var(--section-grey); color: var(--text-light); }
+    .section h2 { font-size: 2.5rem; margin-bottom: 40px; font-family: Tahoma, Geneva, sans-serif; border-bottom: 3px solid var(--accent-copper); display: inline-block; padding-bottom: 10px; text-align: center; }
+    .section-title-container { text-align: center; margin-bottom: 50px; }
+
+    /* QUÉ HAGO */
+    .cards-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+    .card { 
+      background: rgba(255,255,255,0.05); 
+      padding: 30px; border-radius: 4px; 
+      border-left: 5px solid var(--accent-copper);
+      transition: background 0.3s, transform 0.3s;
+      text-align: left;
+    }
+    .card:hover { background: rgba(255,255,255,0.1); transform: translateY(-5px); }
+    .card svg { width: 40px; height: 40px; fill: var(--accent-copper); margin-bottom: 20px; }
+    .card h3 { color: var(--text-light); margin-bottom: 10px; font-size: 1.2rem; }
+    .card p { color: var(--text-muted); }
+
+    /* FRASE EJE */
+    .frase-eje-section { 
+      text-align: center; 
+      padding: 80px 20px; 
+      background-color: var(--bg-light); 
+      border-top: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .frase-eje-section p { font-size: 1.5rem; font-style: italic; line-height: 1.5; color: var(--accent-copper); max-width: 900px; margin: 0 auto; }
+
+    /* SOBRE MÍ */
+    .sobre-mi-layout { display: flex; gap: 50px; align-items: flex-start; }
+    .sobre-mi-texto { flex: 2; }
+    .sobre-mi-texto p { font-size: 1.1rem; line-height: 1.8; margin-bottom: 20px; }
+    .sobre-mi-texto .cita { 
+      border-left: 4px solid var(--accent-copper); 
+      padding-left: 20px; 
+      margin-bottom: 30px; 
+      font-style: italic; 
+      color: var(--text-muted); 
+    }
+    .audiencia { 
+      flex: 1; 
+      background: rgba(0, 0, 0, 0.3); 
+      padding: 25px; 
+      border-radius: 4px; 
+      border: 1px solid rgba(255,255,255,0.05); 
+    }
+    .audiencia h4 { color: var(--accent-copper); margin-bottom: 15px; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; }
+    .audiencia ul { list-style: none; }
+    .audiencia ul li { margin-bottom: 10px; padding-left: 20px; position: relative; color: var(--text-muted); }
+    .audiencia ul li::before { content: '•'; color: var(--accent-copper); position: absolute; left: 0; font-weight: bold; }
+
+    /* SERVICIOS */
+    .servicio-bloque {
+      background: rgba(255,255,255,0.05);
+      padding: 40px;
+      border-radius: 4px;
+      margin-bottom: 30px;
+      border-left: 5px solid var(--accent-copper);
+      transition: background 0.3s;
+    }
+    .servicio-bloque:hover { background: rgba(255,255,255,0.08); }
+    .servicio-bloque h3 { color: var(--text-light); font-size: 1.5rem; margin-bottom: 15px; }
+    .servicio-bloque > p { margin-bottom: 25px; color: var(--text-muted); }
+    .servicio-lista {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .servicio-item { display: flex; align-items: center; gap: 10px; color: var(--text-dark); }
+    .servicio-item svg { width: 10px; height: 10px; fill: var(--accent-copper); flex-shrink: 0; }
+    .destacado { 
+      margin-top: 30px; 
+      padding: 20px; 
+      background: rgba(0, 0, 0, 0.3); 
+      border-radius: 4px; 
+      font-weight: 600; 
+      color: var(--accent-copper); 
+      text-align: center; 
+      border: 1px dashed rgba(255,255,255,0.1); 
+    }
+
+    /* CONTACTO */
+    .contacto-section { position: relative; background-color: var(--section-grey); color: var(--text-light); overflow: hidden; }
+    .contacto-content { position: relative; z-index: 2; padding: 80px 40px; max-width: 1200px; margin: 0 auto; text-align: center; }
+    .contacto-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; max-width: 1000px; margin: 0 auto; }
+    .contacto-item { display: flex; flex-direction: column; align-items: center; gap: 10px; background: rgba(0, 0, 0, 0.6); padding: 25px; border-radius: 4px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.05); }
+    .contacto-item svg { width: 32px; height: 32px; fill: var(--accent-copper); }
+    .contacto-item a, .contacto-item span { color: var(--text-muted); transition: color 0.3s; font-size: 0.95rem; }
+    .contacto-item a:hover { color: var(--accent-copper-hover); }
+
+    footer { background-color: var(--primary-dark); color: var(--text-muted); text-align: center; padding: 40px 20px; border-top: 5px solid var(--accent-copper); }
+
+    /* --- BOTÓN FLOTANTE WHATSAPP --- */
+    .wa-flotante {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .wa-flotante a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 62px;
+      height: 62px;
+      background-color: #25D366;
+      border-radius: 50%;
+      box-shadow:
+        0 4px 18px rgba(37, 211, 102, 0.45),
+        0 2px 6px rgba(0, 0, 0, 0.3);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.2s ease;
+      position: relative;
+      overflow: visible;
+    }
+
+    .wa-flotante a:hover {
+      transform: scale(1.1);
+      box-shadow:
+        0 6px 24px rgba(37, 211, 102, 0.55),
+        0 3px 8px rgba(0, 0, 0, 0.35);
+      background-color: #20BD5A;
+    }
+
+    .wa-flotante a:active {
+      transform: scale(0.95);
+    }
+
+    /* Ícono WhatsApp (SVG inline) */
+    .wa-flotante a svg {
+      width: 34px;
+      height: 34px;
+      fill: #fff;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Anillo de pulso */
+    .wa-flotante a::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: #25D366;
+      z-index: 1;
+      animation: wa-pulso 2.2s ease-out infinite;
+    }
+
+    @keyframes wa-pulso {
+      0% {
+        transform: scale(1);
+        opacity: 0.5;
+      }
+      70% {
+        transform: scale(1.8);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1.8);
+        opacity: 0;
+      }
+    }
+
+    /* Tooltip */
+    .wa-tooltip {
+      position: absolute;
+      right: 74px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #1a1c22;
+      color: #e0e0e0;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 6px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      transform: translateY(-50%) translateX(8px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .wa-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: -6px;
+      transform: translateY(-50%) rotate(45deg);
+      width: 12px;
+      height: 12px;
+      background: #1a1c22;
+      border-right: 1px solid rgba(255,255,255,0.08);
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .wa-flotante:hover .wa-tooltip {
+      opacity: 1;
+      transform: translateY(-50%) translateX(0);
+    }
+
+    /* Ocultar pulso si el usuario prefiere movimiento reducido */
+    @media (prefers-reduced-motion: reduce) {
+      .wa-flotante a::before {
+        animation: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .menu-icon { display: block; }
+      nav ul { display: none; flex-direction: column; position: absolute; top: 70px; left: 0; width: 100%; background: var(--primary-dark); padding: 20px; gap: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+      nav ul.active { display: flex; }
+      
+      .hero { background-attachment: scroll; background-position: center; padding-top: 90px; }
+      .hero-content { padding-top: 0; }
+      .hero-logo { width: 130px; } 
+      .hero h1 { font-size: 2.5rem; }
+      .hero h2 { font-size: 1.4rem; }
+      .hero .profesion { font-size: 1.05rem; }
+      .bim-flow-wrapper { padding-bottom: 80px; }
+      
+      .sobre-mi-layout { flex-direction: column; }
+      
+      .nav-logo-text { font-size: 0.85rem; }
+      .nav-logo-img { height: 40px; }
+
+      .contacto-content { padding: 60px 20px; }
+      .section { padding: 60px 20px; }
+      .section h2 { font-size: 2rem; }
+
+      /* Ajuste botón flotante en móvil */
+      .wa-flotante {
+        bottom: 20px;
+        right: 20px;
+      }
+      .wa-flotante a {
+        width: 56px;
+        height: 56px;
+      }
+      .wa-flotante a svg {
+        width: 30px;
+        height: 30px;
+      }
+      .wa-tooltip {
+        display: none; /* En móvil el tooltip queda fuera, se oculta */
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="main-nav">
+  <a href="#inicio" class="nav-logo-link">
+    <img src="mi_logo.png" alt="Logo MIM" class="nav-logo-img">
+    <div class="nav-logo-text">Gestión <span>Digital</span></div>
+  </a>
+  <div class="menu-icon" id="menuToggle">≡</div>
+  <ul id="navMenu">
+    <li><a href="#inicio">Inicio</a></li>
+    <li><a href="#que-hago">Qué hago</a></li>
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#sobre-mi">Sobre mí</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+</nav>
+
+<!-- HERO FULLSCREEN -->
+<section class="hero" id="inicio">
+  <div class="hero-content">
+    <img src="mi_logo.png" alt="Logo MIM" class="hero-logo">
+    
+    <h1>Mario Molina</h1>
+    <h2>Gestor Digital de Proyectos</h2>
+ 
+    <h3>Diseño y Desarrollo Web Especializado<br>
+        Visualizaciones Arquitectónicas Web 3D y 360° | Comunicación de proyectos</h3>
+     &nbsp; 
+<!-- 
+    <p class="profesion">"Transformo documentación técnica, modelos digitales y archivos históricos en experiencias visuales que facilitan la comprensión, comunicación y preservación del conocimiento profesional."</p>
+-->     
+    <div class="botones-hero">
+      <a href="#servicios" class="btn">Mis servicios</a>
+      <a href="https://wa.me/5492345446330" target="_blank" class="btn btn-outline">Solicitar Consulta</a>
+    </div>
+  </div>
+
+  <!-- Envoltorio con gradiente desvanecido -->
+  <div class="bim-flow-wrapper"></div>
+
+  <!-- BANNER DE MARCAS -->
+  <div class="marcas-banner">
+    <div class="linea-fija">MÁS DE 35 AÑOS DE TRAYECTORIA DESARROLLANDO PROYECTOS PARA EMPRESAS NOTABLES COMO:</div>
+    <div class="linea-animada-container">
+      <div class="marcas-scroll" aria-hidden="true">
+        <div class="marcas-grupo"><span>Arcor</span><span>Philips</span><span>Whirlpool</span><span>Peabody</span><span>Philco</span><span>Midas</span></div>
+        <div class="marcas-grupo"><span>Arcor</span><span>Philips</span><span>Whirlpool</span><span>Peabody</span><span>Philco</span><span>Midas</span></div>
+        <div class="marcas-grupo"><span>Arcor</span><span>Philips</span><span>Whirlpool</span><span>Peabody</span><span>Philco</span><span>Midas</span></div>
+        <div class="marcas-grupo"><span>Arcor</span><span>Philips</span><span>Whirlpool</span><span>Peabody</span><span>Philco</span><span>Midas</span></div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUÉ HAGO -->
+<section class="section-full-grey" id="que-hago">
+  <div class="section">
+    <div class="section-title-container">
+      <h2>Qué hago</h2>
+    </div>
+    <h3>"Transformo documentación técnica, modelos digitales y archivos históricos en experiencias visuales que facilitan la comprensión, comunicación y preservación del conocimiento profesional."</h3>
+<p>--</p>
+&nbsp;
+ 
+
+    <div class="cards-container">
+      <div class="card">
+        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+        <h3>Comunicación de Proyectos</h3>
+        <p>Transformación de planos, renders y modelos BIM en herramientas de presentación para clientes, inversores y equipos técnicos.</p>
+      </div>
+      <div class="card">
+        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12zM6 10h2v2H6zm0 4h2v2H6zm4-4h8v2h-8zm0 4h8v2h-8z"/></svg>
+        <h3>Diseño Web 3D/360</h3>
+        <p>Recorridos 3D, visualización web y plataformas interactivas accesibles desde cualquier navegador.</p>
+      </div>
+      <div class="card">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 8v14h8v-6h4v6h8V8L12 2zm0 2.4L20 9v11h-4v-6H8v6H4V9l8-4.6z"/></svg>
+        <h3>Patrimonio Profesional</h3>
+        <p>Rescate, restauración y puesta en valor de documentación histórica desarrollada antes de la era digital.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FRASE EJE -->
+<section class="frase-eje-section">
+  <p>"Conecto décadas de experiencia técnica con herramientas digitales contemporáneas para comunicar proyectos y preservar conocimiento profesional."</p>
+</section>
+
+<!-- SOBRE MÍ -->
+<section class="section-full-dark" id="sobre-mi">
+  <div class="section">
+    <div class="section-title-container">
+      <h2>Sobre mí</h2>
+    </div>
+    <div class="sobre-mi-layout">
+      <div class="sobre-mi-texto">
+        <h3 style="color: var(--text-light); margin-bottom: 15px; font-size: 1.8rem;">Mario Molina</h3>
+        <p class="cita">"Constructor Civil especializado en Gestión Digital de Proyectos e integración de tecnologías BIM, CAD, GIS y Geomática. Incluye el desarrollo web de presentaciones visuales interactivas en 3D/360° y la restauración digital del patrimonio arquitectónico e histórico (HBIM)."</p>
+        <p>Profesional con más de 35 años de experiencia en proyectos de ingeniería y construcción, diseño y representaciones visuales. Especialista en la transición tecnológica desde el dibujo tradicional hacia CAD, BIM e inteligencia artificial.</p>
+        <p>Ofrece servicios de comunicación de proyectos mediante tecnologías 3D y plataformas web, además de la recuperación, restauración y digitalización de documentación histórica técnica para arquitectos, ingenieros y empresas del sector.</p>
+      </div>
+      <div class="audiencia">
+        <h4>A quién ayudo</h4>
+        <ul>
+          <li>Arquitectos</li>
+          <li>Ingenieros</li>
+          <li>Estudios profesionales</li>
+          <li>Desarrolladores</li>
+          <li>Empresas industriales</li>
+          <li>Inversores</li>
+          <li>Colegios profesionales</li>
+          <li>Instituciones</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICIOS -->
+<section class="section-full-grey" id="servicios">
+  <div class="section">
+    <div class="section-title-container">
+      <h2>Mis Servicios</h2>
+    </div>
+    
+    <div class="servicio-bloque">
+      <h3>1. Diseño y Desarrollo Web para Comunicación de Proyectos</h3>
+      <p>Ayudo a arquitectos, ingenieros, desarrolladores, empresas e inversores a comunicar proyectos de manera clara, interactiva y profesional mediante tecnologías BIM, visualización 3D y plataformas web.</p>
+      <div class="servicio-lista">
+        <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Visualización Web 3D y recorridos 360°</div>
+        <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Desarrollo Web interactivo especializado</div>
+        <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Presentaciones digitales para marketing e inversores</div>
+        <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Gemelos Digitales BIM - Auditoría y optimización</div>
+        <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Experiencias interactivas para arquitectura e industria</div>
+      </div>
+    </div>
+
+    <div class="servicio-bloque">
+      <h3>2. Rescate Digital de Patrimonio Profesional</h3>
+      <p>Servicio especializado en la recuperación, restauración y puesta en valor de documentación histórica desarrollada en soporte papel antes de la era digital. Orientado a profesionales y entidades que desean preservar y difundir décadas de trabajo técnico y proyectual.</p>
+      <div class="servicio-lista">
+        <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Digitalización y preservación de documentación histórica</div>
+        <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Restauración de perspectivas dibujadas a mano</div>
+        <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Recuperación de planos en papel vegetal, heliográficos y diazo</div>
+        <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Reentintado digital y vectorización</div>
+        <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Reconstrucción gráfica</div>
+        <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Generación de renders desde documentación histórica</div>
+        <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Preparación de material para portfolios y exposiciones</div>
+      </div>
+      <div class="destacado">
+        Más que una digitalización, el objetivo es rescatar el valor técnico, gráfico e histórico de cada proyecto, permitiendo que obras desarrolladas décadas atrás vuelvan a formar parte activa del patrimonio profesional de sus autores.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section class="contacto-section" id="contacto">
+  <div class="contacto-content">
+    <h2>Contacto</h2>
+    <p style="margin-bottom: 40px; max-width: 800px; margin-left: auto; margin-right: auto; color: var(--text-muted);">Uno la experiencia de más de 35 años en proyectos de construcción, diseño y representación con herramientas BIM, CAD y Web 3D/360.</p>
+    <div class="contacto-info">
+      <div class="contacto-item">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        <a href="https://wa.me/5492345446330" target="_blank">+54 9 2345 44 6330</a>
+      </div>
+      <div class="contacto-item">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        <a href="https://mariomolinacc.github.io" target="_blank">mariomolinacc.github.io</a>
+      </div>
+      <div class="contacto-item">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        <a href="https://github.com/mariomolinacc" target="_blank">mariomolinacc</a>
+      </div>
+      <div class="contacto-item">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        <span>Calle 11, N°1065, 25 de Mayo, (BA) 🇦🇷</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; <script>document.write(new Date().getFullYear())</script> Mario Molina | Gestión Digital de Proyectos · Todos los derechos reservados · 25 de Mayo, Buenos Aires · Argentina</p>
+ <a href="https://mariomolinacc.github.io" target="_blank">Design_MM</a>
+</footer>
+
+<!-- BOTÓN FLOTANTE DE WHATSAPP -->
+<div class="wa-flotante" aria-label="Contactar por WhatsApp">
+  <span class="wa-tooltip">Escribime por WhatsApp</span>
+  <a href="https://wa.me/5492345446330?text=Hola%20Mario%2C%20te%20contacto%20desde%20tu%20web." target="_blank" rel="noopener noreferrer">
+    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16.004 0h-.008C7.174 0 0 7.176 0 16.004c0 3.5 1.132 6.744 3.054 9.378L1.056 31.2l6.042-1.964c2.526 1.676 5.536 2.656 8.772 2.656h.008C24.826 31.892 32 24.714 32 15.888 32 7.06 24.826 0 16.004 0zm9.314 22.61c-.39 1.1-1.932 2.014-3.17 2.28-.846.18-1.95.324-5.668-1.218-4.758-1.97-7.822-6.81-8.064-7.13-.234-.318-1.918-2.556-1.918-4.874s1.216-3.454 1.648-3.928c.432-.474.944-.594 1.26-.594.316 0 .632.002.908.016.292.016.684-.11 1.068.816.394.946 1.34 3.266 1.458 3.502.118.236.196.512.04.828-.158.316-.236.512-.472.788-.236.276-.498.616-.71.828-.236.236-.482.492-.206.964.274.474 1.222 2.016 2.624 3.266 1.804 1.606 3.324 2.104 3.798 2.34.474.236.75.196 1.026-.118.274-.316 1.182-1.376 1.498-1.85.316-.474.632-.394 1.066-.236.434.158 2.744 1.294 3.218 1.53.474.236.79.354.908.55.118.196.118 1.14-.272 2.24z"/>
+    </svg>
+  </a>
+</div>
+
+<script>
+  const menuToggle = document.getElementById('menuToggle');
+  const navMenu = document.getElementById('navMenu');
+  menuToggle.addEventListener('click', () => { navMenu.classList.toggle('active'); });
+  document.querySelectorAll('#navMenu a').forEach(link => {
+    link.addEventListener('click', () => { navMenu.classList.remove('active'); });
+  });
+</script>
+
+</body>
+</html>
