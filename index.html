@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mario Molina | Soluciones Profesionales</title>
+    <title>Mario Molina | Enlaces</title>
     <style>
         :root {
             --primary-dark: #12141a;
@@ -19,10 +19,9 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
 
-
         body {
             font-family: 'Trebuchet MS', Tahoma, Geneva, Verdana, sans-serif;
-            /*'building.jpg' por la ruta o URL de tu imagen */
+            /* Fondo de pantalla */
             background-image: linear-gradient(rgba(18, 20, 26, 0.85), rgba(18, 20, 26, 0.50)), url('building.jpg');
             background-size: cover;
             background-position: center;
@@ -33,32 +32,47 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            align-items: center; /* Centra todo el contenido horizontalmente */
         }
 
-
-        /* --- ENCABEZADO --- */
-        .brand-header {
-            padding: 60px 40px 40px;
+        /* Contenedor principal tipo Linktree */
+        .bio-container {
+            width: 100%;
+            max-width: 680px; /* Ancho estándar para estos sitios */
+            padding: 40px 24px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            flex: 1;
+        }
+
+        /* --- ENCABEZADO --- */
+        .brand-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
             text-align: center;
+            margin-bottom: 20px;
         }
 
         .brand-header img {
-            height: 90px;
-            width: auto;
+            height: 100px;
+            width: 100px;
+            object-fit: cover;
+            border-radius: 50%; /* Logo circular estilo perfil */
+            border: 3px solid var(--accent-copper);
             filter: drop-shadow(0 4px 10px rgba(0,0,0,0.7));
         }
 
         .brand-header h1 {
-            font-size: 2.8rem;
+            font-size: 2.4rem;
             color: var(--text-light);
-            letter-spacing: 4px;
+            letter-spacing: 3px;
             font-weight: bold;
             line-height: 1;
             text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            margin-top: 10px;
         }
 
         .brand-header h1 span {
@@ -66,17 +80,9 @@
         }
 
         .brand-header .subtitle {
-            font-size: 1.2rem;
-            color: var(--text-muted);
-            letter-spacing: 2px;
-   /* ---   text-transform: uppercase;   --- */
-        }
-
-        .brand-header .tagline {
             font-size: 1.1rem;
             color: var(--text-muted);
             letter-spacing: 1px;
-            margin-top: 4px;
         }
 
         /* --- LINEA DORADA --- */
@@ -84,150 +90,169 @@
             width: 120px;
             height: 3px;
             background: linear-gradient(90deg, transparent, var(--accent-copper), transparent);
-            margin: 30px auto;
+            margin: 25px 0 35px;
             border-radius: 2px;
         }
 
-        /* --- TARJETAS --- */
-        .cards-container {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            gap: 40px;
-            padding: 0 40px 60px;
-            flex-wrap: wrap;
-        }
-
-        .card {
+        /* --- LISTA DE ENLACES --- */
+        .links-list {
+            width: 100%;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            text-align: center;
+            gap: 18px; /* Espacio entre botones */
+        }
+
+        .link-item {
+            display: block;
             text-decoration: none;
             color: var(--text-light);
-            max-width: 440px;
-            width: 100%;
             background: var(--bg-white);
-            padding: 50px 35px;
-            border-radius: 8px;
+            padding: 20px 25px;
+            border-radius: 12px;
             border: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-            transition: border-color 0.4s ease, transform 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        .card:hover {
+        .link-item:hover {
+            transform: translateY(-3px);
             border-color: var(--accent-copper);
-            transform: translateY(-4px);
+            background: linear-gradient(145deg, var(--bg-white), #22252e);
         }
 
-        .card h2 {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            font-weight: normal;
-            border-bottom: 2px solid var(--accent-copper);
-            display: inline-block;
-            padding-bottom: 10px;
-            line-height: 1.3;
-        }
-
-        .card p {
-            font-size: 1.05rem;
-            color: var(--text-muted);
-            margin-bottom: 35px;
-            line-height: 1.7;
-        }
-
-        .btn-enter {
-            display: inline-block;
-            padding: 14px 35px;
-            background-color: transparent;
-            color: var(--text-light);
-            text-transform: uppercase;
+        .link-item h2 {
+            font-size: 1.2rem;
+            margin-bottom: 6px;
             font-weight: bold;
-            font-size: 1rem;
-            letter-spacing: 1px;
-            transition: all 0.3s;
-            border: 2px solid var(--accent-copper);
-            box-shadow: var(--shadow-btn);
+            color: var(--text-light);
         }
 
-        .card:hover .btn-enter {
+        .link-item p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Efecto de relleno al pasar el mouse por encima del botón */
+        .link-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
             background-color: var(--accent-copper);
-            color: var(--primary-dark);
+            transition: width 0.3s ease;
+        }
+
+        .link-item:hover::before {
+            width: 100%;
+            opacity: 0.1; {/* Sutil capa de color cobre al hacer hover */}
+        }
+
+        /* --- BOTON FLOTANTE WHATSAPP --- */
+        .whatsapp-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25D366;
+            color: white;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+        
+        .whatsapp-btn:hover {
+            transform: scale(1.1);
         }
 
         /* --- FOOTER --- */
         .hub-footer {
             text-align: center;
-            padding: 20px;
-            background: var(--primary-dark);
+            padding: 30px 20px;
+            width: 100%;
+            background: rgba(18, 20, 26, 0.8);
             border-top: 1px solid rgba(255,255,255,0.05);
             color: var(--text-muted);
             font-size: 0.85rem;
+            margin-top: 40px;
+        }
+        
+        .hub-footer a {
+            color: var(--accent-copper);
+            text-decoration: none;
         }
 
         /* --- MOVIL --- */
         @media (max-width: 768px) {
-            .brand-header {
-                padding: 40px 20px 30px;
-            }
-            .brand-header img {
-                height: 60px;
+            .bio-container {
+                padding: 30px 20px;
             }
             .brand-header h1 {
                 font-size: 2rem;
                 letter-spacing: 2px;
             }
             .brand-header .subtitle {
-                font-size: 0.85rem;
+                font-size: 1rem;
             }
-            .cards-container {
-                gap: 25px;
-                padding: 0 20px 40px;
+            .link-item {
+                padding: 18px 20px;
             }
-            .card {
-                padding: 35px 25px;
-            }
-            .card h2 {
-                font-size: 1.5rem;
+            .link-item h2 {
+                font-size: 1.1rem;
             }
         }
     </style>
 </head>
 <body>
 
-    <header class="brand-header">
-        <img src="mi_logo.png" alt="Logo Mario Molina">
-        <h1>Mario <span>Molina</span></h1>
-        <p class="subtitle">Gestor Digital de Proyectos <br>Soluciones de Diseño y Tecnología</p>
-  <!-- ---       <p class="tagline">Soluciones de Diseño y Tecnología</p>  -->
-    </header>
+    <div class="bio-container">
+        <header class="brand-header">
+            <img src="mi_logo.png" alt="Logo Mario Molina">
+            <h1>Mario <span>Molina</span></h1>
+            <p class="subtitle">Gestor Digital de Proyectos <br>Soluciones de Diseño y Tecnología</p>
+        </header>
 
-    <div class="golden-line"></div>
+        <div class="golden-line"></div>
 
-    <main class="cards-container">
-        <a href="dw/index.html" class="card">
-            <h2>Diseño y Desarrollo Web Especializado</h2>
-            <p>Diseño y visualizaciones web 3D/360. Restauración digital de planos.</p>
-            <span class="btn-enter">Ingresar al sitio</span>
-        </a>
+        <main class="links-list">
+            <!-- Enlace 1 -->
+            <a href="dw/index.html" class="link-item">
+                <h2>Diseño y Desarrollo Web</h2>
+                <p>Visualizaciones web 3D/360. Restauración digital de planos.</p>
+            </a>
 
-        <a href="cc/index.html" class="card">
-            <h2>Proyecto y Dirección de Obras</h2>
-            <p>Soluciones profesionales en diseño, gestión y dirección de obra civil.</p>
-            <span class="btn-enter">Ingresar al sitio</span>
-        </a>
-    </main>
+            <!-- Enlace 2 -->
+            <a href="cc/index.html" class="link-item">
+                <h2>Proyecto y Dirección de Obras</h2>
+                <p>Soluciones en diseño, gestión y dirección de obra civil.</p>
+            </a>
+            
+            <!-- Enlace 3 (Opcional: Contacto directo) -->
+            <a href="https://wa.me/5492345446330?text=Hola%20Mario,%20quería%20hacerle%20una%20consulta." target="_blank" class="link-item">
+                <h2>Consultar por WhatsApp</h2>
+                <p>Haz clic aquí para enviarme un mensaje directo.</p>
+            </a>
+        </main>
+    </div>
 
-   <!-- Botón de WhatsApp: círculo verde con W -->
-    <a href="https://wa.me/5491123456789?text=Hola%20Mario,%20quería%20hacerle%20una%20consulta." class="whatsapp-btn" target="_blank" aria-label="Contactar por WhatsApp">📱</a>
-
-
+    <!-- Botón flotante de WhatsApp -->
+    <a href="https://wa.me/5492345446330text=Hola%20Mario,%20quería%20hacerle%20una%20consulta." class="whatsapp-btn" target="_blank" aria-label="Contactar por WhatsApp">💬</a>
 
     <footer class="hub-footer">
         <p>&copy; <script>document.write(new Date().getFullYear())</script> Mario Molina · Todos los derechos reservados · 25 de Mayo, Buenos Aires · Argentina<br>
- <a href="https://mariomolinacc.github.io" target="_blank">🌐 Design by MM</a>   </p>
+        <a href="https://mariomolinacc.github.io" target="_blank">🌐 Design by MM</a></p>
     </footer>
 
 </body>
