@@ -395,7 +395,7 @@ body {
 }
 
 /* =========================================
-   PIE DE PÁGINA (FOOTER)
+   PIE DE PÁGINA (FOOTER) - CENTRADO
    ========================================= */
 .site-footer {
     padding: 0 5%;
@@ -410,27 +410,28 @@ body {
 
 .footer-content {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-    padding: 10px 0;
+    flex-direction: column; /* Apila los elementos verticalmente */
+    align-items: center;    /* Centra horizontalmente todo */
+    justify-content: center; /* Centra verticalmente todo */
+    gap: 10px;
+    padding: 10px 0 20px;
+    text-align: center;     /* Centra el texto por si alguna línea es larga */
 }
 
 .footer-text {
     margin: 0;
-    flex: 1;
-    min-width: 250px;
     display: flex;
     align-items: center;
+    justify-content: center; /* Centra el logo y el texto de copyright */
     color: var(--text-muted);
     font-size: 0.9rem;
+    flex-wrap: wrap;        /* Permite que el texto baje de línea en pantallas muy pequeñas */
+    gap: 10px;
 }
 
 .footer-logo {
     height: 25px;
     width: auto;
-    margin-right: 10px;
     opacity: 0.7;
 }
 
@@ -440,7 +441,6 @@ body {
     opacity: 0.5;
     font-family: var(--font-sans);
     text-align: center;
-    min-width: 80px;
 }
 
 .footer-firma a {
