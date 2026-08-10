@@ -50,17 +50,18 @@
     <div class="top-bar">
         <div class="lang-selector">
             <select id="lang-select">
-                <option value="es">Español</option>
                 <option value="en">English</option>
+                <option value="es">Español</option>
             </select>
         </div>
     </div>
 
     <h1 id="title-h1">Mercado de Pilotos - GPRO</h1>
     
-    <div class="file-input" id="drop-zone">
+    <!-- Zona de carga oculta visualmente (display: none) -->
+    <div class="file-input" id="drop-zone" style="display: none;">
         <p id="drop-text">Arrastra aquí tu archivo CSV o haz clic para seleccionarlo</p>
-        <input type="file" id="csv-file" accept=".csv" style="display: none;">
+        <input type="file" id="csv-file" accept=".csv">
     </div>
     
     <div id="status-message" class="status-message">Esperando archivo CSV...</div>
@@ -103,13 +104,13 @@
         es: {
             title: "Mercado de Pilotos - GPRO",
             dropText: "Arrastra aquí tu archivo CSV o haz clic para seleccionarlo",
-            waiting: "Esperando archivo CSV...",
+            waiting: "Cargando base de datos de pilotos...",
             waitingError: "No se cargó automáticamente. Por favor, arrastra tu archivo CSV.",
             clearBtn: "Limpiar Filtros",
             prevBtn: "&larr; Anterior",
             nextBtn: "Siguiente &rarr;",
             emptyFile: "Error: El archivo está vacío.",
-            loadSuccess: (file, count) => `✅ Archivo "${file}" cargado. ${count.toLocaleString('es-ES')} pilotos encontrados.`,
+            loadSuccess: (file, count) => `✅ Base de datos cargada. ${count.toLocaleString('es-ES')} pilotos encontrados.`,
             noDrivers: "No hay pilotos que cumplan los criterios.",
             noFile: "Ningún archivo cargado todavía.",
             pageInfo: (start, end, total, current, total_pages) => `Mostrando ${start} - ${end} de ${total.toLocaleString('es-ES')} pilotos (Pág. ${current} de ${total_pages})`,
@@ -118,7 +119,7 @@
                 { id: 'oa', label: 'General (OA)' }, { id: 'con', label: 'Concentración' },
                 { id: 'tal', label: 'Talento' }, { id: 'exp', label: 'Experiencia' },
                 { id: 'sta', label: 'Resistencia' }, { id: 'agg', label: 'Agresividad' },
-                { id: 'tei', label: 'Trabajo Eq.' }, { id: 'cha', label: 'Carisma' },
+                { id: 'tei', label: 'TI.' }, { id: 'cha', label: 'Carisma' },
                 { id: 'mot', label: 'Motivación' }, { id: 'rep', label: 'Reputación' },
                 { id: 'age', label: 'Edad' }, { id: 'sal', label: 'Salario' }
             ],
@@ -129,13 +130,13 @@
         en: {
             title: "Drivers Market - GPRO",
             dropText: "Drag your CSV file here or click to select it",
-            waiting: "Waiting for CSV file...",
+            waiting: "Loading drivers database...",
             waitingError: "Not loaded automatically. Please drag your CSV file.",
             clearBtn: "Clear Filters",
             prevBtn: "&larr; Previous",
             nextBtn: "Next &rarr;",
             emptyFile: "Error: The file is empty.",
-            loadSuccess: (file, count) => `✅ File "${file}" loaded. ${count.toLocaleString('en-US')} drivers found.`,
+            loadSuccess: (file, count) => `✅ Database loaded. ${count.toLocaleString('en-US')} drivers found.`,
             noDrivers: "No drivers match the criteria.",
             noFile: "No file loaded yet.",
             pageInfo: (start, end, total, current, total_pages) => `Showing ${start} - ${end} of ${total.toLocaleString('en-US')} drivers (Page ${current} of ${total_pages})`,
@@ -144,7 +145,7 @@
                 { id: 'oa', label: 'Overall (OA)' }, { id: 'con', label: 'Concentration' },
                 { id: 'tal', label: 'Talent' }, { id: 'exp', label: 'Experience' },
                 { id: 'sta', label: 'Stamina' }, { id: 'agg', label: 'Aggressiveness' },
-                { id: 'tei', label: 'Teamwork' }, { id: 'cha', label: 'Charisma' },
+                { id: 'tei', label: 'TechI:' }, { id: 'cha', label: 'Charisma' },
                 { id: 'mot', label: 'Motivation' }, { id: 'rep', label: 'Reputation' },
                 { id: 'age', label: 'Age' }, { id: 'sal', label: 'Salary' }
             ],
