@@ -2,14 +2,18 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Drivers Market Filter - Sauber GPRO</title>
+    <title>Drivers Market Filter - GPRO</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; background-color: #1e1e1e; color: #ffffff; }
         h1 { color: #ff9800; text-align: center; }
         
-        /* Barra superior para el selector de idioma */
-        .top-bar { display: flex; justify-content: flex-end; margin-bottom: 15px; }
+        /* Barra superior: botón a la izquierda, idioma a la derecha */
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .lang-selector select { padding: 5px; border-radius: 4px; background: #333; color: #fff; border: 1px solid #555; cursor: pointer; }
+        
+        /* Estilo del botón de regreso */
+        .btn-back { background: #444; color: #fff; border: 1px solid #555; padding: 6px 14px; border-radius: 4px; cursor: pointer; text-decoration: none; font-weight: bold; font-size: 14px; }
+        .btn-back:hover { background: #555; color: #ff9800; }
 
         .container { max-width: 1400px; margin: auto; background: #2d2d2d; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
         .file-input { border: 2px dashed #ff9800; padding: 20px; text-align: center; cursor: pointer; margin-bottom: 15px; border-radius: 4px; transition: 0.3s; }
@@ -42,16 +46,19 @@
         tr:hover { background-color: #383838; }
         .text-left { text-align: left; }
         
-        /* Estilos para los enlaces de los pilotos */
         .text-left a { color: #ff9800; text-decoration: none; font-weight: bold; }
         .text-left a:hover { text-decoration: underline; }
+
+        /* Estilo del Pie de página */
+        .footer { margin-top: 30px; padding-top: 15px; border-top: 1px solid #444; text-align: center; color: #777; font-size: 0.85em; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Selector de Idioma -->
+    <!-- Barra superior con botón de regreso e idioma -->
     <div class="top-bar">
+        <a href="../index.html" class="btn-back" id="back-btn">&larr; Menú Principal</a>
         <div class="lang-selector">
             <select id="lang-select">
                 <option value="en">English</option>
@@ -60,7 +67,7 @@
         </div>
     </div>
 
-    <h1 id="title-h1">Mercado de Pilotos - GPRO</h1>
+    <h1 id="title-h1">Mercado de Pilotos - Sauber GPRO</h1>
     
     <!-- Zona de carga oculta visualmente (display: none) -->
     <div class="file-input" id="drop-zone" style="display: none;">
@@ -93,6 +100,9 @@
             </tbody>
         </table>
     </div>
+
+    <!-- Pie de página -->
+    <div class="footer" id="footer-text">Última modificación: Agosto 2024</div>
 </div>
 
 <script>
@@ -107,6 +117,7 @@
     const i18n = {
         es: {
             title: "Mercado de Pilotos - GPRO",
+            backBtn: "&larr; Menú Principal",
             dropText: "Arrastra aquí tu archivo CSV o haz clic para seleccionarlo",
             waiting: "Cargando base de datos de pilotos...",
             waitingError: "No se cargó automáticamente. Por favor, arrastra tu archivo CSV.",
@@ -123,16 +134,18 @@
                 { id: 'oa', label: 'General (OA)' }, { id: 'con', label: 'Concentración' },
                 { id: 'tal', label: 'Talento' }, { id: 'exp', label: 'Experiencia' },
                 { id: 'sta', label: 'Resistencia' }, { id: 'agg', label: 'Agresividad' },
-                { id: 'tei', label: 'C. Tecnico' }, { id: 'cha', label: 'Carisma' },
+                { id: 'tei', label: 'C. Técnico.' }, { id: 'cha', label: 'Carisma' },
                 { id: 'mot', label: 'Motivación' }, { id: 'rep', label: 'Reputación' },
                 { id: 'age', label: 'Edad' }, { id: 'sal', label: 'Salario' }
             ],
             minPlaceholder: "Mínimo",
             maxPlaceholder: "Máximo",
-            tableHeaders: ["ID","Nombre","NAT","OA","CON","TAL","EXP","AGG","TEI","STA","CHA","MOT","REP","AGE","WEI","RET","SALARIO","FEE","FAV","OFF"]
+            tableHeaders: ["ID","Nombre","NAT","OA","CON","TAL","EXP","AGG","TEI","STA","CHA","MOT","REP","AGE","WEI","RET","SALARIO","FEE","FAV","OFF"],
+            footer: "© 2026 All Rights Reserved - Mario Molina - Última modificación: Agosto 2026"
         },
         en: {
             title: "Drivers Market - GPRO",
+            backBtn: "&larr; Main Menu",
             dropText: "Drag your CSV file here or click to select it",
             waiting: "Loading drivers database...",
             waitingError: "Not loaded automatically. Please drag your CSV file.",
@@ -155,7 +168,8 @@
             ],
             minPlaceholder: "Min",
             maxPlaceholder: "Max",
-            tableHeaders: ["ID","Name","NAT","OA","CON","TAL","EXP","AGG","TEI","STA","CHA","MOT","REP","AGE","WEI","RET","SALARY","FEE","FAV","OFF"]
+            tableHeaders: ["ID","Name","NAT","OA","CON","TAL","EXP","AGG","TEI","STA","CHA","MOT","REP","AGE","WEI","RET","SALARY","FEE","FAV","OFF"],
+            footer: "Last modified: August 2024"
         }
     };
 
@@ -169,11 +183,13 @@
         const t = i18n[currentLang];
         document.documentElement.lang = currentLang;
         document.getElementById('title-h1').innerText = t.title;
+        document.getElementById('back-btn').innerHTML = t.backBtn;
         document.getElementById('drop-text').innerText = t.dropText;
         document.getElementById('clear-btn').innerText = t.clearBtn;
         document.getElementById('prev-btn').innerHTML = t.prevBtn;
         document.getElementById('next-btn').innerHTML = t.nextBtn;
         document.getElementById('empty-msg').innerText = t.noFile;
+        document.getElementById('footer-text').innerText = t.footer;
         
         // Generar Filtros
         const panel = document.getElementById('filters-panel');
@@ -366,7 +382,6 @@
         const endIndex = startIndex + pageSize;
         const pageData = filteredData.slice(startIndex, endIndex);
 
-        // Se modifica la columna de Nombre para incluir el hipervínculo al perfil de GPRO
         const rowsHtml = pageData.map(d => `
             <tr>
                 <td>${d.id}</td>
