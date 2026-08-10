@@ -41,6 +41,10 @@
         tr:nth-child(even) { background-color: #252525; }
         tr:hover { background-color: #383838; }
         .text-left { text-align: left; }
+        
+        /* Estilos para los enlaces de los pilotos */
+        .text-left a { color: #ff9800; text-decoration: none; font-weight: bold; }
+        .text-left a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -119,7 +123,7 @@
                 { id: 'oa', label: 'General (OA)' }, { id: 'con', label: 'Concentración' },
                 { id: 'tal', label: 'Talento' }, { id: 'exp', label: 'Experiencia' },
                 { id: 'sta', label: 'Resistencia' }, { id: 'agg', label: 'Agresividad' },
-                { id: 'tei', label: 'TI.' }, { id: 'cha', label: 'Carisma' },
+                { id: 'tei', label: 'C. Tecnico' }, { id: 'cha', label: 'Carisma' },
                 { id: 'mot', label: 'Motivación' }, { id: 'rep', label: 'Reputación' },
                 { id: 'age', label: 'Edad' }, { id: 'sal', label: 'Salario' }
             ],
@@ -145,7 +149,7 @@
                 { id: 'oa', label: 'Overall (OA)' }, { id: 'con', label: 'Concentration' },
                 { id: 'tal', label: 'Talent' }, { id: 'exp', label: 'Experience' },
                 { id: 'sta', label: 'Stamina' }, { id: 'agg', label: 'Aggressiveness' },
-                { id: 'tei', label: 'TechI:' }, { id: 'cha', label: 'Charisma' },
+                { id: 'tei', label: 'Technical Ins.' }, { id: 'cha', label: 'Charisma' },
                 { id: 'mot', label: 'Motivation' }, { id: 'rep', label: 'Reputation' },
                 { id: 'age', label: 'Age' }, { id: 'sal', label: 'Salary' }
             ],
@@ -362,9 +366,12 @@
         const endIndex = startIndex + pageSize;
         const pageData = filteredData.slice(startIndex, endIndex);
 
+        // Se modifica la columna de Nombre para incluir el hipervínculo al perfil de GPRO
         const rowsHtml = pageData.map(d => `
             <tr>
-                <td>${d.id}</td><td class="text-left">${d.name}</td><td>${d.nat}</td>
+                <td>${d.id}</td>
+                <td class="text-left"><a href="https://gpro.net/gb/DriverProfile.asp?ID=${d.id}" target="_blank">${d.name}</a></td>
+                <td>${d.nat}</td>
                 <td><strong>${d.oa}</strong></td><td>${d.con}</td><td>${d.tal}</td>
                 <td>${d.exp}</td><td>${d.agg}</td><td>${d.tei}</td><td>${d.sta}</td>
                 <td>${d.cha}</td><td>${d.mot}</td><td>${d.rep}</td><td>${d.age}</td>
