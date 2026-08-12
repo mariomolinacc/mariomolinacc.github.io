@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tyres & Fuel Calculator - Sauber</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --bg-main: #0f1115;
+            --bg-card: #1a1d24;
+            --bg-input: #252a34;
+            --text-main: #e0e6ed;
+            --text-muted: #8b9bb4;
+            --accent-green: #1db954;
+            --accent-orange: #e67e22;
+            --accent-blue: #3498db;
+            --accent-red: #e10600;
+            --border-color: #2d3139;
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            max-width: 960px; 
+            margin: 20px auto; 
+            padding: 0 10px; 
+            background-color: var(--bg-main); 
+            color: var(--text-main); 
+            min-height: 100vh;
+        }
+        .container { 
+            background-color: var(--bg-card); 
+            color: var(--text-main); 
+            padding: 25px; 
+            border-radius: 12px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            border: 1px solid var(--border-color);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--accent-green);
+        }
+        .header h1 { margin: 0; font-size: 2.2em; color: var(--text-main); font-weight: 300; }
+        .header .subtitle { margin-top: 5px; color: var(--text-muted); font-size: 1em; }
+        
+        .form-group { 
+            margin-bottom: 25px; padding: 20px; background-color: rgba(255, 255, 255, 0.03);
+            border-radius: 8px; border: 1px solid var(--border-color);
+        }
+        label { display: block; margin-bottom: 10px; font-weight: 600; font-size: 0.95em; color: var(--text-muted); }
+        input, select { 
+            width: 100%; padding: 12px 15px; box-sizing: border-box; border: 1px solid var(--border-color); 
+            border-radius: 6px; background-color: var(--bg-input); color: var(--text-main); font-size: 1em; transition: all 0.3s ease;
+        }
+        input:focus, select:focus { outline: none; border-color: var(--accent-green); box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.2); }
+        
+        .checkbox-group { display: flex; align-items: center; margin-bottom: 15px; }
+        .checkbox-group input[type="checkbox"] { width: auto; margin-right: 10px; transform: scale(1.2); accent-color: var(--accent-green); }
+        
+        button { 
+            background-color: var(--accent-green); color: white; padding: 15px 30px; 
+            border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 1.1em; margin-top: 20px; 
+            font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        button:hover { background-color: #1ed760; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+        
+        .track-info {
+            margin-top: 25px; padding: 20px; background-color: rgba(255, 255, 255, 0.03); border-radius: 8px;
+            border: 1px solid var(--border-color); display: none;
+        }
+        .track-info h3 { margin-top: 0; color: var(--text-main); font-size: 1.3em; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
+        .info-item { padding: 12px; background-color: rgba(29, 185, 84, 0.05); border-radius: 6px; border-left: 4px solid var(--accent-green); }
+        .info-label { font-weight: 600; font-size: 0.85em; color: var(--text-muted); margin-bottom: 5px; }
+        .info-value { font-size: 1.1em; color: var(--text-main); font-weight: 500; }
+        
+        .results-container { margin-top: 30px; display: none; }
+        .results-header {
+            background-color: var(--accent-green); color: #fff; padding: 20px;
+            border-radius: 10px 10px 0 0; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .results-header h2 { margin: 0; font-size: 1.8em; font-weight: 300; }
+        .results-subtitle { margin-top: 5px; opacity: 0.9; font-size: 0.9em; }
+        
+        .recommendation-section {
+            background-color: var(--bg-card); padding: 25px; border: 1px solid var(--border-color); border-top: none; margin-bottom: 25px;
+            display: none;
+        }
+        
+        .tire-life-section, .strategy-matrix-section, .strategy-section, .fuel-matrix-section, .chart-section {
+            background-color: var(--bg-card); padding: 25px; border: 1px solid var(--border-color); border-top: none; margin-bottom: 0;
+        }
+        
+        .tire-life-title, .strategy-matrix-title, .strategy-title, .fuel-matrix-title, .chart-title {
+            font-size: 1.2em; color: var(--text-main); margin-bottom: 20px; font-weight: 600; text-align: center;
+        }
+        .fuel-matrix-title { color: var(--accent-orange); }
+        .chart-title { color: var(--accent-blue); }
+        
+        .tire-life-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
+        .tire-card { background-color: var(--bg-input); border-radius: 10px; padding: 18px 12px; text-align: center; border: 2px solid transparent; transition: transform 0.2s; }
+        .tire-card:hover { transform: translateY(-3px); }
+        .tire-card.xsoft { border-color: #ff6b6b; } .tire-card.soft { border-color: #feca57; }
+        .tire-card.medium { border-color: #48c774; } .tire-card.hard { border-color: #3498db; }
+        .tire-card.rain { border-color: #5dade2; }
+        .tire-compound { font-size: 1em; font-weight: 600; margin-bottom: 8px; color: var(--text-main); }
+        .tire-life-value { font-size: 1.5em; font-weight: 700; margin-bottom: 4px; color: var(--text-main); }
+        .tire-laps { font-size: 0.85em; color: var(--text-muted); }
+        
+        .strategy-matrix-table, .strategy-table, .fuel-matrix-table {
+            width: 100%; border-collapse: separate; border-spacing: 0; background-color: var(--bg-input);
+            border-radius: 10px; overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 20px;
+        }
+        .strategy-matrix-table thead { background-color: var(--accent-blue); color: #fff; }
+        .strategy-table thead { background-color: var(--accent-green); color: #fff; }
+        .fuel-matrix-table thead { background-color: var(--accent-orange); color: #fff; }
+        .strategy-matrix-table th, .strategy-table th, .fuel-matrix-table th { padding: 14px 10px; text-align: center; font-weight: 600; font-size: 0.85em; }
+        .strategy-matrix-table td, .strategy-table td, .fuel-matrix-table td { padding: 11px 10px; text-align: center; border-bottom: 1px solid var(--border-color); font-size: 0.9em; color: var(--text-main); }
+        .strategy-matrix-table tbody tr:hover, .strategy-table tbody tr:hover, .fuel-matrix-table tbody tr:hover { background-color: rgba(255, 255, 255, 0.03); }
+        .strategy-number-cell { text-align: left; font-weight: 600; color: var(--text-main); padding-left: 18px; background-color: rgba(52, 152, 219, 0.1); }
+        .tire-type-cell { text-align: left; font-weight: 600; color: var(--text-main); padding-left: 18px; }
+        
+        .fuel-highlight { background-color: rgba(230, 126, 34, 0.15) !important; color: var(--accent-orange); font-weight: 700; }
+        .not-viable { color: var(--accent-red); font-weight: bold; }
+        .viable-icon { color: var(--accent-green); font-weight: bold; font-size: 1.1em; }
+        .fuel-laps-detail { font-size: 0.8em; color: var(--text-muted); margin-top: 3px; }
+        .fuel-note { font-size: 0.8em; color: var(--text-muted); margin-top: 10px; text-align: center; font-style: italic; }
+
+        .chart-section { border-radius: 0 0 10px 10px; margin-bottom: 0; }
+        .chart-controls {
+            display: flex; gap: 12px; align-items: center; margin-bottom: 18px; flex-wrap: wrap; justify-content: center;
+        }
+        .chart-controls select {
+            width: auto; min-width: 220px; padding: 10px 14px; font-size: 0.9em; border-radius: 6px;
+            background-color: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-color);
+        }
+        .chart-controls select:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2); }
+        .chart-wrapper {
+            position: relative; background: linear-gradient(180deg, #12151a 0%, #0d0f13 100%);
+            border-radius: 10px; padding: 15px 10px 10px 10px; border: 1px solid var(--border-color);
+        }
+        .chart-legend-custom {
+            display: flex; gap: 24px; justify-content: center; margin-top: 14px; flex-wrap: wrap;
+        }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.85em; color: var(--text-muted); }
+        .legend-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+        .legend-line { width: 28px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+        .chart-stats {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 16px;
+        }
+        .chart-stat-card {
+            background-color: var(--bg-input); border-radius: 8px; padding: 12px; text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        .chart-stat-label { font-size: 0.75em; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .chart-stat-value { font-size: 1.15em; font-weight: 700; color: var(--text-main); }
+
+        .compound-badge {
+            display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: 600; color: #fff;
+        }
+        .compound-badge.xsoft { background: #ff6b6b; }
+        .compound-badge.soft { background: #feca57; color: #333; }
+        .compound-badge.medium { background: #48c774; color: #333; }
+        .compound-badge.hard { background: #3498db; }
+        .compound-badge.rain { background: #5dade2; }
+
+        footer { margin-top: 40px; padding: 20px; text-align: center; font-size: 0.8em; color: var(--text-muted); border-top: 1px solid var(--border-color); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Tyres & Fuel Calculator Sauber</h1>
+            <div class="subtitle">GPRO Unified Strategy Tool</div>
+        </div>
+
+        <div class="form-group">
+            <label for="languageSelector">Language / Idioma:</label>
+            <select id="languageSelector">
+                <option value="en" selected>English</option>
+                <option value="es">Español</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="selectorPista">Select Track / Selecciona Pista:</label>
+            <select id="selectorPista"></select>
+        </div>
+
+        <div class="track-info" id="trackInfo">
+            <h3 id="trackName">Track Information</h3>
+            <div class="info-grid">
+                <div class="info-item"><div class="info-label">Pit Time:</div><div class="info-value" id="pitTimeValue">-</div></div>
+                <div class="info-item"><div class="info-label">Fuel Cons. (km/l):</div><div class="info-value" id="fuelConsumptionValue">-</div></div>
+                <div class="info-item"><div class="info-label">Avg Speed:</div><div class="info-value" id="avgSpeedValue">-</div></div>
+                <div class="info-item"><div class="info-label">Corners:</div><div class="info-value" id="cornersValue">-</div></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="tempCarrera">Predicted Race Temperature (°C):</label>
+            <input type="number" id="tempCarrera" value="30" min="1" max="50">
+        </div>
+
+        <div class="form-group">
+            <label for="distanciaTotal">Total Race Distance (km):</label>
+            <input type="number" id="distanciaTotal" value="305.5" step="0.1">
+        </div>
+
+        <div class="form-group">
+            <label for="distanciaVuelta">Lap Distance (km):</label>
+            <input type="number" id="distanciaVuelta" value="5.555" step="0.001">
+        </div>
+
+        <div class="form-group">
+            <label for="agresividad">Driver Aggression (Factor):</label>
+            <select id="agresividad">
+                <option value="0.95">Cautious</option>
+                <option value="1.00" selected>Normal</option>
+                <option value="1.05">Aggressive</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="desgastePista">Track Wear Level (Factor):</label>
+            <select id="desgastePista">
+                <option value="0.90">Low</option>
+                <option value="1.00" selected>Medium</option>
+                <option value="1.10">High</option>
+                <option value="1.20">Very High</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="penalizacionGrado">Temperature Adjustment Factor:</label>
+            <input type="number" id="penalizacionGrado" value="0" step="0.001" min="0" max="0.1">
+        </div>
+
+        <div class="form-group">
+            <label for="driverCarLevel">Engine & Electronics Level (for Fuel):</label>
+            <select id="driverCarLevel">
+                <option value="lvl1">Level 1</option><option value="lvl2">Level 2</option><option value="lvl3">Level 3</option>
+                <option value="lvl4">Level 4</option><option value="lvl5">Level 5</option><option value="lvl6" selected>Level 6</option>
+                <option value="lvl7">Level 7</option><option value="lvl8">Level 8</option><option value="lvl9">Level 9</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="boostLaps">Boost Laps per Stint:</label>
+            <select id="boostLaps">
+                <option value="0" selected>0 Boost Laps</option>
+                <option value="1">1 Boost Lap</option>
+                <option value="2">2 Boost Laps</option>
+                <option value="3">3 Boost Laps (Maximum)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="fuelMargin">Fuel Margin (extra laps):</label>
+            <input type="number" id="fuelMargin" value="2" min="0" max="10">
+        </div>
+
+        <div class="form-group">
+            <div class="checkbox-group">
+                <input type="checkbox" id="rainRace">
+                <label for="rainRace">Full Rain Race</label>
+            </div>
+        </div>
+
+        <button onclick="calculateStrategy()">Calculate Strategy & Fuel</button>
+
+        <div class="results-container" id="resultsContainer">
+            <div class="results-header">
+                <h2 id="resultsTrackName">Track Name</h2>
+                <div class="results-subtitle" id="resultsSubtitle">Race Conditions</div>
+            </div>
+            
+            <div class="recommendation-section" id="recommendationSection" style="display: none;">
+                <div class="recommendation-card">
+                    <div class="recommendation-title">Recommended Strategy</div>
+                    <div class="recommendation-content">
+                        <div class="temp-badge" id="tempBadge">30°C</div>
+                        <div class="tire-recommendation" id="tireRecommendation">Soft</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tire-life-section">
+                <div class="tire-life-title">Tire Life Information</div>
+                <div class="tire-life-grid" id="tireLifeGrid"></div>
+            </div>
+            
+            <div class="strategy-matrix-section">
+                <div class="strategy-matrix-title">Strategy Matrix - Laps Distribution</div>
+                <table class="strategy-matrix-table">
+                    <thead>
+                        <tr><th>Strategy</th><th>Stint 1</th><th>Stint 2</th><th>Stint 3</th><th>Stint 4</th><th>Stint 5</th><th>Total</th></tr>
+                    </thead>
+                    <tbody id="strategyMatrixBody"></tbody>
+                </table>
+            </div>
+            
+            <div class="strategy-section">
+                <div class="strategy-title">Pit Strategy Matrix</div>
+                <table class="strategy-table" id="strategyTable">
+                    <thead><tr><th>Tire Type</th><th>Distance (km)</th><th>Max Laps</th><th>1 Stop</th><th>2 Stops</th><th>3 Stops</th><th>4 Stops</th></tr></thead>
+                    <tbody id="strategyTableBody"></tbody>
+                </table>
+            </div>
+
+            <div class="fuel-matrix-section">
+                <div class="fuel-matrix-title">Fuel Strategy Matrix (Based on Tyre Strategy)</div>
+                <table class="fuel-matrix-table">
+                    <thead>
+                        <tr>
+                            <th>Strategy</th>
+                            <th>Laps per Stint</th>
+                            <th>Fuel Needed (L)</th>
+                            <th>Pit Time (s)</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fuelMatrixBody"></tbody>
+                </table>
+                <div class="fuel-note">
+                    Note: In GPRO you select ONE compound for the entire race. New tyres of the same compound are fitted at each pit stop. Fuel is calculated per stint (max 180L tank).
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <div class="chart-title">Strategy Timeline - Tyre Condition & Fuel Load</div>
+                <div class="chart-controls">
+                    <select id="chartStrategySelector" onchange="updateChart()"></select>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="strategyChart" height="340"></canvas>
+                </div>
+                <div class="chart-legend-custom">
+                    <div class="legend-item"><div class="legend-line" style="background: #1db954;"></div> Cond. Neumaticos (%)</div>
+                    <div class="legend-item"><div class="legend-line" style="background: #5bc0de;"></div> Carga Combustible (L)</div>
+                    <div class="legend-item"><div class="legend-dot" style="background: rgba(230,126,34,0.7); border: 2px dashed #e67e22;"></div> Pit Stop</div>
+                    <div class="legend-item">
+                        <div class="legend-dot" id="legendCompoundDot" style="width: 28px; height: 14px; border-radius: 4px; background: #48c774;"></div>
+                        Compuesto elegido (toda la carrera)
+                    </div>
+                </div>
+                <div class="chart-stats" id="chartStats"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Tyres & Fuel Calculador Sauber - V. 0.016 (Dark Mode + Timeline Chart)
+        <p>--</p>
+        <div id="footer-text" style="margin-bottom: 5px;">© 2026 All Rights Reserved - Sauber Racing Team - Agosto 2026</div>
+        <a href="https://mariomolinacc.github.io" target="_blank" style="color: #777; text-decoration: none;">Design_by_MM</a>
+
+    </footer>
+
+
+
+    <script>
+        const tracksData = [
+            { id: 1, name: "A1-Ring", raceDistance: "307,1", laps: "71", lapDistance: "4,325", fuelKml: 1.430, pitTime: "21", avgSpeed: "232,22", corners: "9" },
+            { id: 2, name: "Adelaide", raceDistance: "298,6", laps: "79", lapDistance: "3,780", fuelKml: 1.585, pitTime: "19,5", avgSpeed: "193,33", corners: "12" },
+            { id: 3, name: "Ahvenisto", raceDistance: "243,2", laps: "80", lapDistance: "3,040", fuelKml: 1.489, pitTime: "11,5", avgSpeed: "150,95", corners: "10" },
+            { id: 4, name: "Anderstorp", raceDistance: "281,8", laps: "70", lapDistance: "4,026", fuelKml: 1.402, pitTime: "13,5", avgSpeed: "207,25", corners: "10" },
+            { id: 5, name: "Austin", raceDistance: "308,9", laps: "56", lapDistance: "5,516", fuelKml: 1.428, pitTime: "17,5", avgSpeed: "194,19", corners: "20" },
+            { id: 6, name: "Avus", raceDistance: "312,3", laps: "64", lapDistance: "4,880", fuelKml: 1.380, pitTime: "13", avgSpeed: "303,15", corners: "4" },
+            { id: 7, name: "Barcelona", raceDistance: "307,3", laps: "65", lapDistance: "4,728", fuelKml: 1.471, pitTime: "21", avgSpeed: "221,28", corners: "16" },
+            { id: 8, name: "Brands Hatch", raceDistance: "315,5", laps: "75", lapDistance: "4,207", fuelKml: 1.548, pitTime: "25,5", avgSpeed: "213,29", corners: "12" },
+            { id: 9, name: "Brasilia", raceDistance: "301,1", laps: "55", lapDistance: "5,475", fuelKml: 1.417, pitTime: "13,5", avgSpeed: "210,98", corners: "12" },
+            { id: 10, name: "Bremgarten", raceDistance: "305,8", laps: "42", lapDistance: "7,281", fuelKml: 1.474, pitTime: "17", avgSpeed: "270,71", corners: "16" },
+            { id: 11, name: "Brno", raceDistance: "308,0", laps: "57", lapDistance: "5,404", fuelKml: 1.414, pitTime: "14", avgSpeed: "210,14", corners: "15" },
+            { id: 12, name: "Baku", raceDistance: "306,3", laps: "51", lapDistance: "6,006", fuelKml: 1.532, pitTime: "17", avgSpeed: "231,94", corners: "20" },
+            { id: 13, name: "Bucharest Ring", raceDistance: "245,7", laps: "80", lapDistance: "3,071", fuelKml: 1.396, pitTime: "24", avgSpeed: "149,64", corners: "14" },
+            { id: 14, name: "Buenos Aires", raceDistance: "306,6", laps: "72", lapDistance: "4,258", fuelKml: 1.617, pitTime: "19,5", avgSpeed: "187,83", corners: "16" },
+            { id: 15, name: "Estoril", raceDistance: "305,2", laps: "70", lapDistance: "4,360", fuelKml: 1.535, pitTime: "22,5", avgSpeed: "226,02", corners: "13" },
+            { id: 16, name: "Fiorano", raceDistance: "238,6", laps: "79", lapDistance: "3,020", fuelKml: 1.350, pitTime: "16,5", avgSpeed: "187,5", corners: "14" },
+            { id: 17, name: "Fuji", raceDistance: "305,4", laps: "67", lapDistance: "4,558", fuelKml: 1.522, pitTime: "18,5", avgSpeed: "196,33", corners: "16" },
+            { id: 18, name: "Grobnik", raceDistance: "308,4", laps: "74", lapDistance: "4,168", fuelKml: 1.491, pitTime: "13", avgSpeed: "216,89", corners: "15" },
+            { id: 19, name: "Hockenheim", raceDistance: "306,4", laps: "67", lapDistance: "4,573", fuelKml: 1.459, pitTime: "16,5", avgSpeed: "241,98", corners: "12" },
+            { id: 20, name: "Hungaroring", raceDistance: "305,5", laps: "77", lapDistance: "3,968", fuelKml: 1.687, pitTime: "16,5", avgSpeed: "193,43", corners: "14" },
+            { id: 21, name: "Imola", raceDistance: "305,6", laps: "62", lapDistance: "4,929", fuelKml: 1.486, pitTime: "12", avgSpeed: "218,99", corners: "16" },
+            { id: 22, name: "Indianapolis", raceDistance: "306,6", laps: "73", lapDistance: "4,200", fuelKml: 1.438, pitTime: "25,5", avgSpeed: "212,6", corners: "13" },
+            { id: 23, name: "Indy Oval", raceDistance: "804,4", laps: "200", lapDistance: "4,023", fuelKml: 1.408, pitTime: "45", avgSpeed: "425,41", corners: "4" },
+            { id: 24, name: "Interlagos", raceDistance: "305,9", laps: "71", lapDistance: "4,308", fuelKml: 1.521, pitTime: "18", avgSpeed: "219,37", corners: "14" },
+            { id: 25, name: "Irungattukottai", raceDistance: "293,6", laps: "79", lapDistance: "3,716", fuelKml: 1.495, pitTime: "14", avgSpeed: "172,25", corners: "12" },
+            { id: 26, name: "Istanbul", raceDistance: "309,4", laps: "58", lapDistance: "5,334", fuelKml: 1.490, pitTime: "16", avgSpeed: "231,53", corners: "14" },
+            { id: 27, name: "Jerez", raceDistance: "306,4", laps: "69", lapDistance: "4,441", fuelKml: 1.439, pitTime: "18", avgSpeed: "203,19", corners: "14" },
+            { id: 28, name: "Jeddah", raceDistance: "308,7", laps: "50", lapDistance: "6,174", fuelKml: 1.337, pitTime: "21", avgSpeed: "231,94", corners: "27" },
+            { id: 29, name: "Jyllands-Ringen", raceDistance: "312,8", laps: "136", lapDistance: "2,300", fuelKml: 1.481, pitTime: "19,5", avgSpeed: "157,14", corners: "20" },
+            { id: 30, name: "Kaunas", raceDistance: "264,1", laps: "80", lapDistance: "3,301", fuelKml: 1.468, pitTime: "11", avgSpeed: "186,66", corners: "10" },
+            { id: 31, name: "Kyalami", raceDistance: "306,8", laps: "72", lapDistance: "4,261", fuelKml: 1.583, pitTime: "15", avgSpeed: "236,84", corners: "14" },
+            { id: 32, name: "Laguna Seca", raceDistance: "284,5", laps: "79", lapDistance: "3,601", fuelKml: 1.410, pitTime: "16,7", avgSpeed: "183,62", corners: "11" },
+            { id: 33, name: "Las Vegas", raceDistance: "305,9", laps: "50", lapDistance: "6,118", fuelKml: 1.437, pitTime: "23", avgSpeed: "185", corners: "17" },
+            { id: 34, name: "Losail", raceDistance: "306,7", laps: "57", lapDistance: "5,381", fuelKml: 1.442, pitTime: "24", avgSpeed: "180", corners: "16" },
+            { id: 35, name: "Magny Cours", raceDistance: "305,8", laps: "72", lapDistance: "4,247", fuelKml: 1.481, pitTime: "18", avgSpeed: "211,47", corners: "14" },
+            { id: 36, name: "Melbourne", raceDistance: "307,6", laps: "58", lapDistance: "5,303", fuelKml: 1.491, pitTime: "16,5", avgSpeed: "221,88", corners: "17" },
+            { id: 37, name: "Mexico City", raceDistance: "305,0", laps: "69", lapDistance: "4,420", fuelKml: 1.543, pitTime: "24", avgSpeed: "228,08", corners: "9" },
+            { id: 38, name: "Miami", raceDistance: "308,4", laps: "57", lapDistance: "5,411", fuelKml: 1.510, pitTime: "17", avgSpeed: "230", corners: "19" },
+            { id: 39, name: "Monte Carlo", raceDistance: "262,8", laps: "78", lapDistance: "3,369", fuelKml: 1.567, pitTime: "18", avgSpeed: "157,19", corners: "19" },
+            { id: 40, name: "Montreal", raceDistance: "305,0", laps: "69", lapDistance: "4,420", fuelKml: 1.488, pitTime: "16,5", avgSpeed: "214,41", corners: "12" },
+            { id: 41, name: "Monza", raceDistance: "306,7", laps: "53", lapDistance: "5,787", fuelKml: 1.398, pitTime: "25,5", avgSpeed: "263,67", corners: "13" },
+            { id: 42, name: "Mugello", raceDistance: "304,3", laps: "58", lapDistance: "5,247", fuelKml: 1.500, pitTime: "13,5", avgSpeed: "250,91", corners: "14" },
+            { id: 43, name: "New Delhi", raceDistance: "308,2", laps: "60", lapDistance: "5,137", fuelKml: 1.510, pitTime: "19", avgSpeed: "233,03", corners: "16" },
+            { id: 44, name: "Nurburgring", raceDistance: "308,7", laps: "60", lapDistance: "5,145", fuelKml: 1.617, pitTime: "15", avgSpeed: "228,07", corners: "16" },
+            { id: 45, name: "Rafaela", raceDistance: "317,3", laps: "67", lapDistance: "4,736", fuelKml: 1.399, pitTime: "10", avgSpeed: "341,7", corners: "8" },
+            { id: 46, name: "Oesterreichring", raceDistance: "308,9", laps: "52", lapDistance: "5,940", fuelKml: 1.463, pitTime: "21", avgSpeed: "271,2", corners: "11" },
+            { id: 47, name: "Paul Ricard", raceDistance: "305,0", laps: "79", lapDistance: "3,861", fuelKml: 1.392, pitTime: "19,5", avgSpeed: "231,3", corners: "11" },
+            { id: 48, name: "Portimao", raceDistance: "309,7", laps: "66", lapDistance: "4,692", fuelKml: 1.523, pitTime: "15,5", avgSpeed: "204,31", corners: "18" },
+            { id: 49, name: "Poznan", raceDistance: "306,2", laps: "75", lapDistance: "4,083", fuelKml: 1.581, pitTime: "14", avgSpeed: "220,33", corners: "14" },
+            { id: 50, name: "Sakhir", raceDistance: "308,5", laps: "57", lapDistance: "5,412", fuelKml: 1.355, pitTime: "25,5", avgSpeed: "241,92", corners: "14" },
+            { id: 51, name: "Sepang", raceDistance: "310,4", laps: "55", lapDistance: "5,644", fuelKml: 1.519, pitTime: "24", avgSpeed: "220,14", corners: "17" },
+            { id: 52, name: "Serres", raceDistance: "254,9", laps: "80", lapDistance: "3,186", fuelKml: 1.490, pitTime: "12", avgSpeed: "201,82", corners: "16" },
+            { id: 53, name: "Shanghai", raceDistance: "305,2", laps: "56", lapDistance: "5,450", fuelKml: 1.381, pitTime: "24", avgSpeed: "219,3", corners: "10" },
+            { id: 54, name: "Silverstone", raceDistance: "306,3", laps: "52", lapDistance: "5,891", fuelKml: 1.452, pitTime: "22,5", avgSpeed: "227,7", corners: "18" },
+            { id: 55, name: "Singapore", raceDistance: "309,1", laps: "61", lapDistance: "5,067", fuelKml: 1.489, pitTime: "17", avgSpeed: "218,72", corners: "23" },
+            { id: 56, name: "Sochi", raceDistance: "310,1", laps: "53", lapDistance: "5,851", fuelKml: 1.505, pitTime: "23", avgSpeed: "209,11", corners: "19" },
+            { id: 57, name: "Slovakiaring", raceDistance: "313,9", laps: "53", lapDistance: "5,923", fuelKml: 1.415, pitTime: "19,5", avgSpeed: "225,97", corners: "14" },
+            { id: 58, name: "Spa", raceDistance: "306,6", laps: "44", lapDistance: "6,968", fuelKml: 1.345, pitTime: "13,5", avgSpeed: "241,1", corners: "22" },
+            { id: 59, name: "Suzuka", raceDistance: "310,6", laps: "53", lapDistance: "5,860", fuelKml: 1.491, pitTime: "15", avgSpeed: "236,83", corners: "14" },
+            { id: 60, name: "Valencia", raceDistance: "310,1", laps: "57", lapDistance: "5,440", fuelKml: 1.530, pitTime: "14,5", avgSpeed: "217,26", corners: "25" },
+            { id: 61, name: "Yas Marina", raceDistance: "305,5", laps: "55", lapDistance: "5,555", fuelKml: 1.544, pitTime: "18,5", avgSpeed: "218,8", corners: "21" },
+            { id: 62, name: "Yeongam", raceDistance: "309,2", laps: "55", lapDistance: "5,622", fuelKml: 1.522, pitTime: "23,5", avgSpeed: "216,75", corners: "18" },
+            { id: 63, name: "Zandvoort", raceDistance: "301,8", laps: "71", lapDistance: "4,251", fuelKml: 1.554, pitTime: "22,5", avgSpeed: "235,49", corners: "14" },
+            { id: 64, name: "Zolder", raceDistance: "298,3", laps: "70", lapDistance: "4,261", fuelKml: 1.542, pitTime: "19,5", avgSpeed: "227,91", corners: "17" }
+        ];
+
+        const baseTyreLifeData = {
+            "A1-Ring": { xsoft: 78, soft: 103, medium: 135, hard: 178, rain: 235 },
+            "Adelaide": { xsoft: 82, soft: 108, medium: 142, hard: 187, rain: 247 },
+            "Ahvenisto": { xsoft: 72, soft: 95, medium: 124, hard: 164, rain: 216 },
+            "Anderstorp": { xsoft: 72, soft: 95, medium: 125, hard: 165, rain: 218 },
+            "Austin": { xsoft: 94, soft: 124, medium: 163, hard: 215, rain: 284 },
+            "Avus": { xsoft: 88, soft: 116, medium: 153, hard: 202, rain: 267 },
+            "Barcelona": { xsoft: 88, soft: 116, medium: 152, hard: 201, rain: 265 },
+            "Brands Hatch": { xsoft: 100, soft: 132, medium: 173, hard: 228, rain: 301 },
+            "Brasilia": { xsoft: 82, soft: 108, medium: 142, hard: 187, rain: 247 },
+            "Bremgarten": { xsoft: 90, soft: 119, medium: 157, hard: 206, rain: 272 },
+            "Brno": { xsoft: 80, soft: 106, medium: 139, hard: 183, rain: 242 },
+            "Baku": { xsoft: 72, soft: 94, medium: 124, hard: 163, rain: 215 },
+            "Bucharest Ring": { xsoft: 96, soft: 127, medium: 167, hard: 220, rain: 290 },
+            "Buenos Aires": { xsoft: 74, soft: 98, medium: 128, hard: 169, rain: 223 },
+            "Estoril": { xsoft: 79, soft: 104, medium: 138, hard: 181, rain: 239 },
+            "Fiorano": { xsoft: 78, soft: 102, medium: 135, hard: 177, rain: 234 },
+            "Fuji": { xsoft: 84, soft: 111, medium: 146, hard: 193, rain: 255 },
+            "Grobnik": { xsoft: 82, soft: 109, medium: 143, hard: 188, rain: 248 },
+            "Hockenheim": { xsoft: 86, soft: 113, medium: 148, hard: 195, rain: 257 },
+            "Hungaroring": { xsoft: 114, soft: 150, medium: 197, hard: 259, rain: 342 },
+            "Imola": { xsoft: 86, soft: 113, medium: 148, hard: 195, rain: 257 },
+            "Indianapolis": { xsoft: 84, soft: 110, medium: 145, hard: 191, rain: 252 },
+            "Indy Oval": { xsoft: 87, soft: 115, medium: 152, hard: 200, rain: 264 },
+            "Interlagos": { xsoft: 86, soft: 113, medium: 148, hard: 195, rain: 257 },
+            "Irungattukottai": { xsoft: 75, soft: 99, medium: 130, hard: 171, rain: 226 },
+            "Istanbul": { xsoft: 88, soft: 116, medium: 153, hard: 202, rain: 267 },
+            "Jerez": { xsoft: 63, soft: 83, medium: 110, hard: 144, rain: 190 },
+            "Jeddah": { xsoft: 80, soft: 105, medium: 138, hard: 181, rain: 239 },
+            "Jyllands-Ringen": { xsoft: 87, soft: 115, medium: 151, hard: 199, rain: 263 },
+            "Kaunas": { xsoft: 74, soft: 97, medium: 128, hard: 168, rain: 222 },
+            "Kyalami": { xsoft: 87, soft: 114, medium: 151, hard: 198, rain: 261 },
+            "Laguna Seca": { xsoft: 73, soft: 96, medium: 126, hard: 166, rain: 219 },
+            "Las Vegas": { xsoft: 83, soft: 109, medium: 143, hard: 189, rain: 249 },
+            "Losail": { xsoft: 94, soft: 124, medium: 163, hard: 214, rain: 282 },
+            "Magny Cours": { xsoft: 85, soft: 111, medium: 146, hard: 193, rain: 255 },
+            "Melbourne": { xsoft: 86, soft: 114, medium: 150, hard: 197, rain: 260 },
+            "Mexico City": { xsoft: 81, soft: 106, medium: 140, hard: 184, rain: 243 },
+            "Miami": { xsoft: 111, soft: 146, medium: 192, hard: 252, rain: 333 },
+            "Monte Carlo": { xsoft: 83, soft: 109, medium: 143, hard: 189, rain: 249 },
+            "Montreal": { xsoft: 79, soft: 105, medium: 138, hard: 181, rain: 239 },
+            "Monza": { xsoft: 88, soft: 116, medium: 153, hard: 201, rain: 265 },
+            "Mugello": { xsoft: 81, soft: 106, medium: 140, hard: 184, rain: 243 },
+            "New Delhi": { xsoft: 67, soft: 88, medium: 116, hard: 153, rain: 202 },
+            "Nurburgring": { xsoft: 96, soft: 126, medium: 166, hard: 219, rain: 289 },
+            "Rafaela": { xsoft: 75, soft: 98, medium: 129, hard: 170, rain: 224 },
+            "Oesterreichring": { xsoft: 87, soft: 115, medium: 151, hard: 199, rain: 263 },
+            "Paul Ricard": { xsoft: 70, soft: 93, medium: 122, hard: 161, rain: 213 },
+            "Portimao": { xsoft: 82, soft: 107, medium: 141, hard: 186, rain: 246 },
+            "Poznan": { xsoft: 83, soft: 109, medium: 143, hard: 189, rain: 249 },
+            "Sakhir": { xsoft: 92, soft: 121, medium: 159, hard: 209, rain: 276 },
+            "Sepang": { xsoft: 90, soft: 118, medium: 155, hard: 205, rain: 271 },
+            "Serres": { xsoft: 86, soft: 113, medium: 149, hard: 196, rain: 259 },
+            "Shanghai": { xsoft: 88, soft: 116, medium: 152, hard: 201, rain: 265 },
+            "Silverstone": { xsoft: 88, soft: 115, medium: 152, hard: 199, rain: 263 },
+            "Singapore": { xsoft: 78, soft: 103, medium: 136, hard: 179, rain: 236 },
+            "Sochi": { xsoft: 76, soft: 100, medium: 131, hard: 172, rain: 227 },
+            "Slovakiaring": { xsoft: 73, soft: 96, medium: 126, hard: 166, rain: 219 },
+            "Spa": { xsoft: 100, soft: 131, medium: 173, hard: 227, rain: 300 },
+            "Suzuka": { xsoft: 89, soft: 118, medium: 155, hard: 204, rain: 269 },
+            "Valencia": { xsoft: 87, soft: 114, medium: 150, hard: 198, rain: 261 },
+            "Yas Marina": { xsoft: 87, soft: 114, medium: 150, hard: 198, rain: 261 },
+            "Yeongam": { xsoft: 82, soft: 108, medium: 143, hard: 188, rain: 248 },
+            "Zandvoort": { xsoft: 85, soft: 112, medium: 148, hard: 194, rain: 256 },
+            "Zolder": { xsoft: 82, soft: 108, medium: 143, hard: 188, rain: 248 }
+        };
+
+        const compoundNames = { xsoft: "XSoft", soft: "Soft", medium: "Medium", hard: "Hard", rain: "Rain" };
+        const compoundColors = { xsoft: "#ff6b6b", soft: "#feca57", medium: "#48c774", hard: "#3498db", rain: "#5dade2" };
+        const compoundColorsBg = { xsoft: "rgba(255,107,107,0.10)", soft: "rgba(254,202,87,0.10)", medium: "rgba(72,199,116,0.10)", hard: "rgba(52,152,219,0.10)", rain: "rgba(93,173,226,0.10)" };
+        const MAX_FUEL_CAPACITY = 180;
+
+        let strategyChartInstance = null;
+        let chartStrategies = [];
+        let lastCalcData = null;
+
+        window.onload = function() {
+            const selector = document.getElementById('selectorPista');
+            const defaultOption = document.createElement('option');
+            defaultOption.value = "";
+            defaultOption.textContent = "Select a track...";
+            selector.appendChild(defaultOption);
+            tracksData.forEach(track => {
+                let opt = document.createElement('option');
+                opt.value = track.id;
+                opt.textContent = track.name;
+                selector.appendChild(opt);
+            });
+            selector.addEventListener('change', actualizarDatosPista);
+        };
+
+        function parseComma(val) {
+            return parseFloat(String(val).replace(',', '.'));
+        }
+
+        function actualizarDatosPista() {
+            const trackId = document.getElementById('selectorPista').value;
+            const trackInfoDiv = document.getElementById('trackInfo');
+            if (trackId === "") { trackInfoDiv.style.display = 'none'; return; }
+            const pista = tracksData.find(t => t.id == trackId);
+            document.getElementById('trackName').textContent = pista.name;
+            document.getElementById('pitTimeValue').textContent = pista.pitTime + " s";
+            document.getElementById('fuelConsumptionValue').textContent = pista.fuelKml.toFixed(3) + " km/l";
+            document.getElementById('avgSpeedValue').textContent = pista.avgSpeed + " km/h";
+            document.getElementById('cornersValue').textContent = pista.corners;
+            document.getElementById('distanciaTotal').value = parseComma(pista.raceDistance);
+            document.getElementById('distanciaVuelta').value = parseComma(pista.lapDistance);
+            trackInfoDiv.style.display = 'block';
+        }
+
+        function calculateStrategy() {
+            const trackId = document.getElementById('selectorPista').value;
+            if (trackId === "") return;
+
+            const pista = tracksData.find(t => t.id == trackId);
+            const totalLaps = parseInt(pista.laps);
+            const lapDistance = parseComma(pista.lapDistance);
+            const pitTime = parseComma(pista.pitTime);
+            const temp = parseFloat(document.getElementById('tempCarrera').value);
+            const aggr = parseFloat(document.getElementById('agresividad').value);
+            const wear = parseFloat(document.getElementById('desgastePista').value);
+            const tempAdjust = parseFloat(document.getElementById('penalizacionGrado').value) || 0;
+            const isRain = document.getElementById('rainRace').checked;
+            const boostLaps = parseInt(document.getElementById('boostLaps').value);
+            const fuelMargin = parseInt(document.getElementById('fuelMargin').value);
+
+            const lvlMap = { lvl1: 1.00, lvl2: 0.98, lvl3: 0.96, lvl4: 0.94, lvl5: 0.92, lvl6: 0.90, lvl7: 0.88, lvl8: 0.86, lvl9: 0.84 };
+            const lvlFactor = lvlMap[document.getElementById('driverCarLevel').value] || 0.90;
+
+            const baseLife = baseTyreLifeData[pista.name] || { xsoft: 80, soft: 100, medium: 130, hard: 170, rain: 230 };
+            const tempFactor = Math.max(0.5, 1 - (Math.abs(30 - temp) * 0.01) - tempAdjust);
+            const adjTyreLife = {};
+            for (let comp in baseLife) {
+                adjTyreLife[comp] = Math.max(1, Math.round(baseLife[comp] * tempFactor * aggr * wear));
+            }
+
+            const maxLapsByCompound = {};
+            for (let comp in adjTyreLife) {
+                maxLapsByCompound[comp] = Math.floor(adjTyreLife[comp] / lapDistance);
+            }
+
+            let bestStops = 2;
+            let bestTire = 'medium';
+            const lapsForStops = (stops) => Math.ceil(totalLaps / (stops + 1));
+
+            if (isRain) {
+                bestStops = 1; bestTire = 'rain';
+                if (maxLapsByCompound.rain < lapsForStops(1)) bestStops = 2;
+            } else {
+                let idealTire;
+                if (temp <= 10) idealTire = 'xsoft';
+                else if (temp <= 20) idealTire = 'soft';
+                else if (temp <= 30) idealTire = 'medium';
+                else idealTire = 'hard';
+
+                let targetStops = 2;
+                let chosenTire = idealTire;
+
+                if (maxLapsByCompound[idealTire] >= lapsForStops(targetStops)) {
+                    chosenTire = idealTire;
+                } else {
+                    const order = ['xsoft','soft','medium','hard'];
+                    let found = false;
+                    for (let c of order) {
+                        if (maxLapsByCompound[c] >= lapsForStops(2)) { chosenTire = c; found = true; break; }
+                    }
+                    if (!found) {
+                        targetStops = 3;
+                        for (let c of order) {
+                            if (maxLapsByCompound[c] >= lapsForStops(3)) { chosenTire = c; found = true; break; }
+                        }
+                        if (!found) { chosenTire = 'hard'; targetStops = 4; }
+                    }
+                }
+                bestStops = targetStops;
+                bestTire = chosenTire;
+
+                if (temp <= 40 && maxLapsByCompound.hard >= totalLaps) {
+                    bestStops = 0; bestTire = 'hard';
+                }
+            }
+
+            document.getElementById('resultsTrackName').textContent = pista.name;
+            document.getElementById('resultsSubtitle').textContent = `${temp}°C | ${isRain ? 'Rain' : 'Dry'} | ${totalLaps} Laps | Boost: ${boostLaps}/stint`;
+            document.getElementById('resultsContainer').style.display = 'block';
+
+            const tireGrid = document.getElementById('tireLifeGrid');
+            tireGrid.innerHTML = '';
+            const compsToShow = isRain ? ['rain'] : ['xsoft','soft','medium','hard'];
+            compsToShow.forEach(comp => {
+                tireGrid.innerHTML += `
+                    <div class="tire-card ${comp}">
+                        <div class="tire-compound">${compoundNames[comp]}</div>
+                        <div class="tire-life-value">${adjTyreLife[comp]} km</div>
+                        <div class="tire-laps">${maxLapsByCompound[comp]} laps</div>
+                    </div>`;
+            });
+
+            const matrixBody = document.getElementById('strategyMatrixBody');
+            matrixBody.innerHTML = '';
+            for (let stops = 0; stops <= 4; stops++) {
+                let stints = [];
+                let stintLaps = Math.floor(totalLaps / (stops + 1));
+                let remainder = totalLaps % (stops + 1);
+                for (let i = 0; i <= stops; i++) {
+                    stints.push(stintLaps + (i < remainder ? 1 : 0));
+                }
+                let row = `<td class="strategy-number-cell">${stops} Stop${stops !== 1 ? 's' : ''}</td>`;
+                for (let i = 0; i < 5; i++) {
+                    row += `<td>${stints[i] !== undefined ? stints[i] : '-'}</td>`;
+                }
+                row += `<td><strong>${totalLaps}</strong></td></tr>`;
+                matrixBody.innerHTML += `<tr>${row}`;
+            }
+
+            const stratBody = document.getElementById('strategyTableBody');
+            stratBody.innerHTML = '';
+            compsToShow.forEach(comp => {
+                const maxL = maxLapsByCompound[comp];
+                let row = `<td class="tire-type-cell"><span class="compound-badge ${comp}">${compoundNames[comp]}</span></td>`;
+                row += `<td>${adjTyreLife[comp]} km</td>`;
+                row += `<td>${maxL} laps</td>`;
+                for (let stops = 1; stops <= 4; stops++) {
+                    const needed = lapsForStops(stops);
+                    const viable = maxL >= needed;
+                    row += `<td class="${viable ? 'viable-icon' : 'not-viable'}">${viable ? '&#10003;' : '&#10007;'}</td>`;
+                }
+                stratBody.innerHTML += `<tr>${row}</tr>`;
+            });
+
+            const fuelBody = document.getElementById('fuelMatrixBody');
+            fuelBody.innerHTML = '';
+            chartStrategies = [];
+            const fuelPerLap = (lapDistance / pista.fuelKml) * lvlFactor;
+            const boostFactor = 1.5;
+
+            const allCompounds = isRain ? ['rain'] : ['xsoft','soft','medium','hard'];
+            allCompounds.forEach(comp => {
+                for (let stops = 0; stops <= 4; stops++) {
+                    const needed = stops === 0 ? totalLaps : lapsForStops(stops);
+                    const maxL = maxLapsByCompound[comp];
+                    if (maxL < needed && stops > 0) continue;
+                    if (stops === 0 && maxL < totalLaps) continue;
+
+                    let stints = [];
+                    let stintLaps = Math.floor(totalLaps / (stops + 1));
+                    let remainder = totalLaps % (stops + 1);
+                    for (let i = 0; i <= stops; i++) {
+                        stints.push(stintLaps + (i < remainder ? 1 : 0));
+                    }
+
+                    let maxFuelNeeded = 0;
+                    let stintFuels = [];
+                    stints.forEach(sl => {
+                        let normalLaps = Math.max(0, sl - boostLaps);
+                        let boostL = Math.min(boostLaps, sl);
+                        let fuel = (normalLaps * fuelPerLap) + (boostL * fuelPerLap * boostFactor) + (fuelMargin * fuelPerLap);
+                        fuel = Math.min(fuel, MAX_FUEL_CAPACITY);
+                        stintFuels.push(Math.ceil(fuel));
+                        if (fuel > maxFuelNeeded) maxFuelNeeded = fuel;
+                    });
+
+                    let totalFuel = Math.ceil(maxFuelNeeded);
+                    let totalPitTime = stops * pitTime;
+                    let overCapacity = totalFuel > MAX_FUEL_CAPACITY;
+
+                    let label = `${stops} Stop${stops !== 1 ? 's' : ''} - ${compoundNames[comp]}`;
+                    let isRec = (stops === bestStops && comp === bestTire);
+
+                    fuelBody.innerHTML += `
+                        <tr class="${isRec ? 'fuel-highlight' : ''}">
+                            <td style="text-align:left; padding-left:15px; font-weight:600;">
+                                ${isRec ? '&#9733; ' : ''}${label}
+                            </td>
+                            <td>${stints.join(' / ')}</td>
+                            <td><strong>${totalFuel} L</strong>
+                                <div class="fuel-laps-detail">${stintFuels.join(' / ')} L per stint</div>
+                            </td>
+                            <td>${totalPitTime.toFixed(1)}s</td>
+                            <td class="${overCapacity ? 'not-viable' : 'viable-icon'}">${overCapacity ? '&#10007; Over 180L' : '&#10003; OK'}</td>
+                        </tr>`;
+
+                    chartStrategies.push({
+                        label: label,
+                        stops: stops,
+                        compound: comp,
+                        stints: stints,
+                        stintFuels: stintFuels,
+                        totalFuel: totalFuel,
+                        totalPitTime: totalPitTime,
+                        overCapacity: overCapacity,
+                        isRec: isRec,
+                        maxLapsCompound: maxL
+                    });
+                }
+            });
+
+            chartStrategies.sort((a, b) => {
+                if (a.isRec) return -1;
+                if (b.isRec) return 1;
+                return a.stops - b.stops;
+            });
+
+            lastCalcData = {
+                totalLaps, lapDistance, fuelPerLap, boostLaps, boostFactor,
+                pitTime, adjTyreLife, maxLapsByCompound, bestStops, bestTire
+            };
+
+            populateChartSelector();
+            renderStrategyChart();
+        }
+
+        function populateChartSelector() {
+            const sel = document.getElementById('chartStrategySelector');
+            sel.innerHTML = '';
+            chartStrategies.forEach((s, i) => {
+                let opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = (s.isRec ? '&#9733; ' : '') + s.label + (s.overCapacity ? ' [!]' : '');
+                sel.appendChild(opt);
+            });
+            const recIdx = chartStrategies.findIndex(s => s.isRec);
+            if (recIdx >= 0) sel.value = recIdx;
+        }
+
+        function updateChart() {
+            renderStrategyChart();
+        }
+
+        function renderStrategyChart() {
+            if (!lastCalcData || chartStrategies.length === 0) return;
+
+            const selIdx = parseInt(document.getElementById('chartStrategySelector').value);
+            const strat = chartStrategies[selIdx];
+            if (!strat) return;
+
+            const { totalLaps, fuelPerLap, boostLaps, boostFactor, maxLapsByCompound } = lastCalcData;
+            const { compound, stints, stintFuels } = strat;
+            const maxLapsCompound = maxLapsByCompound[compound];
+
+            let labels = [];
+            let tyreCondition = [];
+            let fuelLoad = [];
+            let pitStopLaps = [];
+            let currentLap = 0;
+            let maxFuelForScale = 0;
+
+            stints.forEach((stintLaps, stintIdx) => {
+                for (let i = 0; i < stintLaps; i++) {
+                    labels.push(currentLap);
+
+                    // Neumatico: se reinicia al 100% en cada pit (nuevas gomas del mismo compuesto)
+                    // El progreso se mide por vuelta dentro del stint, no por vuelta acumulada
+                    let progress = i / maxLapsCompound;
+                    let condition = Math.max(0, 100 * (1 - Math.pow(progress, 1.3)));
+                    tyreCondition.push(parseFloat(condition.toFixed(1)));
+
+                    // Combustible: se reinicia en cada pit (se reabastece)
+                    let fuelAtStart = stintFuels[stintIdx];
+                    let totalConsumption = 0;
+                    for (let j = 0; j <= i; j++) {
+                        if (j < Math.min(boostLaps, stintLaps)) {
+                            totalConsumption += fuelPerLap * boostFactor;
+                        } else {
+                            totalConsumption += fuelPerLap;
+                        }
+                    }
+                    let remaining = Math.max(0, fuelAtStart - totalConsumption);
+                    fuelLoad.push(parseFloat(remaining.toFixed(1)));
+
+                    if (fuelAtStart > maxFuelForScale) maxFuelForScale = fuelAtStart;
+                    currentLap++;
+                }
+                if (stintIdx < stints.length - 1) {
+                    pitStopLaps.push(currentLap);
+                }
+            });
+
+            document.getElementById('legendCompoundDot').style.background = compoundColors[compound] || '#48c774';
+
+            if (strategyChartInstance) {
+                strategyChartInstance.destroy();
+                strategyChartInstance = null;
+            }
+
+            const ctx = document.getElementById('strategyChart').getContext('2d');
+            const bgColor = compoundColorsBg[compound] || 'rgba(255,255,255,0.03)';
+            const compColor = compoundColors[compound] || '#fff';
+            const compName = compoundNames[compound] || compound;
+
+            const customPlugin = {
+                id: 'stintBands',
+                beforeDraw(chart) {
+                    const { ctx: c, chartArea, scales } = chart;
+                    if (!chartArea) return;
+
+                    const xScale = scales.x;
+                    const yTop = chartArea.top;
+                    const yBottom = chartArea.bottom;
+
+                    c.fillStyle = bgColor;
+                    c.fillRect(chartArea.left, yTop, chartArea.right - chartArea.left, yBottom - yTop);
+
+                    pitStopLaps.forEach(pitLap => {
+                        const x = xScale.getPixelForValue(pitLap);
+                        c.save();
+                        c.setLineDash([6, 4]);
+                        c.strokeStyle = 'rgba(230, 126, 34, 0.8)';
+                        c.lineWidth = 2;
+                        c.beginPath();
+                        c.moveTo(x, yTop);
+                        c.lineTo(x, yBottom);
+                        c.stroke();
+                        c.setLineDash([]);
+
+                        c.fillStyle = 'rgba(230, 126, 34, 0.9)';
+                        c.font = 'bold 10px Segoe UI, sans-serif';
+                        c.textAlign = 'center';
+                        c.fillText('PIT', x, yTop - 4);
+                        c.restore();
+                    });
+
+                    c.fillStyle = compColor;
+                    c.globalAlpha = 0.6;
+                    c.font = 'bold 12px Segoe UI, sans-serif';
+                    c.textAlign = 'center';
+                    c.fillText(compName.toUpperCase() + ' — toda la carrera', (chartArea.left + chartArea.right) / 2, chartArea.bottom + 16);
+                    c.globalAlpha = 1;
+                }
+            };
+
+            strategyChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Cond. Neumaticos (%)',
+                            data: tyreCondition,
+                            borderColor: '#1db954',
+                            backgroundColor: 'rgba(29, 185, 84, 0.08)',
+                            borderWidth: 2.5,
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 0,
+                            pointHoverRadius: 5,
+                            pointHoverBackgroundColor: '#1db954',
+                            yAxisID: 'y',
+                            order: 1
+                        },
+                        {
+                            label: 'Carga Combustible (L)',
+                            data: fuelLoad,
+                            borderColor: '#5bc0de',
+                            backgroundColor: 'rgba(91, 192, 222, 0.06)',
+                            borderWidth: 2.5,
+                            fill: true,
+                            tension: 0.1,
+                            pointRadius: 0,
+                            pointHoverRadius: 5,
+                            pointHoverBackgroundColor: '#5bc0de',
+                            yAxisID: 'y1',
+                            order: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 17, 21, 0.95)',
+                            borderColor: 'rgba(255,255,255,0.15)',
+                            borderWidth: 1,
+                            titleColor: '#e0e6ed',
+                            bodyColor: '#8b9bb4',
+                            titleFont: { size: 13, weight: 'bold' },
+                            bodyFont: { size: 12 },
+                            padding: 12,
+                            cornerRadius: 8,
+                            callbacks: {
+                                title: function(items) {
+                                    if (items.length > 0) {
+                                        let lap = items[0].label;
+                                        let stintNum = 1;
+                                        let accumulated = 0;
+                                        for (let s = 0; s < stints.length; s++) {
+                                            accumulated += stints[s];
+                                            if (lap < accumulated) { stintNum = s + 1; break; }
+                                            if (s === stints.length - 1) stintNum = s + 1;
+                                        }
+                                        return `Lap ${lap} (Stint ${stintNum}/${stints.length})`;
+                                    }
+                                    return '';
+                                },
+                                label: function(item) {
+                                    if (item.datasetIndex === 0) {
+                                        return `  Neumaticos: ${item.raw}%`;
+                                    } else {
+                                        return `  Combustible: ${item.raw} L`;
+                                    }
+                                },
+                                afterBody: function(items) {
+                                    if (items.length > 0) {
+                                        let lap = items[0].label;
+                                        if (pitStopLaps.includes(lap)) {
+                                            return ['  -- PIT STOP --'];
+                                        }
+                                    }
+                                    return [];
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            title: {
+                                display: true,
+                                text: 'Lap',
+                                color: '#8b9bb4',
+                                font: { size: 12, weight: '600' }
+                            },
+                            ticks: {
+                                color: '#8b9bb4',
+                                font: { size: 10 },
+                                maxTicksLimit: 20,
+                                stepSize: Math.max(1, Math.floor(totalLaps / 20))
+                            },
+                            grid: {
+                                color: 'rgba(255,255,255,0.04)',
+                                drawTicks: false
+                            },
+                            border: { color: 'rgba(255,255,255,0.1)' },
+                            min: 0,
+                            max: totalLaps - 1
+                        },
+                        y: {
+                            type: 'linear',
+                            position: 'left',
+                            min: 0,
+                            max: 105,
+                            title: {
+                                display: true,
+                                text: 'Cond. Neumaticos (%)',
+                                color: '#1db954',
+                                font: { size: 11, weight: '600' }
+                            },
+                            ticks: {
+                                color: '#1db954',
+                                font: { size: 10 },
+                                stepSize: 20,
+                                callback: v => v + '%'
+                            },
+                            grid: {
+                                color: 'rgba(29, 185, 84, 0.06)',
+                                drawTicks: false
+                            },
+                            border: { color: 'rgba(29, 185, 84, 0.3)' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            position: 'right',
+                            min: 0,
+                            max: Math.ceil(maxFuelForScale * 1.1 / 10) * 10,
+                            title: {
+                                display: true,
+                                text: 'Combustible (L)',
+                                color: '#5bc0de',
+                                font: { size: 11, weight: '600' }
+                            },
+                            ticks: {
+                                color: '#5bc0de',
+                                font: { size: 10 },
+                                stepSize: Math.max(10, Math.ceil(maxFuelForScale / 6 / 10) * 10),
+                                callback: v => v + 'L'
+                            },
+                            grid: { drawOnChartArea: false, drawTicks: false },
+                            border: { color: 'rgba(91, 192, 222, 0.3)' }
+                        }
+                    },
+                    layout: {
+                        padding: { top: 20, bottom: 25, left: 5, right: 5 }
+                    }
+                },
+                plugins: [customPlugin]
+            });
+
+            const minTyre = Math.min(...tyreCondition);
+            const avgTyre = (tyreCondition.reduce((a, b) => a + b, 0) / tyreCondition.length).toFixed(1);
+            const minFuel = Math.min(...fuelLoad);
+            const criticalLaps = tyreCondition.filter(v => v < 20).length;
+            const lowFuelLaps = fuelLoad.filter(v => v < 5).length;
+
+            const tc = (v, t1, t2) => v < t1 ? 'var(--accent-red)' : v < t2 ? 'var(--accent-orange)' : 'var(--accent-green)';
+            const fc = (v, t1, t2) => v < t1 ? 'var(--accent-red)' : v < t2 ? 'var(--accent-orange)' : '#5bc0de';
+
+            document.getElementById('chartStats').innerHTML = `
+                <div class="chart-stat-card">
+                    <div class="chart-stat-label">Min Tyre Cond.</div>
+                    <div class="chart-stat-value" style="color: ${tc(minTyre, 15, 30)}">${minTyre}%</div>
+                </div>
+                <div class="chart-stat-card">
+                    <div class="chart-stat-label">Avg Tyre Cond.</div>
+                    <div class="chart-stat-value">${avgTyre}%</div>
+                </div>
+                <div class="chart-stat-card">
+                    <div class="chart-stat-label">Min Fuel</div>
+                    <div class="chart-stat-value" style="color: ${fc(minFuel, 3, 8)}">${minFuel} L</div>
+                </div>
+                <div class="chart-stat-card">
+                    <div class="chart-stat-label">Critical Tyre Laps</div>
+                    <div class="chart-stat-value" style="color: ${tc(criticalLaps, 1, 4)}">${criticalLaps} laps</div>
+                </div>
+                <div class="chart-stat-card">
+                    <div class="chart-stat-label">Low Fuel Laps</div>
+                    <div class="chart-stat-value" style="color: ${fc(lowFuelLaps, 1, 3)}">${lowFuelLaps} laps</div>
+                </div>
+                <div class="chart-stat-card">
+                    <div class="chart-stat-label">Pit Stops</div>
+                    <div class="chart-stat-value">${stints.length - 1}</div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

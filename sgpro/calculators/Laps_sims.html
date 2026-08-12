@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Gpro — Laps Sims Sauber</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0b0e13;
+            --bg-card: #141920;
+            --bg-input: #0b0e13;
+            --border: #252b35;
+            --accent: #e10600;
+            --accent-glow: rgba(225,6,0,0.15);
+            --text: #e6edf3;
+            --text-muted: #6e7a88;
+            --success: #1db954;
+            --warning: #e6a817;
+            --danger: #e10600;
+            --radius: 6px;
+            --font-display: 'Orbitron', monospace;
+            --font-body: 'IBM Plex Sans', sans-serif;
+        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-body); background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.5; }
+        body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse at 15% 50%, rgba(225,6,0,0.04) 0%, transparent 55%), radial-gradient(ellipse at 85% 15%, rgba(225,6,0,0.025) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+        body::after { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px); background-size: 48px 48px; pointer-events: none; z-index: 0; }
+        .top-stripe { height: 3px; background: linear-gradient(90deg, var(--accent), #ff4444, var(--accent)); position: relative; z-index: 2; }
+        header { position: relative; z-index: 2; padding: 20px 28px 12px; border-bottom: 1px solid var(--border); background: rgba(20,25,32,0.85); backdrop-filter: blur(10px); }
+        header h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(16px, 3vw, 22px); letter-spacing: 3px; }
+        header h1 span { color: var(--accent); }
+        header p { font-size: 12px; color: var(--text-muted); letter-spacing: 1px; margin-top: 2px; }
+        .app-layout { position: relative; z-index: 1; display: grid; grid-template-columns: 320px 1fr; min-height: calc(100vh - 70px); }
+        @media (max-width: 900px) { .app-layout { grid-template-columns: 1fr; } }
+        .sidebar { border-right: 1px solid var(--border); background: rgba(20,25,32,0.6); backdrop-filter: blur(6px); overflow-y: auto; max-height: calc(100vh - 70px); padding: 16px; }
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        .config-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; }
+        .config-section-header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; cursor: pointer; user-select: none; font-weight: 600; font-size: 13px; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); transition: background 0.2s; }
+        .config-section-header:hover { background: rgba(225,6,0,0.05); }
+        .config-section-header i { color: var(--accent); font-size: 12px; width: 16px; text-align: center; }
+        .config-section-header .chevron { margin-left: auto; color: var(--text-muted); font-size: 10px; transition: transform 0.2s; }
+        .config-section-header.collapsed .chevron { transform: rotate(-90deg); }
+        .config-section-body { padding: 12px 14px; display: grid; gap: 10px; }
+        .config-section-body.hidden { display: none; }
+        label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 3px; letter-spacing: 0.3px; font-weight: 500; }
+        input[type="text"], input[type="number"], select { width: 100%; padding: 7px 10px; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-family: var(--font-body); font-size: 13px; transition: border-color 0.2s, box-shadow 0.2s; outline: none; }
+        input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-glow); }
+        input::placeholder { color: var(--text-muted); opacity: 0.6; }
+        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .btn { padding: 9px 16px; border: none; border-radius: var(--radius); font-family: var(--font-body); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; letter-spacing: 0.3px; }
+        .btn-accent { background: var(--accent); color: #fff; }
+        .btn-accent:hover { background: #ff1a1a; transform: translateY(-1px); box-shadow: 0 4px 15px rgba(225,6,0,0.3); }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+        .btn-outline:hover { border-color: var(--accent); color: var(--text); background: rgba(225,6,0,0.05); }
+        .btn-sm { padding: 5px 10px; font-size: 11px; }
+        .btn-simulate { width: 100%; padding: 12px; font-family: var(--font-display); font-size: 14px; letter-spacing: 2px; margin-top: 4px; }
+        .main-content { overflow-y: auto; max-height: calc(100vh - 70px); padding: 20px 24px; }
+        .main-content::-webkit-scrollbar { width: 6px; }
+        .main-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 60vh; color: var(--text-muted); text-align: center; gap: 12px; }
+        .empty-state i { font-size: 48px; opacity: 0.3; }
+        .empty-state p { font-size: 14px; }
+        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 16px; }
+        .summary-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; }
+        .summary-card .label { font-size: 10px; color: var(--text-muted); letter-spacing: 0.5px; text-transform: uppercase; font-weight: 600; }
+        .summary-card .value { font-family: var(--font-display); font-size: 17px; font-weight: 700; margin-top: 4px; }
+        .summary-card .value.accent { color: var(--accent); }
+        .strategy-display { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .strategy-display .stint-badge { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 4px; padding: 4px 10px; }
+        .strategy-display .stint-badge .mini-badge { width: 22px; height: 22px; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 9px; font-weight: 700; }
+        .strategy-display .arrow { color: var(--text-muted); font-size: 10px; }
+        .fuel-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px; overflow: hidden; }
+        .fuel-card-header { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--border); font-weight: 600; font-size: 13px; }
+        .fuel-card-header i { color: var(--warning); font-size: 12px; }
+        .fuel-card-body { padding: 0; }
+        .fuel-stint-row { display: grid; grid-template-columns: 140px 80px 40px 1fr 100px; align-items: center; padding: 8px 16px; border-bottom: 1px solid rgba(37,43,53,0.4); font-size: 12px; }
+        .fuel-stint-row:last-child { border-bottom: none; }
+        .fuel-stint-row .stint-name { color: var(--text-muted); font-weight: 500; }
+        .fuel-stint-row .stint-vueltas { font-family: var(--font-display); font-size: 11px; font-weight: 600; color: var(--text); }
+        .fuel-stint-row .stint-x { color: var(--text-muted); text-align: center; }
+        .fuel-stint-row .stint-consumo { color: var(--text-muted); font-size: 11px; }
+        .fuel-stint-row .stint-total { font-family: var(--font-display); font-size: 12px; font-weight: 700; color: var(--warning); text-align: right; }
+        .fuel-total-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; background: rgba(230,168,23,0.05); border-top: 1px solid var(--border); }
+        .fuel-total-row .label { font-size: 12px; font-weight: 600; color: var(--text); letter-spacing: 0.5px; }
+        .fuel-total-row .value { font-family: var(--font-display); font-size: 16px; font-weight: 900; color: var(--warning); }
+        .tire-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px; overflow: hidden; }
+        .tire-card-header { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--border); font-weight: 600; font-size: 13px; }
+        .tire-card-header i { color: var(--accent); font-size: 12px; }
+        .tire-card-body { padding: 0; }
+        .tire-stint-row { display: grid; grid-template-columns: 140px 80px 1fr 120px; align-items: center; padding: 8px 16px; border-bottom: 1px solid rgba(37,43,53,0.4); font-size: 12px; }
+        .tire-stint-row:last-child { border-bottom: none; }
+        .tire-stint-row .stint-name { color: var(--text-muted); font-weight: 500; }
+        .tire-stint-row .stint-vueltas { font-family: var(--font-display); font-size: 11px; font-weight: 600; color: var(--text); }
+        .tire-stint-row .stint-range { color: var(--text-muted); font-size: 11px; }
+        .tire-stint-row .stint-wear-end { font-family: var(--font-display); font-size: 11px; font-weight: 700; text-align: right; }
+        .tire-stint-row .stint-wear-end.ok { color: var(--success); }
+        .tire-stint-row .stint-wear-end.warn { color: var(--warning); }
+        .tire-stint-row .stint-wear-end.danger { color: var(--danger); }
+        .table-wrapper { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 16px; }
+        .table-header-bar { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+        .table-header-bar h3 { font-size: 12px; color: var(--text-muted); letter-spacing: 0.5px; text-transform: uppercase; font-weight: 600; margin: 0; }
+        .btn-download { background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 6px 12px; border-radius: 4px; font-family: var(--font-body); font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; letter-spacing: 0.3px; }
+        .btn-download:hover { border-color: var(--success); color: var(--success); background: rgba(29,185,84,0.05); }
+        .table-scroll { overflow-x: auto; max-height: 50vh; overflow-y: auto; }
+        .table-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
+        .table-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        .lap-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .lap-table thead { position: sticky; top: 0; z-index: 5; }
+        .lap-table th { background: #1a2029; padding: 8px 12px; text-align: center; font-size: 10px; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; border-bottom: 1px solid var(--border); white-space: nowrap; }
+        .lap-table th:nth-child(2), .lap-table td:nth-child(2) { text-align: right; }
+        .lap-table th:nth-child(5), .lap-table td:nth-child(5) { text-align: left; }
+        .lap-table td { padding: 5px 12px; border-bottom: 1px solid rgba(37,43,53,0.5); text-align: center; white-space: nowrap; vertical-align: middle; }
+        .lap-table tr { transition: background 0.15s; }
+        .lap-table tbody tr:hover { background: rgba(225,6,0,0.04); }
+        .lap-table .lap-num { font-family: var(--font-display); font-size: 12px; font-weight: 600; color: var(--text-muted); }
+        .lap-table .lap-time { font-family: var(--font-display); font-size: 12px; font-weight: 400; letter-spacing: 0.5px; }
+        .lap-table .lap-time.best { color: var(--success); font-weight: 700; }
+        .lap-table .lap-time.worst { color: var(--danger); }
+        .comp-badge { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 20px; border-radius: 3px; font-family: var(--font-display); font-size: 9px; font-weight: 700; }
+        .comp-badge.extra_soft { background: #ff6666; color: #fff; }
+        .comp-badge.soft { background: #e10600; color: #fff; }
+        .comp-badge.medium { background: #f5a623; color: #000; }
+        .comp-badge.hard { background: #c8d0da; color: #000; }
+        .comp-badge.rain { background: #3b9eff; color: #fff; }
+        .wear-cell { min-width: 140px; }
+        .wear-bar-container { display: flex; align-items: center; gap: 8px; }
+        .wear-bar-track { flex: 1; height: 14px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
+        .wear-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s ease, background 0.3s ease; }
+        .wear-bar-fill.good { background: linear-gradient(90deg, #1db954, #2ecc71); }
+        .wear-bar-fill.warn { background: linear-gradient(90deg, #e6a817, #f0c040); }
+        .wear-bar-fill.danger { background: linear-gradient(90deg, #e10600, #ff3333); animation: dangerPulse 1s infinite; }
+        .wear-bar-fill.dead { background: #333; }
+        @keyframes dangerPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+        .wear-pct { font-family: var(--font-display); font-size: 10px; font-weight: 600; min-width: 40px; text-align: right; }
+        .wear-pct.good { color: var(--success); }
+        .wear-pct.warn { color: var(--warning); }
+        .wear-pct.danger { color: var(--danger); }
+        .wear-pct.dead { color: #555; }
+        .note-text { font-size: 10px; font-weight: 600; letter-spacing: 0.3px; }
+        .note-text.pit { color: #3b9eff; }
+        .note-text.danger { color: var(--danger); }
+        .note-text.new-tire { color: var(--success); }
+        .note-text.dead { color: #555; }
+        .pit-row { background: rgba(59,158,255,0.04) !important; }
+        .lap-row-anim { animation: rowFadeIn 0.12s ease forwards; opacity: 0; }
+        @keyframes rowFadeIn { to { opacity: 1; } }
+        .chart-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
+        .chart-header-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .chart-header-bar h3 { font-size: 12px; color: var(--text-muted); letter-spacing: 0.5px; text-transform: uppercase; font-weight: 600; margin: 0; }
+        #wearChart { width: 100%; height: 220px; display: block; }
+        .toast { position: fixed; bottom: 24px; right: 24px; background: var(--bg-card); border: 1px solid var(--danger); border-radius: var(--radius); padding: 12px 18px; font-size: 13px; color: var(--danger); z-index: 100; animation: toastIn 0.3s ease, toastOut 0.3s ease 2.5s forwards; box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes toastOut { to { opacity: 0; transform: translateY(20px); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .stint-row { display: grid; grid-template-columns: 90px 1fr 28px; gap: 6px; align-items: end; animation: fadeIn 0.2s ease; }
+        .stint-row .remove-btn { width: 28px; height: 32px; background: none; border: 1px solid var(--border); border-radius: 4px; color: var(--danger); cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .stint-row .remove-btn:hover { background: rgba(225,6,0,0.15); border-color: var(--danger); }
+        .stint-row .stint-label { font-size: 11px; font-weight: 600; color: var(--text-muted); padding: 7px 0; text-align: right; letter-spacing: 0.3px; }
+        .stint-total { display: flex; justify-content: space-between; align-items: center; padding: 6px 0 0; border-top: 1px solid var(--border); margin-top: 4px; }
+        .stint-total .label { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+        .stint-total .value { font-family: var(--font-display); font-size: 13px; font-weight: 700; }
+        .stint-total .value.ok { color: var(--success); }
+        .stint-total .value.error { color: var(--danger); }
+        .top-controls { position: fixed; top: 15px; right: 15px; z-index: 9999; display: flex; gap: 8px; }
+        .top-controls button { background-color: #1a2029; color: #fff; border: 1px solid var(--border); padding: 8px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 6px; font-size: 12px; transition: all 0.2s; }
+        .top-controls button:hover { border-color: var(--accent); }
+        .top-controls .lang-active { border-color: var(--accent); color: var(--accent); background-color: rgba(225,6,0,0.1); }
+        @media (max-width: 900px) {
+            .sidebar { max-height: none; border-right: none; border-bottom: 1px solid var(--border); }
+            .main-content { max-height: none; }
+            .table-scroll { max-height: 50vh; }
+            .summary-grid { grid-template-columns: repeat(2, 1fr); }
+            .fuel-stint-row { grid-template-columns: 100px 60px 30px 1fr 80px; font-size: 11px; padding: 6px 12px; }
+            .tire-stint-row { grid-template-columns: 100px 60px 1fr 90px; font-size: 11px; padding: 6px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-stripe"></div>
+    
+    <div class="top-controls">
+        <button id="btn-en" class="lang-active" onclick="setLang('en')">EN</button>
+        <button id="btn-es" onclick="setLang('es')">ES</button>
+        <button onclick="goBackToLauncher()" style="background-color: #005a9c; border-color: #005a9c;">
+            <i class="fas fa-arrow-left"></i> <span id="lbl-launcher">Launcher</span>
+        </button>
+    </div>
+
+    <header>
+        <h1>Simulador <span>Gpro</span></h1>
+        <p>Laps Sims Sauber</p>
+    </header>
+
+    <div class="app-layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="config-section">
+                <div class="config-section-header" onclick="toggleSection(this)">
+                    <i class="fas fa-flag-checkered"></i> <span id="lbl-track-race">Track & Race</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="config-section-body">
+                    <div>
+                        <label id="lbl-track">Track</label>
+                        <select id="trackSelect" onchange="loadTrackPreset()">
+                            <option value="" id="lbl-custom-opt">-- Custom --</option>
+                            <option value="a1-ring">A1-Ring</option><option value="adelaide">Adelaide</option><option value="ahvenisto">Ahvenisto</option><option value="anderstorp">Anderstorp</option><option value="austin">Austin</option><option value="avus">Avus</option><option value="barcelona">Barcelona</option><option value="brands-hatch">Brands Hatch</option><option value="brasilia">Brasilia</option><option value="bremgarten">Bremgarten</option><option value="baku">Baku</option><option value="brno">Brno</option><option value="bucharest-ring">Bucharest Ring</option><option value="buenos-aires">Buenos Aires</option><option value="estoril">Estoril</option><option value="fiorano">Fiorano</option><option value="fuji">Fuji</option><option value="grobnik">Grobnik</option><option value="hockenheim">Hockenheim</option><option value="hungaroring">Hungaroring</option><option value="imola">Imola</option><option value="indianapolis">Indianapolis</option><option value="indy-oval">Indy Oval</option><option value="interlagos">Interlagos</option><option value="irungattukottai">Irungattukottai</option><option value="istanbul" selected>Istanbul</option><option value="jerez">Jerez</option><option value="jeddah">Jeddah</option><option value="jyllands-ringen">Jyllands-Ringen</option><option value="kaunas">Kaunas</option><option value="kyalami">Kyalami</option><option value="laguna-seca">Laguna Seca</option><option value="las-vegas">Las Vegas</option><option value="losail">Losail</option><option value="magny-cours">Magny Cours</option><option value="melbourne">Melbourne</option><option value="mexico-city">Mexico City</option><option value="miami">Miami</option><option value="monte-carlo">Monte Carlo</option><option value="montreal">Montreal</option><option value="monza">Monza</option><option value="mugello">Mugello</option><option value="new-delhi">New Delhi</option><option value="nurburgring">Nurburgring</option><option value="rafaela">Rafaela Oval</option><option value="oesterreichring">Oesterreichring</option><option value="paul-ricard">Paul Ricard</option><option value="portimao">Portimao</option><option value="poznan">Poznan</option><option value="sakhir">Sakhir</option><option value="sepang">Sepang</option><option value="serres">Serres</option><option value="shanghai">Shanghai</option><option value="silverstone">Silverstone</option><option value="singapore">Singapore</option><option value="sochi">Sochi</option><option value="slovakiaring">Slovakiaring</option><option value="spa">Spa</option><option value="suzuka">Suzuka</option><option value="valencia">Valencia</option><option value="yas-marina">Yas Marina</option><option value="yeongam">Yeongam</option><option value="zandvoort">Zandvoort</option><option value="zolder">Zolder</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label id="lbl-total-laps">Total race laps</label>
+                        <input type="number" id="totalLaps" value="58" min="10" max="200">
+                    </div>
+                    <div>
+                        <label id="lbl-fuel-cons">Fuel consumption (L/lap)</label>
+                        <input type="number" id="fuelConsumption" value="3.0" min="0.1" step="0.1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="config-section">
+                <div class="config-section-header" onclick="toggleSection(this)">
+                    <i class="fas fa-stopwatch"></i> <span id="lbl-qual-times">Qualifying Times</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="config-section-body">
+                    <div class="input-row">
+                        <div><label>Q1 (mm:ss.xxx)</label><input type="text" id="q1Time" placeholder="1:32.456"></div>
+                        <div><label>Q2 (mm:ss.xxx)</label><input type="text" id="q2Time" placeholder="1:31.200"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="config-section">
+                <div class="config-section-header" onclick="toggleSection(this)">
+                    <i class="fas fa-circle"></i> <span id="lbl-race-tire">Race Tire</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="config-section-body">
+                    <div>
+                        <label id="lbl-compound">Selected compound</label>
+                        <select id="compound">
+                            <option value="extra_soft">Extra Soft (XS)</option>
+                            <option value="soft" selected>Soft (S)</option>
+                            <option value="medium">Medium (M)</option>
+                            <option value="hard">Hard (H)</option>
+                            <option value="rain">Rain (W)</option>
+                        </select>
+                    </div>
+                    <div class="input-row">
+                        <div><label id="lbl-tire-dur">Tire duration (laps)</label><input type="number" id="tireDur" value="25" min="1"></div>
+                        <div><label id="lbl-pit-time">Pit stop time (s)</label><input type="number" id="pitTime" value="16" min="10" step="0.5"></div>
+                    </div>
+                    <div><label id="lbl-danger-thresh">Danger threshold (%)</label><input type="number" id="dangerThresh" value="10" min="1" max="30"></div>
+                </div>
+            </div>
+
+            <div class="config-section">
+                <div class="config-section-header" onclick="toggleSection(this)">
+                    <i class="fas fa-layer-group"></i> <span id="lbl-strategy">Stint Strategy</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="config-section-body">
+                    <div style="font-size:10px;color:var(--text-muted);margin-bottom:-2px;" id="lbl-strategy-hint">Load laps for each stint. Last one at 0 = until the end.</div>
+                    <div id="stintsList"></div>
+                    <button class="btn btn-outline btn-sm" onclick="addStint()" style="width:100%;" id="btn-add-stint"><i class="fas fa-plus" style="font-size:9px;"></i> Add stint</button>
+                    <div class="stint-total">
+                        <span class="label" id="lbl-total-stints">Total stints:</span>
+                        <span class="value" id="stintTotalDisplay">0 / 58</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="config-section">
+                <div class="config-section-header collapsed" onclick="toggleSection(this)">
+                    <i class="fas fa-sliders-h"></i> <span id="lbl-advanced">Advanced Options</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="config-section-body hidden">
+                    <div class="input-row">
+                        <div><label id="lbl-fuel-pen">Fuel penalty (s)</label><input type="number" id="fuelPen" value="3.0" step="0.1"></div>
+                        <div><label id="lbl-fuel-exp">Fuel exponent</label><input type="number" id="fuelExp" value="0.75" step="0.05" min="0" max="2"></div>
+                    </div>
+                    <div><label id="lbl-rand-var">Random variation (±s) — 0 for clean data</label><input type="number" id="randomVar" value="0.15" step="0.05" min="0"></div>
+                </div>
+            </div>
+
+            <button class="btn btn-accent btn-simulate" onclick="runSimulation()" id="btn-simulate">
+                <i class="fas fa-play" style="font-size:11px;"></i> SIMULATE
+            </button>
+        </aside>
+
+        <main class="main-content" id="mainContent">
+            <div class="empty-state" id="emptyState">
+                <i class="fas fa-car-side"></i>
+                <p id="lbl-empty-text">Configure the stints and click <strong>SIMULATE</strong><br>to see the lap by lap breakdown</p>
+            </div>
+            <div id="resultsArea" style="display:none;"></div>
+        </main>
+    </div>
+
+    <script>
+        /* ============================================================
+           INTERNATIONALIZATION (i18n)
+        ============================================================ */
+        let currentLang = 'en';
+        const i18n = {
+            en: {
+                launcher: "Launcher",
+                track_race: "Track & Race", track: "Track", custom: "-- Custom --",
+                total_laps: "Total race laps", fuel_cons: "Fuel consumption (L/lap)",
+                qual_times: "Qualifying Times", race_tire: "Race Tire",
+                compound: "Selected compound", tire_dur: "Tire duration (laps)",
+                pit_time: "Pit stop time (s)", danger_thresh: "Danger threshold (%)",
+                strategy: "Stint Strategy", strategy_hint: "Load laps for each stint. Last one at 0 = until the end.",
+                add_stint: "Add stint", total_stints: "Total stints:", stint_suf: "stint:",
+                advanced: "Advanced Options", simulate: "SIMULATE",
+                empty_text: "Configure the stints and click <strong>SIMULATE</strong><br>to see the lap by lap breakdown",
+                total_time: "Total Time", fastest_lap: "Fastest Lap", slowest_lap: "Slowest Lap",
+                pit_stops: "Pit Stops", average: "Average", danger_laps: "Danger Laps",
+                dead_suffix: " dead", fuel: "Fuel", total_fuel: "Total fuel",
+                tires: "Tires", theor_dur: "Theoretical duration:", final: "final",
+                breakdown: "Lap by lap breakdown", wear_chart: "Wear by lap",
+                dl_table: "Download Table PNG", dl_chart: "Download Chart PNG",
+                lap: "LAP", time: "TIME", comp: "COMP.", wear: "WEAR", notes: "NOTES",
+                pit: "PIT", danger: "DANGER", dead: "DEAD", new_tire: "NEW",
+                fuel_pen: "Fuel penalty (s)", fuel_exp: "Fuel exponent",
+                rand_var: "Random variation (±s) — 0 for clean data",
+                stintNames: ["First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth"],
+                toasts: { inv_laps: "Invalid total laps", inv_q2: "Enter Q2 time", inv_dur: "Invalid tire duration", add_stint: "Add at least one stint", neg: "Negative stint", last_zero: "Only the last stint can be 0", sum: "Stints sum ", race: ", race has " }
+            },
+            es: {
+                launcher: "Lanzador",
+                track_race: "Pista y Carrera", track: "Pista", custom: "-- Personalizada --",
+                total_laps: "Total vueltas carrera", fuel_cons: "Consumo de combustible (L/vuelta)",
+                qual_times: "Tiempos Clasificación", race_tire: "Neumático de Carrera",
+                compound: "Compuesto seleccionado", tire_dur: "Duración del neumático (vueltas)",
+                pit_time: "Tiempo pit stop (s)", danger_thresh: "Umbral peligro (%)",
+                strategy: "Estrategia por Stints", strategy_hint: "Carga las vueltas de cada stint. El último en 0 = hasta el final.",
+                add_stint: "Añadir stint", total_stints: "Total stints:", stint_suf: "stint:",
+                advanced: "Opciones Avanzadas", simulate: "SIMULAR",
+                empty_text: "Configura los stints y pulsa <strong>SIMULAR</strong><br>para ver el desglose vuelta por vuelta",
+                total_time: "Tiempo Total", fastest_lap: "Vuelta Rápida", slowest_lap: "Vuelta Lenta",
+                pit_stops: "Paradas", average: "Promedio", danger_laps: "Vueltas en Peligro",
+                dead_suffix: " muertas", fuel: "Combustible", total_fuel: "Total combustible",
+                tires: "Neumáticos", theor_dur: "Duración teórica:", final: "final",
+                breakdown: "Desglose por vuelta", wear_chart: "Desgaste por vuelta",
+                dl_table: "Descargar Tabla PNG", dl_chart: "Descargar Gráfico PNG",
+                lap: "VUELTA", time: "TIEMPO", comp: "COMP.", wear: "DESGASTE", notes: "NOTAS",
+                pit: "PIT", danger: "PELIGRO", dead: "MUERTO", new_tire: "NUEVO",
+                fuel_pen: "Penalización combustible (s)", fuel_exp: "Exponente combustible",
+                rand_var: "Variación aleatoria (±s) — 0 para datos limpios",
+                stintNames: ["Primer", "Segundo", "Tercer", "Cuarto", "Quinto", "Sexto", "Séptimo", "Octavo"],
+                toasts: { inv_laps: "Vueltas totales inválidas", inv_q2: "Ingresa tiempo Q2", inv_dur: "Duración de neumático inválida", add_stint: "Agregá al menos un stint", neg: "Stint negativo", last_zero: "Solo el último stint puede ser 0", sum: "Stints suman ", race: ", carrera tiene " }
+            }
+        };
+
+        function setLang(lang) {
+            currentLang = lang;
+            const t = i18n[lang];
+            document.getElementById('btn-en').classList.toggle('lang-active', lang === 'en');
+            document.getElementById('btn-es').classList.toggle('lang-active', lang === 'es');
+            document.getElementById('lbl-launcher').textContent = t.launcher;
+            document.getElementById('lbl-track-race').textContent = t.track_race;
+            document.getElementById('lbl-track').textContent = t.track;
+            document.getElementById('lbl-custom-opt').textContent = t.custom;
+            document.getElementById('lbl-total-laps').textContent = t.total_laps;
+            document.getElementById('lbl-fuel-cons').textContent = t.fuel_cons;
+            document.getElementById('lbl-qual-times').textContent = t.qual_times;
+            document.getElementById('lbl-race-tire').textContent = t.race_tire;
+            document.getElementById('lbl-compound').textContent = t.compound;
+            document.getElementById('lbl-tire-dur').textContent = t.tire_dur;
+            document.getElementById('lbl-pit-time').textContent = t.pit_time;
+            document.getElementById('lbl-danger-thresh').textContent = t.danger_thresh;
+            document.getElementById('lbl-strategy').textContent = t.strategy;
+            document.getElementById('lbl-strategy-hint').textContent = t.strategy_hint;
+            document.getElementById('btn-add-stint').innerHTML = `<i class="fas fa-plus" style="font-size:9px;"></i> ${t.add_stint}`;
+            document.getElementById('lbl-total-stints').textContent = t.total_stints;
+            document.getElementById('lbl-advanced').textContent = t.advanced;
+            document.getElementById('btn-simulate').innerHTML = `<i class="fas fa-play" style="font-size:11px;"></i> ${t.simulate}`;
+            document.getElementById('lbl-empty-text').innerHTML = t.empty_text;
+            document.getElementById('lbl-fuel-pen').textContent = t.fuel_pen;
+            document.getElementById('lbl-fuel-exp').textContent = t.fuel_exp;
+            document.getElementById('lbl-rand-var').textContent = t.rand_var;
+            relabelStints();
+            updateStintTotal();
+            if (state.laps.length > 0) runSimulation();
+        }
+
+        /* ============================================================
+           BACK TO LAUNCHER
+        ============================================================ */
+        function goBackToLauncher() {
+            window.close();
+            setTimeout(function(){ window.location.href = 'index.html'; }, 300);
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === "Escape") goBackToLauncher();
+        });
+
+        /* ============================================================
+           MAIN SIMULATOR LOGIC
+        ============================================================ */
+        const state = { laps: [], bestTime: Infinity, worstTime: 0, totalTime: 0, strategy: null, lastSim: null };
+        const trackPresets = {
+            "a1-ring": { laps: 71, dur: 25, fuel: 3.5, pit: 21 },
+            "adelaide": { laps: 79, dur: 25, fuel: 2.5, pit: 19.5 },
+            "ahvenisto": { laps: 80, dur: 18, fuel: 3.0, pit: 11.5 },
+            "anderstorp": { laps: 70, dur: 18, fuel: 3.5, pit: 13.5 },
+            "austin": { laps: 56, dur: 25, fuel: 3.0, pit: 17.5 },
+            "avus": { laps: 64, dur: 35, fuel: 4.0, pit: 13 },
+            "barcelona": { laps: 65, dur: 18, fuel: 3.5, pit: 21 },
+            "brands-hatch": { laps: 75, dur: 35, fuel: 2.5, pit: 25.5 },
+            "brasilia": { laps: 55, dur: 18, fuel: 3.5, pit: 13.5 },
+            "bremgarten": { laps: 42, dur: 25, fuel: 3.0, pit: 17 },
+            "baku": { laps: 51, dur: 12, fuel: 3.5, pit: 17 },
+            "brno": { laps: 57, dur: 25, fuel: 3.0, pit: 14 },
+            "bucharest-ring": { laps: 80, dur: 12, fuel: 4.0, pit: 24 },
+            "buenos-aires": { laps: 72, dur: 12, fuel: 2.5, pit: 19.5 },
+            "estoril": { laps: 70, dur: 25, fuel: 3.0, pit: 22.5 },
+            "fiorano": { laps: 79, dur: 12, fuel: 4.0, pit: 16.5 },
+            "fuji": { laps: 67, dur: 25, fuel: 3.0, pit: 18.5 },
+            "grobnik": { laps: 74, dur: 35, fuel: 2.5, pit: 13 },
+            "hockenheim": { laps: 67, dur: 18, fuel: 3.5, pit: 16.5 },
+            "hungaroring": { laps: 77, dur: 12, fuel: 2.5, pit: 16.5 },
+            "imola": { laps: 62, dur: 25, fuel: 3.0, pit: 12 },
+            "indianapolis": { laps: 73, dur: 25, fuel: 3.5, pit: 25.5 },
+            "indy-oval": { laps: 200, dur: 35, fuel: 4.0, pit: 45 },
+            "interlagos": { laps: 71, dur: 25, fuel: 3.0, pit: 18 },
+            "irungattukottai": { laps: 79, dur: 18, fuel: 3.0, pit: 14 },
+            "istanbul": { laps: 58, dur: 25, fuel: 3.0, pit: 16 },
+            "jerez": { laps: 69, dur: 18, fuel: 3.5, pit: 18 },
+            "jeddah": { laps: 50, dur: 12, fuel: 4.0, pit: 21 },
+            "jyllands-ringen": { laps: 136, dur: 35, fuel: 2.5, pit: 19.5 },
+            "kaunas": { laps: 80, dur: 18, fuel: 3.0, pit: 11 },
+            "kyalami": { laps: 72, dur: 12, fuel: 2.5, pit: 15 },
+            "laguna-seca": { laps: 79, dur: 12, fuel: 4.0, pit: 16.7 },
+            "las-vegas": { laps: 50, dur: 25, fuel: 3.5, pit: 23 },
+            "losail": { laps: 57, dur: 35, fuel: 2.5, pit: 24 },
+            "magny-cours": { laps: 72, dur: 25, fuel: 3.0, pit: 18 },
+            "melbourne": { laps: 58, dur: 18, fuel: 3.0, pit: 16.5 },
+            "mexico-city": { laps: 69, dur: 35, fuel: 3.0, pit: 24 },
+            "miami": { laps: 57, dur: 35, fuel: 2.5, pit: 17 },
+            "monte-carlo": { laps: 78, dur: 35, fuel: 2.5, pit: 18 },
+            "montreal": { laps: 69, dur: 25, fuel: 3.0, pit: 16.5 },
+            "monza": { laps: 53, dur: 25, fuel: 4.0, pit: 25.5 },
+            "mugello": { laps: 58, dur: 25, fuel: 3.0, pit: 13.5 },
+            "new-delhi": { laps: 60, dur: 18, fuel: 3.0, pit: 19 },
+            "nurburgring": { laps: 60, dur: 35, fuel: 2.5, pit: 15 },
+            "rafaela": { laps: 67, dur: 12, fuel: 3.65, pit: 10 },
+            "oesterreichring": { laps: 52, dur: 18, fuel: 3.5, pit: 21 },
+            "paul-ricard": { laps: 79, dur: 18, fuel: 3.5, pit: 19.5 },
+            "portimao": { laps: 66, dur: 18, fuel: 3.0, pit: 15.5 },
+            "poznan": { laps: 75, dur: 35, fuel: 2.5, pit: 14 },
+            "sakhir": { laps: 57, dur: 12, fuel: 4.0, pit: 25.5 },
+            "sepang": { laps: 55, dur: 25, fuel: 3.0, pit: 24 },
+            "serres": { laps: 80, dur: 25, fuel: 3.0, pit: 12 },
+            "shanghai": { laps: 56, dur: 25, fuel: 4.0, pit: 24 },
+            "silverstone": { laps: 60, dur: 35, fuel: 3.5, pit: 22.5 },
+            "singapore": { laps: 61, dur: 18, fuel: 3.0, pit: 17 },
+            "sochi": { laps: 53, dur: 35, fuel: 3.0, pit: 23 },
+            "slovakiaring": { laps: 53, dur: 18, fuel: 3.5, pit: 19.5 },
+            "spa": { laps: 44, dur: 25, fuel: 3.0, pit: 13.5 },
+            "suzuka": { laps: 53, dur: 25, fuel: 3.0, pit: 15 },
+            "valencia": { laps: 57, dur: 25, fuel: 3.0, pit: 14.5 },
+            "yas-marina": { laps: 55, dur: 35, fuel: 3.0, pit: 18.5 },
+            "yeongam": { laps: 55, dur: 18, fuel: 3.0, pit: 23.5 },
+            "zandvoort": { laps: 71, dur: 35, fuel: 2.5, pit: 22.5 },
+            "zolder": { laps: 70, dur: 35, fuel: 3.0, pit: 19.5 }
+        };
+
+        const compoundLabels = { extra_soft: 'XS', soft: 'S', medium: 'M', hard: 'H', rain: 'W' };
+        const compoundColors = { extra_soft: '#ff6666', soft: '#e10600', medium: '#f5a623', hard: '#c8d0da', rain: '#3b9eff' };
+
+        function parseTime(s) { if (!s || !s.trim()) return 0; s = s.trim(); if (s.includes(':')) { const p = s.split(':'); return parseFloat(p[0]) * 60 + parseFloat(p[1]); } return parseFloat(s); }
+        function formatTime(s) { if (!s || s <= 0) return '--:--.---'; return Math.floor(s / 60) + ':' + (s % 60).toFixed(3).padStart(6, '0'); }
+        function formatTimeShort(s) { if (!s || s <= 0) return '--:--.--'; return Math.floor(s / 60) + ':' + (s % 60).toFixed(2).padStart(5, '0'); }
+        function el(id) { return document.getElementById(id); }
+        function showToast(m) { document.querySelectorAll('.toast').forEach(t => t.remove()); const t = document.createElement('div'); t.className = 'toast'; t.innerHTML = '<i class="fas fa-exclamation-triangle" style="margin-right:8px;"></i>' + m; document.body.appendChild(t); setTimeout(() => t.remove(), 3000); }
+        function toggleSection(h) { h.classList.toggle('collapsed'); h.nextElementSibling.classList.toggle('hidden'); }
+
+        function loadTrackPreset() {
+            const k = el('trackSelect').value; if (!k || !trackPresets[k]) return;
+            const p = trackPresets[k]; el('totalLaps').value = p.laps; el('tireDur').value = p.dur;
+            el('fuelConsumption').value = p.fuel; el('fuelPen').value = p.fuel; el('pitTime').value = p.pit;
+            updateStintTotal();
+        }
+
+        function addStint(val) {
+            const l = el('stintsList'); const c = l.children.length;
+            const t = i18n[currentLang];
+            const n = (t.stintNames[c] || (c+1)+'º');
+            const r = document.createElement('div'); r.className = 'stint-row';
+            r.innerHTML = `<div class="stint-label">${n} ${t.stint_suf}</div><div><input type="number" class="stint-laps" value="${val !== undefined ? val : ''}" min="0" placeholder="0 = end" oninput="updateStintTotal()"></div><button class="remove-btn" onclick="removeStint(this)"><i class="fas fa-times"></i></button>`;
+            l.appendChild(r); updateStintTotal();
+        }
+        function removeStint(b) { b.parentElement.remove(); relabelStints(); updateStintTotal(); }
+        function relabelStints() {
+            const t = i18n[currentLang];
+            Array.from(el('stintsList').children).forEach((r, i) => { r.querySelector('.stint-label').textContent = (t.stintNames[i] || (i+1)+'º') + ' ' + t.stint_suf; });
+        }
+        function updateStintTotal() {
+            const tl = parseInt(el('totalLaps').value) || 0; const st = getStintsFromUI(); let ct = 0;
+            st.forEach((s, i) => { ct = (i === st.length - 1 && s === 0) ? tl : ct + s; });
+            const d = el('stintTotalDisplay'); d.textContent = st.length + ' stints = ' + ct + ' laps';
+            d.className = 'value ' + (ct === tl ? 'ok' : 'error');
+        }
+        function getStintsFromUI() { return Array.from(document.querySelectorAll('#stintsList .stint-laps')).map(i => { const v = parseInt(i.value); return isNaN(v) ? 0 : v; }); }
+        function getPitLapsFromStints(st) { const p = []; let a = 0; for (let i = 0; i < st.length; i++) { if (i === st.length - 1 && st[i] === 0) break; a += st[i]; if (i < st.length - 1) p.push(a); } return p; }
+        function buildStintStructure(st, tl) {
+            const s = []; let a = 0; const t = i18n[currentLang];
+            for (let i = 0; i < st.length; i++) {
+                const n = t.stintNames[i] || (i+1)+'º'; const start = a + 1;
+                if (i === st.length - 1 && st[i] === 0) { s.push({ name: n, laps: tl - a, startLap: start, endLap: tl }); }
+                else { a += st[i]; s.push({ name: n, laps: st[i], startLap: start, endLap: a }); }
+            } return s;
+        }
+
+        function simulateLaps(tl, td, pl, q2, pt, fp, fe, dt, rv) {
+            const laps = []; let cw = 100, tpt = 0;
+            for (let i = 1; i <= tl; i++) {
+                const ip = pl.includes(i); if (ip) { tpt += pt; cw = 100; }
+                cw -= 100 / td; const w = Math.max(0, cw);
+                const ff = fp * Math.pow((tl - i) / tl, fe);
+                let wp = 0; if (w <= 0) wp = 1.5; else if (w < dt) wp = 0.3 + (dt - w) * 0.12; else if (w < 30) wp = (30 - w) * 0.015;
+                const rf = rv > 0 ? (Math.random() * 2 - 1) * rv : 0;
+                let lt = q2 + ff + wp + rf; if (ip) lt += pt;
+                const notes = [];
+                if (ip) notes.push('PIT'); if (i === 1) notes.push('NEW'); if (ip) notes.push('NEW');
+                if (w <= 0 && !ip) notes.push('DEAD'); else if (w < dt && !ip) notes.push('DANGER');
+                laps.push({ lap: i, time: lt, wear: w, isPitLap: ip, isDangerZone: w < dt && w > 0, isDead: w <= 0, isNewTire: ip || i === 1, notes });
+            }
+            const tt = laps.reduce((s, l) => s + l.time, 0);
+            const pl2 = laps.filter(l => !l.isPitLap);
+            return { laps, bestTime: pl2.length ? Math.min(...pl2.map(l => l.time)) : 0, worstTime: pl2.length ? Math.max(...pl2.map(l => l.time)) : 0, totalTime: tt, totalPitTime: tpt };
+        }
+
+        function runSimulation() {
+            const t = i18n[currentLang];
+            const tl = parseInt(el('totalLaps').value); const q2 = parseTime(el('q2Time').value);
+            const pt = parseFloat(el('pitTime').value); const fp = parseFloat(el('fuelPen').value);
+            const fe = parseFloat(el('fuelExp').value); const dt = parseFloat(el('dangerThresh').value);
+            const rv = parseFloat(el('randomVar').value); const td = parseFloat(el('tireDur').value);
+            const comp = el('compound').value; const si = getStintsFromUI();
+            if (!tl || tl < 5) { showToast(t.toasts.inv_laps); return; }
+            if (!q2 || q2 < 30) { showToast(t.toasts.inv_q2); return; }
+            if (!td || td < 1) { showToast(t.toasts.inv_dur); return; }
+            if (!si.length) { showToast(t.toasts.add_stint); return; }
+            for (let i = 0; i < si.length; i++) { if (si[i] < 0) { showToast(t.toasts.neg); return; } }
+            for (let i = 0; i < si.length - 1; i++) { if (si[i] === 0) { showToast(t.toasts.last_zero); return; } }
+            let ct = 0; si.forEach((s, i) => { ct = (i === si.length - 1 && s === 0) ? tl : ct + s; });
+            if (ct !== tl) { showToast(`${t.toasts.sum}${ct}${t.toasts.race}${tl}`); return; }
+            const pl = getPitLapsFromStints(si); const ss = buildStintStructure(si, tl);
+            const sim = simulateLaps(tl, td, pl, q2, pt, fp, fe, dt, rv);
+            state.laps = sim.laps; state.bestTime = sim.bestTime; state.worstTime = sim.worstTime;
+            state.totalTime = sim.totalTime; state.strategy = ss;
+            state.lastSim = { sim, stintStructure: ss, compound: comp, dangerThresh: dt, totalLaps: tl };
+            renderResults(sim, ss, comp);
+        }
+
+        function renderResults(sim, stints, compound) {
+            const t = i18n[currentLang];
+            el('emptyState').style.display = 'none';
+            const area = el('resultsArea'); area.style.display = 'block';
+            const dt = parseFloat(el('dangerThresh').value); const tl = parseInt(el('totalLaps').value);
+            const ns = stints.length - 1;
+            const pl = sim.laps.filter(l => !l.isPitLap);
+            const bl = pl.reduce((a, b) => a.time < b.time ? a : b, pl[0]);
+            const wl = pl.reduce((a, b) => a.time > b.time ? a : b, pl[0]);
+            const dl = sim.laps.filter(l => l.isDangerZone && !l.isPitLap).length;
+            const ddl = sim.laps.filter(l => l.isDead && !l.isPitLap).length;
+            const fc = parseFloat(el('fuelConsumption').value) || 0;
+            const td = parseFloat(el('tireDur').value) || 1;
+
+            let h = '';
+            h += '<div class="summary-grid">';
+            h += sc(t.total_time, formatTimeShort(sim.totalTime), true);
+            h += sc(t.fastest_lap, formatTime(bl.time) + ' <span style="font-size:10px;color:var(--text-muted);">L' + bl.lap + '</span>');
+            h += sc(t.slowest_lap, formatTime(wl.time) + ' <span style="font-size:10px;color:var(--text-muted);">L' + wl.lap + '</span>');
+            h += sc(t.pit_stops, ns + ' <span style="font-size:10px;color:var(--text-muted);">(' + sim.totalPitTime.toFixed(1) + 's)</span>');
+            h += sc(t.average, formatTime(sim.totalTime / sim.laps.length));
+            h += sc(t.danger_laps, '<span style="color:var(--danger);">' + dl + '</span>' + (ddl ? ' <span style="color:#555;">/ ' + ddl + t.dead_suffix + '</span>' : ''));
+            h += '</div>';
+
+            h += '<div class="strategy-display">';
+            h += `<span style="font-family:var(--font-display);font-size:11px;font-weight:700;color:var(--text);letter-spacing:0.5px;">Total: ${tl} Laps</span>`;
+            h += '<span style="width:1px;height:20px;background:var(--border);margin:0 4px;"></span>';
+            stints.forEach((s, i) => {
+                if (i > 0) h += '<span class="arrow"><i class="fas fa-chevron-right"></i></span>';
+                h += `<span class="stint-badge"><span class="mini-badge comp-badge ${compound}">${compoundLabels[compound]}</span><span>${s.name}: ${s.laps}L</span></span>`;
+            });
+            h += '</div>';
+
+            h += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">';
+            h += '<div class="fuel-card"><div class="fuel-card-header"><i class="fas fa-gas-pump"></i> '+t.fuel+' <span style="margin-left:auto;font-size:11px;color:var(--text-muted);font-weight:400;">'+fc+' L/lap</span></div><div class="fuel-card-body">';
+            let totalFuel = 0;
+            stints.forEach(s => { const stintFuel = s.laps * fc; totalFuel += stintFuel; h += `<div class="fuel-stint-row"><span class="stint-name">${s.name} stint</span><span class="stint-vueltas">${s.laps}L</span><span class="stint-x">&times;</span><span class="stint-consumo">${fc} L/L</span><span class="stint-total">${stintFuel.toFixed(1)} L</span></div>`; });
+            h += `<div class="fuel-total-row"><span class="label">${t.total_fuel}</span><span class="value">${totalFuel.toFixed(1)} L</span></div></div></div>`;
+
+            h += '<div class="tire-card"><div class="tire-card-header"><i class="fas fa-circle"></i> '+t.tires+' <span style="margin-left:auto;font-size:11px;color:var(--text-muted);font-weight:400;">'+t.theor_dur+': ' + td + 'L</span></div><div class="tire-card-body">';
+            stints.forEach(s => {
+                const endWear = Math.max(0, 100 - (s.laps / td) * 100); let wearClass = 'ok';
+                if (endWear <= 0) wearClass = 'danger'; else if (endWear < dt) wearClass = 'danger'; else if (endWear < 30) wearClass = 'warn';
+                h += `<div class="tire-stint-row"><span class="stint-name">${s.name} stint</span><span class="stint-vueltas">${s.laps}L</span><span class="stint-range">(${s.startLap} → ${s.endLap})</span><span class="stint-wear-end ${wearClass}">${endWear.toFixed(1)}% ${t.final}</span></div>`;
+            });
+            h += '</div></div></div>';
+
+            h += '<div class="table-wrapper"><div class="table-header-bar"><h3><i class="fas fa-table" style="margin-right:6px;"></i>'+t.breakdown+'</h3><button class="btn-download" onclick="downloadTablePNG()"><i class="fas fa-download"></i> '+t.dl_table+'</button></div>';
+            h += '<div class="table-scroll"><table class="lap-table"><thead><tr><th style="width:50px;">'+t.lap+'</th><th style="width:110px;">'+t.time+'</th><th style="width:45px;">'+t.comp+'</th><th class="wear-cell">'+t.wear+'</th><th style="width:130px;">'+t.notes+'</th></tr></thead><tbody>';
+            sim.laps.forEach((lap, idx) => {
+                const isBest = !lap.isPitLap && Math.abs(lap.time - bl.time) < 0.001;
+                const isWorst = !lap.isPitLap && Math.abs(lap.time - wl.time) < 0.001;
+                let wc = lap.wear <= 0 ? 'dead' : lap.wear > 30 ? 'good' : lap.wear > dt ? 'warn' : 'danger';
+                let rc = 'lap-row-anim' + (lap.isPitLap ? ' pit-row' : '');
+                h += `<tr class="${rc}" style="animation-delay:${idx*12}ms;"><td class="lap-num">${lap.lap}</td><td class="lap-time${isBest?' best':''}${isWorst?' worst':''}">${formatTime(lap.time)}</td><td><span class="comp-badge ${compound}">${compoundLabels[compound]}</span></td><td class="wear-cell"><div class="wear-bar-container"><div class="wear-bar-track"><div class="wear-bar-fill ${wc}" style="width:${Math.max(0,lap.wear)}%;"></div></div><span class="wear-pct ${wc}">${lap.wear.toFixed(1)}%</span></div></td><td class="note-text">`;
+                lap.notes.forEach(n => {
+                    if (n==='PIT') h += '<span class="pit"><i class="fas fa-tools" style="margin-right:3px;"></i>'+t.pit+'</span> ';
+                    if (n==='DANGER') h += '<span class="danger"><i class="fas fa-exclamation-triangle" style="margin-right:3px;"></i>'+t.danger+'</span> ';
+                    if (n==='DEAD') h += '<span class="dead"><i class="fas fa-skull-crossbones" style="margin-right:3px;"></i>'+t.dead+' 0%</span> ';
+                    if (n==='NEW') h += '<span class="new-tire"><i class="fas fa-circle" style="margin-right:3px;font-size:7px;"></i>'+t.new_tire+'</span> ';
+                });
+                h += '</td></tr>';
+            });
+            h += '</tbody></table></div></div>';
+
+            h += '<div class="chart-container"><div class="chart-header-bar"><h3><i class="fas fa-chart-area" style="margin-right:6px;"></i>'+t.wear_chart+'</h3><button class="btn-download" onclick="downloadChartPNG()"><i class="fas fa-download"></i> '+t.dl_chart+'</button></div><canvas id="wearChart"></canvas></div>';
+            area.innerHTML = h;
+            requestAnimationFrame(() => drawWearChart(sim.laps, dt, compound));
+        }
+
+        function sc(l, v, a) { return `<div class="summary-card"><div class="label">${l}</div><div class="value${a?' accent':''}">${v}</div></div>`; }
+
+        function downloadTablePNG() {
+            if (!state.lastSim) return;
+            const t = i18n[currentLang];
+            const { sim, stintStructure, compound, dangerThresh, totalLaps } = state.lastSim;
+            const laps = sim.laps; const pl = laps.filter(l => !l.isPitLap);
+            const bl = pl.reduce((a, b) => a.time < b.time ? a : b, pl[0]);
+            const wl = pl.reduce((a, b) => a.time > b.time ? a : b, pl[0]);
+            const rowH = 32, headerH = 40, titleH = 55, padL = 16, padR = 16;
+            const colW = [60, 130, 50, 240, 180]; const totalW = padL + colW.reduce((a,b) => a+b, 0) + padR;
+            const totalH = titleH + headerH + laps.length * rowH + 10;
+            const c = document.createElement('canvas'); c.width = totalW; c.height = totalH;
+            const ctx = c.getContext('2d'); ctx.fillStyle = '#0b0e13'; ctx.fillRect(0, 0, totalW, totalH);
+            const trackName = el('trackSelect').selectedOptions[0]?.text || 'Race';
+            ctx.fillStyle = '#e6edf3'; ctx.font = 'bold 14px Orbitron, monospace'; ctx.textAlign = 'left';
+            ctx.fillText('GPRO Race Analysis — Laps Sims Sauber', padL, 24);
+            ctx.fillStyle = '#6e7a88'; ctx.font = '11px IBM Plex Sans, sans-serif'; ctx.textAlign = 'right';
+            ctx.fillText(`${trackName} | ${totalLaps}L | ${compoundLabels[compound]} | Total: ${formatTimeShort(sim.totalTime)}`, totalW - padR, 24);
+            const headers = [t.lap, t.time, t.comp, t.wear, t.notes]; const colX = []; let x = padL; colW.forEach(w => { colX.push(x); x += w; });
+            ctx.fillStyle = '#1a2029'; ctx.fillRect(padL, titleH, totalW - padL - padR, headerH);
+            ctx.fillStyle = '#6e7a88'; ctx.font = 'bold 10px IBM Plex Sans, sans-serif';
+            headers.forEach((hh, i) => { const al = i===1?'right':i===4?'left':'center'; ctx.textAlign = al; ctx.fillText(hh, al==='right'?colX[i]+colW[i]-12:al==='left'?colX[i]+12:colX[i]+colW[i]/2, titleH+25); });
+            laps.forEach((lap, idx) => {
+                const y = titleH + headerH + idx * rowH;
+                const isBest = !lap.isPitLap && Math.abs(lap.time - bl.time) < 0.001;
+                const isWorst = !lap.isPitLap && Math.abs(lap.time - wl.time) < 0.001;
+                if (lap.isPitLap) { ctx.fillStyle = 'rgba(59,158,255,0.06)'; ctx.fillRect(padL, y, totalW - padL - padR, rowH); }
+                ctx.strokeStyle = 'rgba(37,43,53,0.6)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(padL, y+rowH); ctx.lineTo(totalW-padR, y+rowH); ctx.stroke();
+                const midY = y + rowH/2 + 4;
+                ctx.fillStyle = '#6e7a88'; ctx.font = '600 11px Orbitron, monospace'; ctx.textAlign = 'center'; ctx.fillText(lap.lap, colX[0]+colW[0]/2, midY);
+                ctx.fillStyle = isBest?'#1db954':isWorst?'#e10600':'#e6edf3'; ctx.font = (isBest||isWorst)?'bold 11px Orbitron, monospace':'11px Orbitron, monospace'; ctx.textAlign = 'right'; ctx.fillText(formatTime(lap.time), colX[1]+colW[1]-12, midY);
+                const bw=28, bh=18, bx=colX[2]+(colW[2]-bw)/2, by=y+(rowH-bh)/2; ctx.fillStyle = compoundColors[compound]; roundRect(ctx,bx,by,bw,bh,3); ctx.fill();
+                ctx.fillStyle = (compound==='medium'||compound==='hard')?'#000':'#fff'; ctx.font = 'bold 9px Orbitron, monospace'; ctx.textAlign = 'center'; ctx.fillText(compoundLabels[compound], bx+bw/2, by+13);
+                const barX=colX[3]+12, barW=150, barH=14, barY=y+(rowH-barH)/2; ctx.fillStyle = 'rgba(255,255,255,0.05)'; roundRect(ctx,barX,barY,barW,barH,3); ctx.fill();
+                const w=Math.max(0,lap.wear); let bc; if(lap.wear<=0)bc='#333';else if(lap.wear>30)bc='#1db954';else if(lap.wear>dangerThresh)bc='#e6a817';else bc='#e10600';
+                if(w>0){ctx.fillStyle=bc;roundRect(ctx,barX,barY,Math.max(6,barW*w/100),barH,3);ctx.fill();}
+                ctx.fillStyle=bc;ctx.font='600 10px Orbitron, monospace';ctx.textAlign='right';ctx.fillText(w.toFixed(1)+'%',colX[3]+colW[3]-8,midY);
+                ctx.textAlign='left'; let nx=colX[4]+12; const nf='600 10px IBM Plex Sans, sans-serif';
+                lap.notes.forEach(n=>{if(n==='PIT'){ctx.fillStyle='#3b9eff';ctx.font=nf;ctx.fillText(t.pit,nx,midY);nx+=ctx.measureText(t.pit+' ').width+4;}if(n==='DANGER'){ctx.fillStyle='#e10600';ctx.font=nf;ctx.fillText(t.danger,nx,midY);nx+=ctx.measureText(t.danger+' ').width+4;}if(n==='DEAD'){ctx.fillStyle='#555';ctx.font=nf;ctx.fillText(t.dead+' 0%',nx,midY);nx+=ctx.measureText(t.dead+' 0% ').width+4;}if(n==='NEW'){ctx.fillStyle='#1db954';ctx.font=nf;ctx.fillText(t.new_tire,nx,midY);nx+=ctx.measureText(t.new_tire+' ').width+4;}});
+            });
+            const link=document.createElement('a');link.download=`gpro-table-${totalLaps}laps-${compound}.png`;link.href=c.toDataURL('image/png');link.click();
+        }
+        function roundRect(ctx,x,y,w,h,r){r=Math.min(r,w/2,h/2);ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+
+        function drawWearChart(laps, dt, compound) {
+            const canvas=el('wearChart');if(!canvas)return;const ctx=canvas.getContext('2d');const rect=canvas.getBoundingClientRect();const dpr=window.devicePixelRatio||1;canvas.width=rect.width*dpr;canvas.height=rect.height*dpr;ctx.scale(dpr,dpr);drawChartOnCtx(ctx,rect.width,rect.height,laps,dt,compound,false);
+        }
+        function downloadChartPNG() {
+            if(!state.lastSim)return;const{sim,compound}=state.lastSim;const dt=parseFloat(el('dangerThresh').value);const total=sim.laps.length;const W=Math.max(800,total*30+80),H=420;const off=document.createElement('canvas');off.width=W;off.height=H;drawChartOnCtx(off.getContext('2d'),W,H,sim.laps,dt,compound,true);const link=document.createElement('a');link.download=`gpro-chart-${total}laps-${compound}.png`;link.href=off.toDataURL('image/png');link.click();
+        }
+        function drawChartOnCtx(ctx,W,H,laps,dt,compound,isExport){
+            const t = i18n[currentLang];
+            ctx.clearRect(0,0,W,H);if(isExport){ctx.fillStyle='#0b0e13';ctx.fillRect(0,0,W,H);}
+            const pad={top:40,right:30,bottom:35,left:50};const cW=W-pad.left-pad.right;const cH=H-pad.top-pad.bottom;const total=laps.length;const xS=cW/Math.max(1,total-1);const yP=v=>pad.top+cH*(1-v/100);
+            if(isExport){const tn=el('trackSelect').selectedOptions[0]?.text||'Race';ctx.fillStyle='#e6edf3';ctx.font='bold 14px Orbitron, monospace';ctx.textAlign='left';ctx.fillText('GPRO Race Analysis — Laps Sims Sauber',pad.left,24);ctx.fillStyle='#6e7a88';ctx.font='11px IBM Plex Sans, sans-serif';ctx.textAlign='right';ctx.fillText(`${tn} | ${total}L | ${compoundLabels[compound]} | Dur: ${el('tireDur').value}L`,W-pad.right,24);}
+            ctx.fillStyle='rgba(29,185,84,0.06)';ctx.fillRect(pad.left,yP(100),cW,yP(30)-yP(100));ctx.fillStyle='rgba(230,168,23,0.06)';ctx.fillRect(pad.left,yP(30),cW,yP(dt)-yP(30));ctx.fillStyle='rgba(225,6,0,0.08)';ctx.fillRect(pad.left,yP(dt),cW,yP(0)-yP(dt));
+            [0,10,25,50,75,100].forEach(v=>{const y=yP(v);if(v!==0){ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(pad.left+cW,y);ctx.stroke();}ctx.fillStyle='rgba(255,255,255,0.3)';ctx.font='10px IBM Plex Sans, sans-serif';ctx.textAlign='right';ctx.fillText(v+'%',pad.left-6,y+3);});
+            ctx.strokeStyle='rgba(255,255,255,0.15)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.left,yP(0));ctx.lineTo(pad.left+cW,yP(0));ctx.stroke();
+            ctx.strokeStyle='rgba(225,6,0,0.5)';ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(pad.left,yP(dt));ctx.lineTo(pad.left+cW,yP(dt));ctx.stroke();ctx.setLineDash([]);
+            ctx.fillStyle='rgba(225,6,0,0.7)';ctx.font='9px IBM Plex Sans, sans-serif';ctx.textAlign='left';ctx.fillText(t.danger+' '+dt+'%',pad.left+cW+4,yP(dt)+3);
+            const ml=Math.floor(cW/25);const int=total<=ml?1:total<=60?2:5;for(let i=1;i<=total;i+=int){ctx.fillStyle='rgba(255,255,255,0.3)';ctx.font='10px IBM Plex Sans, sans-serif';ctx.textAlign='center';ctx.fillText(i,pad.left+(i-1)*xS,H-10);}
+            laps.forEach(l=>{if(l.isPitLap){const x=pad.left+(l.lap-1)*xS;ctx.strokeStyle='rgba(59,158,255,0.4)';ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(x,pad.top);ctx.lineTo(x,pad.top+cH);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='rgba(59,158,255,0.6)';ctx.font='bold 8px Orbitron, monospace';ctx.textAlign='center';ctx.fillText(t.pit,x,pad.top-5);}});
+            const color=compoundColors[compound]||'#e10600';const r=parseInt(color.slice(1,3),16),g=parseInt(color.slice(3,5),16),b=parseInt(color.slice(5,7),16);
+            let ss=0;for(let i=0;i<=laps.length;i++){const ie=i===laps.length;const ic=!ie&&laps[i].isNewTire&&i>0;if(ie||ic){ctx.strokeStyle=color;ctx.lineWidth=isExport?3:2.5;ctx.lineJoin='round';ctx.lineCap='round';ctx.beginPath();for(let j=ss;j<i;j++){const x=pad.left+j*xS,y=yP(Math.max(0,laps[j].wear));j===ss?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();ctx.lineTo(pad.left+(i-1)*xS,yP(0));ctx.lineTo(pad.left+ss*xS,yP(0));ctx.closePath();ctx.fillStyle=`rgba(${r},${g},${b},0.07)`;ctx.fill();if(!ie)ss=i;}}
+            laps.forEach((l,i)=>{if(l.isDangerZone||l.isDead){ctx.fillStyle=l.isDead?'#555':'#e10600';ctx.beginPath();ctx.arc(pad.left+i*xS,yP(Math.max(0,l.wear)),isExport?4:3,0,Math.PI*2);ctx.fill();}});
+            const lx=pad.left+5,ly=H-30;ctx.fillStyle=color;ctx.fillRect(lx,ly,14,10);ctx.fillStyle='rgba(255,255,255,0.6)';ctx.font='10px IBM Plex Sans, sans-serif';ctx.textAlign='left';ctx.fillText(t.wear+' '+compoundLabels[compound],lx+18,ly+9);
+            if(isExport&&state.strategy){let sx=lx+140;state.strategy.forEach(s=>{ctx.fillStyle='rgba(255,255,255,0.35)';ctx.font='10px IBM Plex Sans, sans-serif';const txt=`${s.name}: ${s.laps}L (${s.startLap}-${s.endLap})`;ctx.fillText(txt,sx,ly+9);sx+=ctx.measureText(txt).width+20;});}
+            ctx.strokeStyle='rgba(255,255,255,0.08)';ctx.lineWidth=1;ctx.strokeRect(pad.left,pad.top,cW,cH);
+        }
+
+        /* ============================================================
+           INIT
+        ============================================================ */
+        loadTrackPreset();
+        addStint(20); addStint(20); addStint(18); addStint(0);
+        el('totalLaps').addEventListener('input', updateStintTotal);
+        window.addEventListener('resize', () => { if (state.laps.length > 0) drawWearChart(state.laps, parseFloat(el('dangerThresh').value), el('compound').value); });
+        document.querySelectorAll('.sidebar input').forEach(inp => { inp.addEventListener('keydown', e => { if (e.key === 'Enter') runSimulation(); }); });
+    </script>
+</body>
+</html>

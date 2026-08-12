@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q Setup Calculator — Sauber GPRO Tools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-deep: #060910;
+            --bg-primary: #0b1018;
+            --bg-card: #111a26;
+            --bg-input: #0a1018;
+            --border: #1a2740;
+            --border-light: #243350;
+            --accent: #00e676;
+            --accent-dim: rgba(0,230,118,0.12);
+            --accent-glow: rgba(0,230,118,0.25);
+            --wet: #00b4d8;
+            --wet-dim: rgba(0,180,216,0.12);
+            --wet-glow: rgba(0,180,216,0.25);
+            --text: #dfe6ed;
+            --text-sec: #7a8899;
+            --text-muted: #3e4d5f;
+            --danger: #f85149;
+            --danger-dim: rgba(248,81,73,0.12);
+            --warning: #e3a008;
+            --warning-dim: rgba(227,160,8,0.12);
+            --font-display: 'Rajdhani', sans-serif;
+            --font-body: 'Space Grotesk', sans-serif;
+            --radius: 10px;
+            --radius-sm: 6px;
+        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth}
+        body{font-family:var(--font-body);background:var(--bg-deep);color:var(--text);min-height:100vh;line-height:1.5;overflow-x:hidden}
+        body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(0,230,118,0.04),transparent),radial-gradient(ellipse 60% 50% at 80% 90%,rgba(0,180,216,0.03),transparent);pointer-events:none;z-index:0}
+        body::after{content:'';position:fixed;inset:0;background-image:radial-gradient(rgba(255,255,255,0.03) 1px,transparent 1px);background-size:28px 28px;pointer-events:none;z-index:0}
+
+        .navbar{display:none;align-items:center;gap:16px;padding:0 24px;height:52px;background:var(--bg-card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+        .navbar.visible{display:flex}
+        .nav-back{background:var(--accent-dim);border:1px solid rgba(0,230,118,0.2);color:var(--accent);padding:6px 14px;border-radius:var(--radius-sm);cursor:pointer;font-family:var(--font-body);font-size:13px;font-weight:600;transition:all .2s;display:flex;align-items:center;gap:6px}
+        .nav-back:hover{background:var(--accent-glow);border-color:var(--accent)}
+        .nav-brand{font-family:var(--font-display);font-weight:700;font-size:16px;letter-spacing:2px;color:var(--accent)}
+        .nav-brand span{color:var(--text);font-weight:400}
+        .nav-sep{width:1px;height:24px;background:var(--border-light)}
+        .nav-title{font-size:13px;color:var(--text-sec);font-weight:500}
+
+        .container{max-width:720px;margin:0 auto;padding:24px 20px 40px;position:relative;z-index:1}
+
+        .page-header{text-align:center;margin-bottom:32px;padding-top:8px}
+        .page-header .brand{font-family:var(--font-display);font-weight:700;font-size:14px;letter-spacing:4px;color:var(--accent);text-transform:uppercase;margin-bottom:6px}
+        .page-header h1{font-family:var(--font-display);font-weight:700;font-size:clamp(28px,5vw,38px);color:#fff;letter-spacing:1px;line-height:1.1}
+        .page-header h1 span{color:var(--accent)}
+        .page-header .subtitle{font-size:14px;color:var(--text-sec);margin-top:8px}
+
+        .track-section{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:24px;position:relative;overflow:hidden}
+        .track-section::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),transparent 60%)}
+        .track-top{display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap}
+        .track-select-wrap{flex:1;min-width:200px}
+        .track-select-wrap label{display:block;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-sec);margin-bottom:6px}
+        .track-select-wrap select{width:100%;padding:10px 14px;background:var(--bg-input);border:1px solid var(--border-light);border-radius:var(--radius-sm);color:#fff;font-family:var(--font-display);font-size:17px;font-weight:600;cursor:pointer;transition:border-color .2s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%237a8899'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+        .track-select-wrap select:focus{outline:none;border-color:var(--accent)}
+        .track-meta{display:flex;flex-wrap:wrap;gap:8px}
+        .meta-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;background:var(--bg-primary);border:1px solid var(--border);border-radius:20px;font-size:12px;color:var(--text-sec);font-weight:500;white-space:nowrap}
+        .meta-chip i{font-size:10px;color:var(--text-muted)}
+        .meta-chip.chip-df{border-color:rgba(0,230,118,0.2);color:var(--accent)}
+        .meta-chip.chip-grip{border-color:rgba(0,180,216,0.2);color:var(--wet)}
+        .meta-chip.chip-country{font-weight:600;color:var(--text)}
+
+        .section-label{font-family:var(--font-display);font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-sec);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+        .section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+        .setup-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:14px;transition:border-color .3s,box-shadow .3s}
+        .setup-card:hover{border-color:var(--border-light);box-shadow:0 4px 24px rgba(0,0,0,0.2)}
+        .setup-card.has-feedback{border-color:rgba(0,230,118,0.3);box-shadow:0 0 20px rgba(0,230,118,0.06)}
+        .card-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+        .card-icon{width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);background:var(--accent-dim);color:var(--accent);font-size:14px}
+        .card-head h3{font-family:var(--font-display);font-size:18px;font-weight:700;color:#fff;letter-spacing:.5px}
+
+        .wings-ref{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;padding:12px;background:var(--bg-primary);border-radius:var(--radius-sm);border:1px dashed var(--border)}
+        .ref-item{text-align:center}
+        .ref-label{display:block;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px}
+        .ref-val{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--text-sec)}
+        .ref-val.pos{color:var(--accent)}
+        .ref-val.neg{color:var(--wet)}
+
+        .slider-comp{margin-bottom:16px}
+        .slider-comp:last-of-type{margin-bottom:0}
+        .slider-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+        .slider-top label{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text-sec);flex:1}
+        .nivel-badge{padding:2px 8px;border-radius:4px;font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:.5px;white-space:nowrap;transition:all .25s}
+        .slider-val{width:58px;padding:4px 6px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);color:#fff;font-family:var(--font-display);font-size:16px;font-weight:700;text-align:center;transition:border-color .2s;-moz-appearance:textfield}
+        .slider-val::-webkit-inner-spin-button,.slider-val::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+        .slider-val:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-dim)}
+
+        .slider-track{position:relative;width:100%;height:28px;display:flex;align-items:center}
+        input[type="range"]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;outline:none;cursor:pointer;background:var(--border);position:relative;z-index:2}
+        input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);border:3px solid var(--bg-card);box-shadow:0 0 10px var(--accent-glow),0 2px 6px rgba(0,0,0,0.4);cursor:pointer;transition:box-shadow .2s,transform .15s;position:relative;z-index:3}
+        input[type="range"]::-webkit-slider-thumb:hover{box-shadow:0 0 18px var(--accent-glow),0 0 6px var(--accent),0 2px 8px rgba(0,0,0,0.5);transform:scale(1.1)}
+        input[type="range"]::-webkit-slider-thumb:active{transform:scale(1.15);box-shadow:0 0 22px var(--accent-glow),0 0 8px var(--accent)}
+        input[type="range"]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--accent);border:3px solid var(--bg-card);box-shadow:0 0 10px var(--accent-glow),0 2px 6px rgba(0,0,0,0.4);cursor:pointer}
+        input[type="range"]::-moz-range-track{height:6px;border-radius:3px;background:var(--border)}
+        input[type="range"]::-moz-range-progress{height:6px;border-radius:3px;background:var(--accent)}
+        input[type="range"].slider-wet::-webkit-slider-thumb{background:var(--wet);box-shadow:0 0 10px var(--wet-glow),0 2px 6px rgba(0,0,0,0.4)}
+        input[type="range"].slider-wet::-webkit-slider-thumb:hover{box-shadow:0 0 18px var(--wet-glow),0 0 6px var(--wet),0 2px 8px rgba(0,0,0,0.5)}
+        input[type="range"].slider-wet::-moz-range-thumb{background:var(--wet);box-shadow:0 0 10px var(--wet-glow),0 2px 6px rgba(0,0,0,0.4)}
+        input[type="range"].slider-wet::-moz-range-progress{background:var(--wet)}
+
+        .usage-row{display:flex;align-items:center;gap:8px;margin-top:4px;padding:0 2px}
+        .usage-bar{flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+        .usage-fill{height:100%;border-radius:2px;background:var(--accent);transition:width .15s ease}
+        .usage-fill.wet-fill{background:var(--wet)}
+        .usage-pct{font-size:11px;color:var(--text-muted);font-weight:500;min-width:36px;text-align:right;font-family:var(--font-display)}
+
+        .wings-sliders{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+
+        .pilot-feedback{padding:12px;background:var(--bg-primary);border-radius:var(--radius-sm);border-left:3px solid var(--accent-dim);transition:border-color .3s}
+        .pilot-feedback.active{border-left-color:var(--accent)}
+        .feedback-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+        .feedback-top i{color:var(--accent);font-size:12px}
+        .feedback-top span{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted)}
+        .feedback-msg{font-size:13px;color:var(--text-sec);margin-bottom:8px;min-height:18px;font-style:italic;transition:color .2s}
+        .feedback-msg.active-msg{color:var(--accent);font-style:normal}
+        .feedback-controls{display:flex;align-items:center;gap:10px}
+        .feedback-controls select{flex:1;padding:7px 10px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:var(--font-body);font-size:12px;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%237a8899'%3E%3Cpath d='M5 7L0 2h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
+        .feedback-controls select:focus{outline:none;border-color:var(--accent)}
+        .adj-badge{padding:5px 10px;border-radius:var(--radius-sm);font-family:var(--font-display);font-size:15px;font-weight:700;min-width:58px;text-align:center;background:var(--bg-card);border:1px solid var(--border);color:var(--text-sec);transition:all .3s}
+        .adj-badge.positive{background:var(--accent-dim);border-color:rgba(0,230,118,0.3);color:var(--accent)}
+        .adj-badge.negative{background:var(--danger-dim);border-color:rgba(248,81,73,0.3);color:var(--danger)}
+
+        /* === COMPONENTES APILADOS === */
+        .comp-stack{display:flex;flex-direction:column;gap:14px}
+        .comp-card .card-head{margin-bottom:10px}
+        .comp-card .card-icon{width:30px;height:30px;font-size:12px}
+        .comp-card .card-head h3{font-size:16px}
+        .comp-card .pilot-feedback{margin-top:14px}
+
+        .calc-wrap{margin:28px 0}
+        .calc-btn{width:100%;padding:16px;background:linear-gradient(135deg,var(--accent),#00c864);border:none;border-radius:var(--radius);color:#000;font-family:var(--font-display);font-size:20px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
+        .calc-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent);transform:translateX(-100%);transition:transform .6s}
+        .calc-btn:hover::before{transform:translateX(100%)}
+        .calc-btn:hover{box-shadow:0 6px 30px rgba(0,230,118,0.35);transform:translateY(-1px)}
+        .calc-btn:active{transform:translateY(0)}
+        .calc-btn i{margin-right:8px}
+
+        .results-section{display:none;animation:fadeSlideUp .5s ease}
+        .results-section.show{display:block}
+        @keyframes fadeSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .results-title{font-family:var(--font-display);font-size:22px;font-weight:700;color:#fff;margin-bottom:20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+        .results-title i{color:var(--accent)}
+        .results-track-badge{font-size:13px;font-weight:600;padding:3px 12px;background:var(--accent-dim);border:1px solid rgba(0,230,118,0.2);border-radius:20px;color:var(--accent)}
+
+        .scenario-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:18px;overflow:hidden}
+        .scenario-head{display:flex;align-items:center;justify-content:center;gap:14px;padding:14px 20px;background:var(--bg-primary);border-bottom:1px solid var(--border)}
+        .scenario-badge{padding:5px 16px;border-radius:20px;font-family:var(--font-display);font-size:14px;font-weight:700;letter-spacing:1px}
+        .scenario-badge.dry{background:var(--accent-dim);border:1px solid rgba(0,230,118,0.3);color:var(--accent)}
+        .scenario-badge.wet{background:var(--wet-dim);border:1px solid rgba(0,180,216,0.3);color:var(--wet)}
+        .scenario-head i{color:var(--text-muted);font-size:14px}
+        .scenario-head .arrow-dry-wet{color:var(--accent)}
+        .scenario-head .arrow-wet-dry{color:var(--wet)}
+
+        .res-table{width:100%;border-collapse:collapse}
+        .res-table th{padding:10px 14px;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);text-align:center;border-bottom:1px solid var(--border)}
+        .res-table th:first-child{text-align:left}
+        .res-table th.col-dry{color:var(--accent)}
+        .res-table th.col-wet{color:var(--wet)}
+        .res-table td{padding:10px 14px;text-align:center;border-bottom:1px solid rgba(26,39,64,0.5);font-size:14px}
+        .res-table tr:last-child td{border-bottom:none}
+        .res-table tr:hover{background:rgba(255,255,255,0.015)}
+        .res-table td:first-child{text-align:left;font-weight:600;color:var(--text-sec);font-size:13px}
+        .res-table td:first-child i{margin-right:8px;font-size:12px;color:var(--text-muted)}
+        .val-dry{font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--accent)}
+        .val-wet{font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--wet)}
+        .delta-cell{font-family:var(--font-display);font-size:14px;font-weight:600}
+        .delta-up{color:var(--accent)}
+        .delta-down{color:var(--danger)}
+        .delta-zero{color:var(--text-muted)}
+        .delta-bar{width:100%;max-width:80px;height:3px;background:var(--border);border-radius:2px;margin:4px auto 0;overflow:hidden}
+        .delta-bar-fill{height:100%;border-radius:2px;transition:width .5s ease}
+        .delta-bar-fill.up{background:var(--accent)}
+        .delta-bar-fill.down{background:var(--danger)}
+
+        .scenario-foot{padding:12px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end}
+        .copy-btn{padding:7px 16px;background:var(--bg-primary);border:1px solid var(--border-light);border-radius:var(--radius-sm);color:var(--text-sec);font-family:var(--font-body);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px}
+        .copy-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+        .copy-btn.copied{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+
+        .toast{position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;z-index:1000;transform:translateY(20px);opacity:0;transition:all .35s ease;pointer-events:none;display:flex;align-items:center;gap:8px;max-width:360px}
+        .toast.show{transform:translateY(0);opacity:1}
+        .toast.success{background:rgba(0,230,118,0.15);border:1px solid rgba(0,230,118,0.3);color:var(--accent);backdrop-filter:blur(10px)}
+        .toast.error{background:rgba(248,81,73,0.15);border:1px solid rgba(248,81,73,0.3);color:var(--danger);backdrop-filter:blur(10px)}
+        .toast.info{background:rgba(0,180,216,0.15);border:1px solid rgba(0,180,216,0.3);color:var(--wet);backdrop-filter:blur(10px)}
+
+        .footer{text-align:center;padding:24px 20px;margin-top:20px;border-top:1px solid var(--border);font-size:12px;color:var(--text-muted);position:relative;z-index:1}
+        .footer span{color:var(--accent)}
+
+        @media(max-width:640px){
+            .container{padding:16px 12px 32px}
+            .wings-sliders{grid-template-columns:1fr}
+            .wings-ref{grid-template-columns:repeat(3,1fr);gap:6px}
+            .ref-val{font-size:18px}
+            .val-dry,.val-wet{font-size:17px}
+            .track-top{flex-direction:column;align-items:stretch}
+            .feedback-controls{flex-direction:column}
+            .adj-badge{align-self:flex-start}
+            .scenario-head{gap:8px;padding:10px 14px}
+            .scenario-badge{font-size:12px;padding:4px 10px}
+            .res-table td,.res-table th{padding:8px 8px}
+            .toast{left:16px;right:16px;max-width:none;bottom:16px}
+            .slider-top{flex-wrap:wrap}
+        }
+        ::-webkit-scrollbar{width:6px}
+        ::-webkit-scrollbar-track{background:var(--bg-deep)}
+        ::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:3px}
+        ::-webkit-scrollbar-thumb:hover{background:var(--text-muted)}
+        *:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+        @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+    </style>
+</head>
+<body>
+
+    <nav id="navbar" class="navbar" role="navigation" aria-label="Tools navigation">
+        <button id="back-btn" class="nav-back" aria-label="Volver al Tools Manager">
+            <i class="fas fa-arrow-left"></i> Tools
+        </button>
+        <div class="nav-brand">SAUBER <span>GPRO</span> TOOLS</div>
+        <div class="nav-sep"></div>
+        <div class="nav-title">Q Setup Calculator</div>
+    </nav>
+
+    <div class="container">
+        <header class="page-header">
+            <div class="brand">Sauber Racing Team</div>
+            <h1>Q Setup <span>Calculator</span></h1>
+            <p class="subtitle">Pilot feedback interpreter &middot; Dry / Wet conversion</p>
+        </header>
+
+        <section class="track-section" aria-label="Track information">
+            <div class="track-top">
+                <div class="track-select-wrap">
+                    <label for="trackSelector">Select Track</label>
+                    <select id="trackSelector" aria-label="Track selection"></select>
+                </div>
+            </div>
+            <div class="track-meta">
+                <span class="meta-chip chip-country" id="mCountry"><i class="fas fa-flag"></i> Austria</span>
+                <span class="meta-chip" id="mLaps"><i class="fas fa-redo"></i> 71 laps</span>
+                <span class="meta-chip" id="mDist"><i class="fas fa-road"></i> 307.1 km</span>
+                <span class="meta-chip" id="mLen"><i class="fas fa-ruler-horizontal"></i> 4.325 km</span>
+                <span class="meta-chip" id="mCurves"><i class="fas fa-bezier-curve"></i> 9 curves</span>
+                <span class="meta-chip chip-df" id="mDf"><i class="fas fa-wind"></i> Low DF</span>
+                <span class="meta-chip chip-grip" id="mGrip"><i class="fas fa-hand-paper"></i> Low Grip</span>
+            </div>
+        </section>
+
+        <section class="setup-section" aria-label="Setup configuration">
+            <div class="section-label"><i class="fas fa-sliders-h"></i> Configuration</div>
+
+            <!-- WINGS -->
+            <div class="setup-card" id="card-wings">
+                <div class="card-head">
+                    <div class="card-icon"><i class="fas fa-wind"></i></div>
+                    <h3>Aerodynamics — Wings</h3>
+                </div>
+                <div class="wings-ref">
+                    <div class="ref-item"><span class="ref-label">Neutral</span><span class="ref-val" id="neutral-wings-value">256</span></div>
+                    <div class="ref-item"><span class="ref-label">F/Split</span><span class="ref-val pos" id="fw-split-value">+75</span></div>
+                    <div class="ref-item"><span class="ref-label">R/Split</span><span class="ref-val neg" id="rw-split-value">-75</span></div>
+                </div>
+                <div class="wings-sliders">
+                    <div class="slider-comp">
+                        <div class="slider-top">
+                            <label for="fw-slider">Front Wing</label>
+                            <span class="nivel-badge" id="fw-nivel">Nv.4</span>
+                            <input type="number" id="fw-value" class="slider-val" min="0" max="999" value="331">
+                        </div>
+                        <div class="slider-track">
+                            <input type="range" id="fw-slider" min="0" max="999" value="331">
+                        </div>
+                        <div class="usage-row">
+                            <div class="usage-bar"><div class="usage-fill" id="fw-bar" style="width:33.1%"></div></div>
+                            <span class="usage-pct" id="fw-pct">33.1%</span>
+                        </div>
+                    </div>
+                    <div class="slider-comp">
+                        <div class="slider-top">
+                            <label for="rw-slider">Rear Wing</label>
+                            <span class="nivel-badge" id="rw-nivel">Nv.2</span>
+                            <input type="number" id="rw-value" class="slider-val" min="0" max="999" value="181">
+                        </div>
+                        <div class="slider-track">
+                            <input type="range" id="rw-slider" class="slider-wet" min="0" max="999" value="181">
+                        </div>
+                        <div class="usage-row">
+                            <div class="usage-bar"><div class="usage-fill wet-fill" id="rw-bar" style="width:18.1%"></div></div>
+                            <span class="usage-pct" id="rw-pct">18.1%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="pilot-feedback" id="fb-wings">
+                    <div class="feedback-top"><i class="fas fa-headset"></i><span>Pilot Report</span></div>
+                    <div class="feedback-msg" id="wings-msg">Satisfied</div>
+                    <div class="feedback-controls">
+                        <select id="wings-comment">
+                            <option value="+3">+3 I am really missing a lot of speed in straights</option>
+                            <option value="+2">+2 The car is lacking some speed in the straights</option>
+                            <option value="+1">+1 The car could have a bit more speed in the straights</option>
+                            <option value="0" selected>0 Satisfied</option>
+                            <option value="-1">-1 I am missing a bit of grip in the curves</option>
+                            <option value="-2">-2 The car is very unstable in many corners</option>
+                            <option value="-3">-3 I cannot drive the car, there is no grip on it</option>
+                        </select>
+                        <div class="adj-badge" id="wings-adj">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMPONENTES APILADOS -->
+            <div class="comp-stack">
+                <!-- ENGINE -->
+                <div class="setup-card comp-card" id="card-engine">
+                    <div class="card-head"><div class="card-icon"><i class="fas fa-bolt"></i></div><h3>Engine</h3></div>
+                    <div class="slider-comp">
+                        <div class="slider-top">
+                            <label for="engine-slider">Value</label>
+                            <span class="nivel-badge" id="engine-nivel">Nv.8</span>
+                            <input type="number" id="engine-value" class="slider-val" min="0" max="999" value="715">
+                        </div>
+                        <div class="slider-track">
+                            <input type="range" id="engine-slider" min="0" max="999" value="715">
+                        </div>
+                        <div class="usage-row">
+                            <div class="usage-bar"><div class="usage-fill" id="engine-bar" style="width:71.6%"></div></div>
+                            <span class="usage-pct" id="engine-pct">71.6%</span>
+                        </div>
+                    </div>
+                    <div class="pilot-feedback" id="fb-engine">
+                        <div class="feedback-top"><i class="fas fa-headset"></i><span>Pilot Report</span></div>
+                        <div class="feedback-msg" id="engine-msg">Satisfied</div>
+                        <div class="feedback-controls">
+                            <select id="engine-comment">
+                                <option value="+3">+3 No, no, no!!! Favor a lot more the low revs!</option>
+                                <option value="+2">+2 The engine revs are too high</option>
+                                <option value="+1">+1 Try to favor a bit more the low revs</option>
+                                <option value="0" selected>0 Satisfied</option>
+                                <option value="-1">-1 I feel that I do not have enough engine power in the straights</option>
+                                <option value="-2">-2 The engine power on the straights is not sufficient</option>
+                                <option value="-3">-3 You should try to favor a lot more the high revs</option>
+                            </select>
+                            <div class="adj-badge" id="engine-adj">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BRAKES -->
+                <div class="setup-card comp-card" id="card-brakes">
+                    <div class="card-head"><div class="card-icon"><i class="fas fa-compact-disc"></i></div><h3>Brakes</h3></div>
+                    <div class="slider-comp">
+                        <div class="slider-top">
+                            <label for="brakes-slider">Value</label>
+                            <span class="nivel-badge" id="brakes-nivel">Nv.7</span>
+                            <input type="number" id="brakes-value" class="slider-val" min="0" max="999" value="677">
+                        </div>
+                        <div class="slider-track">
+                            <input type="range" id="brakes-slider" min="0" max="999" value="677">
+                        </div>
+                        <div class="usage-row">
+                            <div class="usage-bar"><div class="usage-fill" id="brakes-bar" style="width:67.8%"></div></div>
+                            <span class="usage-pct" id="brakes-pct">67.8%</span>
+                        </div>
+                    </div>
+                    <div class="pilot-feedback" id="fb-brakes">
+                        <div class="feedback-top"><i class="fas fa-headset"></i><span>Pilot Report</span></div>
+                        <div class="feedback-msg" id="brakes-msg">Satisfied</div>
+                        <div class="feedback-controls">
+                            <select id="brakes-comment">
+                                <option value="+3">+3 Please move the balance a lot more to the back</option>
+                                <option value="+2">+2 I think the balance should be more to the back</option>
+                                <option value="+1">+1 Put the balance a bit more to the back</option>
+                                <option value="0" selected>0 Satisfied</option>
+                                <option value="-1">-1 I would like to have the balance a bit more to the front</option>
+                                <option value="-2">-2 I think the balance should be more to the front</option>
+                                <option value="-3">-3 I would feel a lot more comfortable moving the balance to the front</option>
+                            </select>
+                            <div class="adj-badge" id="brakes-adj">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GEARBOX -->
+                <div class="setup-card comp-card" id="card-gearbox">
+                    <div class="card-head"><div class="card-icon"><i class="fas fa-cogs"></i></div><h3>Gearbox</h3></div>
+                    <div class="slider-comp">
+                        <div class="slider-top">
+                            <label for="gearbox-slider">Value</label>
+                            <span class="nivel-badge" id="gearbox-nivel">Nv.8</span>
+                            <input type="number" id="gearbox-value" class="slider-val" min="0" max="999" value="790">
+                        </div>
+                        <div class="slider-track">
+                            <input type="range" id="gearbox-slider" min="0" max="999" value="790">
+                        </div>
+                        <div class="usage-row">
+                            <div class="usage-bar"><div class="usage-fill" id="gearbox-bar" style="width:79.1%"></div></div>
+                            <span class="usage-pct" id="gearbox-pct">79.1%</span>
+                        </div>
+                    </div>
+                    <div class="pilot-feedback" id="fb-gearbox">
+                        <div class="feedback-top"><i class="fas fa-headset"></i><span>Pilot Report</span></div>
+                        <div class="feedback-msg" id="gearbox-msg">Satisfied</div>
+                        <div class="feedback-controls">
+                            <select id="gearbox-comment">
+                                <option value="+3">+3 Please put a lot lower ratio between the gears</option>
+                                <option value="+2">+2 The gear ratio is too high</option>
+                                <option value="+1">+1 I cannot take advantage of the engine power. Put the gear ratio a bit lower</option>
+                                <option value="0" selected>0 Satisfied</option>
+                                <option value="-1">-1 I am very often in the red. Put the gear ratio a bit higher</option>
+                                <option value="-2">-2 The gear ratio is too low</option>
+                                <option value="-3">-3 It feels like the engine is going to explode. Put a lot higher ratio between the gears</option>
+                            </select>
+                            <div class="adj-badge" id="gearbox-adj">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUSPENSION -->
+                <div class="setup-card comp-card" id="card-suspension">
+                    <div class="card-head"><div class="card-icon"><i class="fas fa-car-side"></i></div><h3>Suspension</h3></div>
+                    <div class="slider-comp">
+                        <div class="slider-top">
+                            <label for="suspension-slider">Value</label>
+                            <span class="nivel-badge" id="suspension-nivel">Nv.6</span>
+                            <input type="number" id="suspension-value" class="slider-val" min="0" max="999" value="510">
+                        </div>
+                        <div class="slider-track">
+                            <input type="range" id="suspension-slider" min="0" max="999" value="510">
+                        </div>
+                        <div class="usage-row">
+                            <div class="usage-bar"><div class="usage-fill" id="suspension-bar" style="width:51.1%"></div></div>
+                            <span class="usage-pct" id="suspension-pct">51.1%</span>
+                        </div>
+                    </div>
+                    <div class="pilot-feedback" id="fb-suspension">
+                        <div class="feedback-top"><i class="fas fa-headset"></i><span>Pilot Report</span></div>
+                        <div class="feedback-msg" id="suspension-msg">Satisfied</div>
+                        <div class="feedback-controls">
+                            <select id="suspension-comment">
+                                <option value="+3">+3 The car is far too rigid. Lower a lot the rigidity</option>
+                                <option value="+2">+2 The suspension rigidity is too high</option>
+                                <option value="+1">+1 The car is too rigid. Lower a bit the rigidity</option>
+                                <option value="0" selected>0 Satisfied</option>
+                                <option value="-1">-1 I think with a bit more rigid suspension I will be able to go faster</option>
+                                <option value="-2">-2 The suspension rigidity is too low</option>
+                                <option value="-3">-3 The suspension rigidity should be a lot higher</option>
+                            </select>
+                            <div class="adj-badge" id="suspension-adj">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="calc-wrap">
+            <button id="calculate-btn" class="calc-btn"><i class="fas fa-calculator"></i> Calculate Setup</button>
+        </div>
+
+        <section id="results-section" class="results-section" aria-label="Setup results">
+            <div class="results-title">
+                <i class="fas fa-chart-bar"></i> Setup Analysis
+                <span class="results-track-badge" id="results-track-badge">A1-Ring</span>
+            </div>
+            <div class="scenario-card">
+                <div class="scenario-head">
+                    <div class="scenario-badge dry">Q1 DRY</div>
+                    <i class="fas fa-long-arrow-alt-right arrow-dry-wet"></i>
+                    <div class="scenario-badge wet">Q2 WET</div>
+                </div>
+                <table class="res-table"><thead><tr><th>Component</th><th class="col-dry">Dry Setup</th><th>Delta</th><th class="col-wet">Wet Setup</th></tr></thead><tbody id="tbody-dry-wet"></tbody></table>
+                <div class="scenario-foot"><button class="copy-btn" id="copy-dry-wet"><i class="fas fa-copy"></i> Copy Wet Setup</button></div>
+            </div>
+            <div class="scenario-card">
+                <div class="scenario-head">
+                    <div class="scenario-badge wet">Q1 WET</div>
+                    <i class="fas fa-long-arrow-alt-right arrow-wet-dry"></i>
+                    <div class="scenario-badge dry">Q2 DRY</div>
+                </div>
+                <table class="res-table"><thead><tr><th>Component</th><th class="col-wet">Wet Setup</th><th>Delta</th><th class="col-dry">Dry Setup</th></tr></thead><tbody id="tbody-wet-dry"></tbody></table>
+                <div class="scenario-foot"><button class="copy-btn" id="copy-wet-dry"><i class="fas fa-copy"></i> Copy Dry Setup</button></div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer"><span>2023 - 2025</span> Sauber Racing Team MM &middot; All rights reserved</footer>
+    <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+    <script>
+    var tracks=[
+        {id:1,name:"A1-Ring",country:"Austria",laps:71,distance:307.1,lapLength:4.325,curves:9,downforce:"Low",grip:"Low"},
+        {id:2,name:"Adelaide",country:"Australia",laps:79,distance:298.6,lapLength:3.78,curves:12,downforce:"Medium",grip:"Low"},
+        {id:3,name:"Ahvenisto",country:"Finland",laps:80,distance:243.2,lapLength:3.04,curves:10,downforce:"High",grip:"Normal"},
+        {id:4,name:"Anderstorp",country:"Sweden",laps:70,distance:281.8,lapLength:4.026,curves:10,downforce:"Low",grip:"Low"},
+        {id:5,name:"Austin",country:"USA",laps:56,distance:308.9,lapLength:5.516,curves:20,downforce:"Medium",grip:"High"},
+        {id:6,name:"Avus",country:"Germany",laps:64,distance:312.3,lapLength:4.88,curves:4,downforce:"Low",grip:"Normal"},
+        {id:7,name:"Barcelona",country:"Spain",laps:65,distance:307.3,lapLength:4.728,curves:16,downforce:"Medium",grip:"Low"},
+        {id:8,name:"Brands Hatch",country:"UK",laps:75,distance:315.5,lapLength:4.207,curves:12,downforce:"Medium",grip:"Normal"},
+        {id:9,name:"Brasilia",country:"Brazil",laps:55,distance:301.1,lapLength:5.475,curves:12,downforce:"Medium",grip:"Normal"},
+        {id:10,name:"Bremgarten",country:"Switzerland",laps:42,distance:305.8,lapLength:7.281,curves:16,downforce:"Medium",grip:"Low"},
+        {id:11,name:"Baku",country:"Azerbaijan",laps:51,distance:306.3,lapLength:6.006,curves:20,downforce:"Medium",grip:"High"},
+        {id:12,name:"Brno",country:"Czech Republic",laps:57,distance:308,lapLength:5.404,curves:15,downforce:"Medium",grip:"Normal"},
+        {id:13,name:"Bucharest Ring",country:"Romania",laps:80,distance:245.7,lapLength:3.071,curves:14,downforce:"Low",grip:"Normal"},
+        {id:14,name:"Buenos Aires",country:"Argentina",laps:72,distance:306.6,lapLength:4.258,curves:16,downforce:"High",grip:"Normal"},
+        {id:15,name:"Estoril",country:"Portugal",laps:70,distance:305.2,lapLength:4.36,curves:13,downforce:"Medium",grip:"Low"},
+        {id:16,name:"Fiorano",country:"Italy",laps:79,distance:238.6,lapLength:3.02,curves:14,downforce:"Medium",grip:"Low"},
+        {id:17,name:"Fuji",country:"Japan",laps:67,distance:305.4,lapLength:4.558,curves:16,downforce:"Low",grip:"Normal"},
+        {id:18,name:"Grobnik",country:"Croatia",laps:74,distance:308.4,lapLength:4.168,curves:15,downforce:"Medium",grip:"Normal"},
+        {id:19,name:"Hockenheim",country:"Germany",laps:67,distance:306.4,lapLength:4.573,curves:12,downforce:"Medium",grip:"High"},
+        {id:20,name:"Hungaroring",country:"Hungary",laps:77,distance:305.5,lapLength:3.968,curves:14,downforce:"High",grip:"Very high"},
+        {id:21,name:"Imola",country:"Italy",laps:62,distance:305.6,lapLength:4.929,curves:16,downforce:"Medium",grip:"Low"},
+        {id:22,name:"Indianapolis",country:"USA",laps:73,distance:306.6,lapLength:4.2,curves:13,downforce:"Low",grip:"High"},
+        {id:23,name:"Indy Oval",country:"USA",laps:200,distance:804.4,lapLength:4.023,curves:4,downforce:"Low",grip:"Low"},
+        {id:24,name:"Interlagos",country:"Brazil",laps:71,distance:305.9,lapLength:4.308,curves:14,downforce:"Medium",grip:"High"},
+        {id:25,name:"Irungattukottai",country:"India",laps:79,distance:293.6,lapLength:3.716,curves:12,downforce:"Medium",grip:"High"},
+        {id:26,name:"Istanbul",country:"Turkey",laps:58,distance:309.4,lapLength:5.334,curves:14,downforce:"Medium",grip:"High"},
+        {id:27,name:"Jerez",country:"Spain",laps:69,distance:306.4,lapLength:4.441,curves:14,downforce:"Medium",grip:"Low"},
+        {id:28,name:"Jeddah",country:"Saudi Arabia",laps:50,distance:308.7,lapLength:6.174,curves:27,downforce:"Low",grip:"Normal"},
+        {id:29,name:"Jyllands-Ringen",country:"Denmark",laps:136,distance:312.8,lapLength:2.3,curves:20,downforce:"High",grip:"Normal"},
+        {id:30,name:"Kaunas",country:"Lithuania",laps:80,distance:264.1,lapLength:3.301,curves:10,downforce:"Medium",grip:"Low"},
+        {id:31,name:"Kyalami",country:"South Africa",laps:72,distance:306.8,lapLength:4.261,curves:14,downforce:"High",grip:"Very low"},
+        {id:32,name:"Laguna Seca",country:"USA",laps:79,distance:284.5,lapLength:3.601,curves:11,downforce:"Medium",grip:"Very low"},
+        {id:33,name:"Las Vegas",country:"USA",laps:50,distance:305.9,lapLength:6.118,curves:17,downforce:"Low",grip:"Low"},
+        {id:34,name:"Losail",country:"Qatar",laps:57,distance:306.7,lapLength:5.381,curves:16,downforce:"High",grip:"High"},
+        {id:35,name:"Magny Cours",country:"France",laps:72,distance:305.8,lapLength:4.247,curves:14,downforce:"Medium",grip:"High"},
+        {id:36,name:"Melbourne",country:"Australia",laps:58,distance:307.6,lapLength:5.303,curves:17,downforce:"Medium",grip:"Low"},
+        {id:37,name:"Mexico City",country:"Mexico",laps:69,distance:305,lapLength:4.42,curves:9,downforce:"Medium",grip:"Normal"},
+        {id:38,name:"Miami",country:"USA",laps:57,distance:308.4,lapLength:5.411,curves:19,downforce:"Medium",grip:"High"},
+        {id:39,name:"Monte Carlo",country:"Monaco",laps:78,distance:262.8,lapLength:3.369,curves:19,downforce:"High",grip:"Normal"},
+        {id:40,name:"Montreal",country:"Canada",laps:69,distance:305,lapLength:4.42,curves:12,downforce:"Medium",grip:"Very low"},
+        {id:41,name:"Monza",country:"Italy",laps:53,distance:306.7,lapLength:5.787,curves:13,downforce:"Low",grip:"Very low"},
+        {id:42,name:"Mugello",country:"Italy",laps:58,distance:304.3,lapLength:5.247,curves:14,downforce:"Medium",grip:"High"},
+        {id:43,name:"New Delhi",country:"India",laps:60,distance:308.2,lapLength:5.137,curves:16,downforce:"Medium",grip:"Very low"},
+        {id:44,name:"Nurburgring",country:"Germany",laps:60,distance:308.7,lapLength:5.145,curves:16,downforce:"Medium",grip:"Normal"},
+        {id:45,name:"Rafaela",country:"Argentina",laps:67,distance:317.3,lapLength:4.736,curves:8,downforce:"Low",grip:"Normal"},
+        {id:46,name:"Oesterreichring",country:"Austria",laps:52,distance:308.9,lapLength:5.94,curves:11,downforce:"Medium",grip:"Low"},
+        {id:47,name:"Paul Ricard",country:"France",laps:79,distance:305,lapLength:3.861,curves:11,downforce:"Medium",grip:"Very high"},
+        {id:48,name:"Portimao",country:"Portugal",laps:66,distance:309.7,lapLength:4.692,curves:18,downforce:"High",grip:"Low"},
+        {id:49,name:"Poznan",country:"Poland",laps:75,distance:306.2,lapLength:4.083,curves:14,downforce:"Medium",grip:"Normal"},
+        {id:50,name:"Sakhir",country:"Bahrain",laps:57,distance:308.5,lapLength:5.412,curves:14,downforce:"Low",grip:"Very high"},
+        {id:51,name:"Sepang",country:"Malaysia",laps:55,distance:310.4,lapLength:5.644,curves:17,downforce:"Medium",grip:"Very high"},
+        {id:52,name:"Serres",country:"Greece",laps:80,distance:254.9,lapLength:3.186,curves:16,downforce:"High",grip:"Normal"},
+        {id:53,name:"Shanghai",country:"China",laps:56,distance:305.2,lapLength:5.45,curves:10,downforce:"Medium",grip:"High"},
+        {id:54,name:"Silverstone",country:"UK",laps:60,distance:308.3,lapLength:5.138,curves:14,downforce:"Low",grip:"Normal"},
+        {id:55,name:"Singapore",country:"Singapore",laps:61,distance:309.1,lapLength:5.067,curves:23,downforce:"High",grip:"Low"},
+        {id:56,name:"Sochi",country:"Russia",laps:53,distance:310.1,lapLength:5.851,curves:19,downforce:"Medium",grip:"Normal"},
+        {id:57,name:"Slovakiaring",country:"Slovakia",laps:53,distance:313.9,lapLength:5.923,curves:14,downforce:"Medium",grip:"High"},
+        {id:58,name:"Spa",country:"Belgium",laps:44,distance:306.6,lapLength:6.968,curves:22,downforce:"Medium",grip:"Normal"},
+        {id:59,name:"Suzuka",country:"Japan",laps:53,distance:310.6,lapLength:5.86,curves:14,downforce:"Medium",grip:"Very high"},
+        {id:60,name:"Valencia",country:"Spain",laps:57,distance:310.1,lapLength:5.44,curves:25,downforce:"High",grip:"Low"},
+        {id:61,name:"Yas Marina",country:"UAE",laps:55,distance:305.5,lapLength:5.555,curves:21,downforce:"Medium",grip:"High"},
+        {id:62,name:"Yeongam",country:"South Korea",laps:55,distance:309.2,lapLength:5.622,curves:18,downforce:"High",grip:"Normal"},
+        {id:63,name:"Zandvoort",country:"Netherlands",laps:71,distance:301.8,lapLength:4.251,curves:14,downforce:"Medium",grip:"High"},
+        {id:64,name:"Zolder",country:"Belgium",laps:70,distance:298.3,lapLength:4.261,curves:17,downforce:"Medium",grip:"Low"}
+    ];
+    var trackConstants={
+        1:{wing:256,engine:715,brakes:677,gearbox:790,suspension:510,fw:75,rw:-75},
+        2:{wing:681,engine:486,brakes:357,gearbox:550,suspension:641,fw:-45,rw:45},
+        3:{wing:1009,engine:468,brakes:699,gearbox:764,suspension:242,fw:50,rw:-50},
+        4:{wing:255,engine:700,brakes:767,gearbox:610,suspension:110,fw:30,rw:-30},
+        5:{wing:533,engine:608,brakes:608,gearbox:643,suspension:785,fw:90,rw:-90},
+        6:{wing:303,engine:639,brakes:412,gearbox:387,suspension:820,fw:0,rw:0},
+        7:{wing:462,engine:674,brakes:503,gearbox:675,suspension:316,fw:-10,rw:10},
+        8:{wing:485,engine:648,brakes:387,gearbox:710,suspension:640,fw:40,rw:-40},
+        9:{wing:588,engine:408,brakes:697,gearbox:850,suspension:780,fw:15,rw:-15},
+        10:{wing:712,engine:592,brakes:590,gearbox:697,suspension:538,fw:-80,rw:80},
+        11:{wing:494,engine:515,brakes:379,gearbox:555,suspension:490,fw:10,rw:-10},
+        12:{wing:361,engine:614,brakes:612,gearbox:705,suspension:800,fw:-65,rw:65},
+        13:{wing:294,engine:656,brakes:711,gearbox:563,suspension:746,fw:40,rw:-40},
+        14:{wing:910,engine:516,brakes:271,gearbox:655,suspension:706,fw:0,rw:0},
+        15:{wing:439,engine:651,brakes:301,gearbox:704,suspension:574,fw:-55,rw:55},
+        16:{wing:459,engine:622,brakes:303,gearbox:375,suspension:900,fw:-20,rw:20},
+        17:{wing:274,engine:591,brakes:635,gearbox:689,suspension:502,fw:47,rw:-47},
+        18:{wing:649,engine:387,brakes:539,gearbox:767,suspension:501,fw:-5,rw:5},
+        19:{wing:454,engine:648,brakes:327,gearbox:790,suspension:290,fw:-200,rw:200},
+        20:{wing:860,engine:441,brakes:573,gearbox:435,suspension:416,fw:-100,rw:100},
+        21:{wing:465,engine:599,brakes:671,gearbox:577,suspension:456,fw:-75,rw:75},
+        22:{wing:218,engine:706,brakes:467,gearbox:649,suspension:519,fw:-90,rw:90},
+        23:{wing:-43,engine:621,brakes:52,gearbox:834,suspension:210,fw:-15,rw:15},
+        24:{wing:469,engine:560,brakes:557,gearbox:570,suspension:320,fw:-150,rw:150},
+        25:{wing:681,engine:470,brakes:625,gearbox:621,suspension:534,fw:-120,rw:120},
+        26:{wing:392,engine:544,brakes:703,gearbox:535,suspension:636,fw:25,rw:-25},
+        27:{wing:725,engine:625,brakes:627,gearbox:701,suspension:322,fw:-60,rw:60},
+        28:{wing:251,engine:429,brakes:612,gearbox:627,suspension:410,fw:-20,rw:20},
+        29:{wing:774,engine:415,brakes:558,gearbox:745,suspension:523,fw:-56,rw:56},
+        30:{wing:402,engine:637,brakes:516,gearbox:690,suspension:359,fw:0,rw:0},
+        31:{wing:780,engine:536,brakes:557,gearbox:530,suspension:752,fw:75,rw:-75},
+        32:{wing:492,engine:404,brakes:585,gearbox:620,suspension:50,fw:-175,rw:175},
+        33:{wing:224,engine:653,brakes:633,gearbox:722,suspension:570,fw:-60,rw:60},
+        34:{wing:999,engine:394,brakes:553,gearbox:395,suspension:294,fw:85,rw:-35},
+        35:{wing:454,engine:565,brakes:297,gearbox:590,suspension:562,fw:50,rw:-50},
+        36:{wing:392,engine:621,brakes:613,gearbox:755,suspension:296,fw:-95,rw:95},
+        37:{wing:639,engine:700,brakes:467,gearbox:670,suspension:320,fw:-100,rw:100},
+        38:{wing:480,engine:581,brakes:531,gearbox:386,suspension:758,fw:-21,rw:21},
+        39:{wing:1030,engine:373,brakes:473,gearbox:374,suspension:496,fw:300,rw:-300},
+        40:{wing:340,engine:677,brakes:567,gearbox:718,suspension:236,fw:-190,rw:190},
+        41:{wing:136,engine:738,brakes:497,gearbox:870,suspension:610,fw:-45,rw:45},
+        42:{wing:522,engine:788,brakes:894,gearbox:899,suspension:590,fw:-200,rw:200},
+        43:{wing:652,engine:558,brakes:560,gearbox:720,suspension:149,fw:-250,rw:250},
+        44:{wing:657,engine:452,brakes:627,gearbox:599,suspension:150,fw:50,rw:-50},
+        45:{wing:138,engine:600,brakes:184,gearbox:710,suspension:290,fw:-50,rw:50},
+        46:{wing:437,engine:678,brakes:497,gearbox:730,suspension:510,fw:90,rw:-90},
+        47:{wing:373,engine:733,brakes:301,gearbox:802,suspension:574,fw:30,rw:-30},
+        48:{wing:790,engine:394,brakes:486,gearbox:489,suspension:294,fw:15,rw:-15},
+        49:{wing:735,engine:548,brakes:379,gearbox:724,suspension:530,fw:15,rw:-15},
+        50:{wing:133,engine:407,brakes:717,gearbox:610,suspension:240,fw:-75,rw:75},
+        51:{wing:558,engine:592,brakes:653,gearbox:745,suspension:466,fw:-110,rw:110},
+        52:{wing:928,engine:413,brakes:502,gearbox:478,suspension:522,fw:15,rw:-15},
+        53:{wing:422,engine:531,brakes:643,gearbox:355,suspension:116,fw:10,rw:-10},
+        54:{wing:291,engine:704,brakes:593,gearbox:825,suspension:412,fw:-65,rw:65},
+        55:{wing:847,engine:439,brakes:579,gearbox:599,suspension:802,fw:70,rw:-70},
+        56:{wing:682,engine:593,brakes:590,gearbox:697,suspension:455,fw:40,rw:40},
+        57:{wing:743,engine:436,brakes:608,gearbox:491,suspension:428,fw:-20,rw:20},
+        58:{wing:615,engine:715,brakes:447,gearbox:610,suspension:372,fw:-65,rw:65},
+        59:{wing:424,engine:641,brakes:517,gearbox:550,suspension:530,fw:-25,rw:25},
+        60:{wing:845,engine:448,brakes:659,gearbox:655,suspension:336,fw:60,rw:-60},
+        61:{wing:742,engine:461,brakes:559,gearbox:475,suspension:420,fw:40,rw:-40},
+        62:{wing:788,engine:481,brakes:719,gearbox:689,suspension:420,fw:40,rw:-40},
+        63:{wing:559,engine:655,brakes:417,gearbox:779,suspension:712,fw:-125,rw:125},
+        64:{wing:669,engine:619,brakes:465,gearbox:629,suspension:540,fw:70,rw:-70}
+    };
+    var wetPct={fw:1.177,rw:1.177,engine:0.745,brakes:0.657,gearbox:0.745,suspension:0.765};
+    var dryPct={};for(var k in wetPct)dryPct[k]=1/wetPct[k];
+    var valorAjuste={"+3":-202,"+2":-135,"+1":-67,"0":0,"-1":68,"-2":136,"-3":203};
+    var compIcons={fw:"fa-wind",rw:"fa-wind",engine:"fa-bolt",brakes:"fa-compact-disc",gearbox:"fa-cogs",suspension:"fa-car-side"};
+    var compNames={fw:"Front Wing",rw:"Rear Wing",engine:"Engine",brakes:"Brakes",gearbox:"Gearbox",suspension:"Suspension"};
+    var compList=["fw","rw","engine","brakes","gearbox","suspension"];
+    var lastResults={dryToWet:{},wetToDry:{}};
+
+    var toastTimer=null;
+    function showToast(msg,type){type=type||'success';var t=document.getElementById('toast');var ic={success:'fa-check-circle',error:'fa-times-circle',info:'fa-info-circle'};t.innerHTML='<i class="fas '+(ic[type]||ic.info)+'"></i> '+msg;t.className='toast '+type+' show';clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove('show');},3000);}
+
+    function getLevelColor(n){
+        if(n<=2)return{bg:'rgba(248,81,73,0.15)',bd:'rgba(248,81,73,0.35)',tx:'#f85149'};
+        if(n<=4)return{bg:'rgba(227,160,8,0.15)',bd:'rgba(227,160,8,0.35)',tx:'#e3a008'};
+        if(n<=6)return{bg:'rgba(122,136,153,0.15)',bd:'rgba(122,136,153,0.3)',tx:'#8b95a3'};
+        if(n<=8)return{bg:'rgba(0,230,118,0.12)',bd:'rgba(0,230,118,0.3)',tx:'#00e676'};
+        return{bg:'rgba(0,230,118,0.22)',bd:'rgba(0,230,118,0.5)',tx:'#00e676'};
+    }
+
+    function syncSlider(comp){
+        var sl=document.getElementById(comp+'-slider');
+        var n=document.getElementById(comp+'-value');
+        var nv=document.getElementById(comp+'-nivel');
+        var bar=document.getElementById(comp+'-bar');
+        var pc=document.getElementById(comp+'-pct');
+        var val=parseInt(sl.value)||0;
+        var pct=Math.round(val/999*1000)/10;
+        n.value=val;
+        var fp=(val/999*100).toFixed(1);
+        sl.style.background='linear-gradient(to right,var(--accent) 0%,var(--accent) '+fp+'%,var(--border) '+fp+'%,var(--border) 100%)';
+        var nivel=Math.min(10,Math.max(1,Math.floor(val/100)+1));
+        var lc=getLevelColor(nivel);nv.textContent='Nv.'+nivel;nv.style.background=lc.bg;nv.style.border='1px solid '+lc.bd;nv.style.color=lc.tx;
+        bar.style.width=pct+'%';pc.textContent=pct+'%';
+    }
+
+    function updateAdjPreview(cid){
+        var s=document.getElementById(cid+'-comment'),b=document.getElementById(cid+'-adj'),m=document.getElementById(cid+'-msg'),c=document.getElementById('card-'+cid),f=document.getElementById('fb-'+cid);
+        var v=valorAjuste[s.value];b.textContent=v>0?'+'+v:v;b.className='adj-badge'+(v>0?' positive':v<0?' negative':'');
+        var ot=s.options[s.selectedIndex].text,is=s.value==='0';m.textContent=is?'Satisfied':ot.substring(ot.indexOf(' ')+1);m.className='feedback-msg'+(is?'':' active-msg');
+        if(is){c.classList.remove('has-feedback');f.classList.remove('active');}else{c.classList.add('has-feedback');f.classList.add('active');}
+    }
+
+    function initTrackSelector(){
+        var sel=document.getElementById('trackSelector');
+        var sorted=[].concat(tracks).sort(function(a,b){return a.name.localeCompare(b.name);});
+        sorted.forEach(function(t){var o=document.createElement('option');o.value=t.id;o.textContent=t.name;sel.appendChild(o);});
+        sel.addEventListener('change',function(){updateTrackInfo(this.value);loadTrackSetup(this.value);});
+    }
+    function updateTrackInfo(id){
+        var t=tracks.find(function(x){return x.id==id;});if(!t)return;
+        document.getElementById('mCountry').innerHTML='<i class="fas fa-flag"></i> '+t.country;
+        document.getElementById('mLaps').innerHTML='<i class="fas fa-redo"></i> '+t.laps+' laps';
+        document.getElementById('mDist').innerHTML='<i class="fas fa-road"></i> '+t.distance+' km';
+        document.getElementById('mLen').innerHTML='<i class="fas fa-ruler-horizontal"></i> '+t.lapLength+' km';
+        document.getElementById('mCurves').innerHTML='<i class="fas fa-bezier-curve"></i> '+t.curves+' curves';
+        document.getElementById('mDf').innerHTML='<i class="fas fa-wind"></i> '+t.downforce+' DF';
+        document.getElementById('mGrip').innerHTML='<i class="fas fa-hand-paper"></i> '+t.grip+' Grip';
+    }
+    function loadTrackSetup(id){
+        var c=trackConstants[id];if(!c)return;var t=tracks.find(function(x){return x.id==id;});
+        document.getElementById('neutral-wings-value').textContent=c.wing;
+        document.getElementById('fw-split-value').textContent=(c.fw>=0?'+':'')+c.fw;
+        document.getElementById('rw-split-value').textContent=(c.rw>=0?'+':'')+c.rw;
+        setSliderValue('fw',c.wing+c.fw);setSliderValue('rw',c.wing+c.rw);
+        setSliderValue('engine',c.engine);setSliderValue('brakes',c.brakes);
+        setSliderValue('gearbox',c.gearbox);setSliderValue('suspension',c.suspension);
+        ['wings','engine','brakes','gearbox','suspension'].forEach(function(cp){document.getElementById(cp+'-comment').value='0';updateAdjPreview(cp);});
+        document.getElementById('results-section').classList.remove('show');showToast('Setup loaded for '+t.name,'info');
+    }
+    function setSliderValue(comp,val){val=Math.max(0,Math.min(999,Math.round(val)));document.getElementById(comp+'-slider').value=val;document.getElementById(comp+'-value').value=val;syncSlider(comp);}
+    function clamp(v){return Math.max(1,Math.min(999,Math.round(v)));}
+    function makeRow(comp,vA,vB,cA,cB){var d=vB-vA,ad=Math.abs(d),md=250,p=Math.min(100,(ad/md)*100),dc=d>0?'up':d<0?'down':'zero',dt=d>0?'+'+d:d===0?'0':''+d;return'<tr><td><i class="fas '+compIcons[comp]+'"></i>'+compNames[comp]+'</td><td class="'+cA+'">'+vA+'</td><td class="delta-cell delta-'+dc+'">'+dt+'<div class="delta-bar"><div class="delta-bar-fill '+dc+'" style="width:'+p+'%"></div></div></td><td class="'+cB+'">'+vB+'</td></tr>';}
+
+    function calculateSetup(){
+        var fw=parseInt(document.getElementById('fw-value').value)||0,rw=parseInt(document.getElementById('rw-value').value)||0,eng=parseInt(document.getElementById('engine-value').value)||0,brk=parseInt(document.getElementById('brakes-value').value)||0,gear=parseInt(document.getElementById('gearbox-value').value)||0,sus=parseInt(document.getElementById('suspension-value').value)||0;
+        var aW=valorAjuste[document.getElementById('wings-comment').value],aE=valorAjuste[document.getElementById('engine-comment').value],aB=valorAjuste[document.getElementById('brakes-comment').value],aG=valorAjuste[document.getElementById('gearbox-comment').value],aS=valorAjuste[document.getElementById('suspension-comment').value];
+        var bFw=clamp(fw+aW),bRw=clamp(rw+aW),bEng=clamp(eng+aE),bBrk=clamp(brk+aB),bGear=clamp(gear+aG),bSus=clamp(sus+aS);
+        setSliderValue('fw',bFw);setSliderValue('rw',bRw);setSliderValue('engine',bEng);setSliderValue('brakes',bBrk);setSliderValue('gearbox',bGear);setSliderValue('suspension',bSus);
+        var dw={fw:clamp(bFw*wetPct.fw),rw:clamp(bRw*wetPct.rw),engine:clamp(bEng*wetPct.engine),brakes:clamp(bBrk*wetPct.brakes),gearbox:clamp(bGear*wetPct.gearbox),suspension:clamp(bSus*wetPct.suspension)};
+        var wd={fw:clamp(bFw*dryPct.fw),rw:clamp(bRw*dryPct.rw),engine:clamp(bEng*dryPct.engine),brakes:clamp(bBrk*dryPct.brakes),gearbox:clamp(bGear*dryPct.gearbox),suspension:clamp(bSus*dryPct.suspension)};
+        lastResults.dryToWet=dw;lastResults.wetToDry=wd;
+        var tid=document.getElementById('trackSelector').value,tn=tracks.find(function(t){return t.id==tid;}).name;
+        document.getElementById('results-track-badge').textContent=tn;
+        document.getElementById('tbody-dry-wet').innerHTML=makeRow('fw',bFw,dw.fw,'val-dry','val-wet')+makeRow('rw',bRw,dw.rw,'val-dry','val-wet')+makeRow('engine',bEng,dw.engine,'val-dry','val-wet')+makeRow('brakes',bBrk,dw.brakes,'val-dry','val-wet')+makeRow('gearbox',bGear,dw.gearbox,'val-dry','val-wet')+makeRow('suspension',bSus,dw.suspension,'val-dry','val-wet');
+        document.getElementById('tbody-wet-dry').innerHTML=makeRow('fw',bFw,wd.fw,'val-wet','val-dry')+makeRow('rw',bRw,wd.rw,'val-wet','val-dry')+makeRow('engine',bEng,wd.engine,'val-wet','val-dry')+makeRow('brakes',bBrk,wd.brakes,'val-wet','val-dry')+makeRow('gearbox',bGear,wd.gearbox,'val-wet','val-dry')+makeRow('suspension',bSus,wd.suspension,'val-wet','val-dry');
+        var rs=document.getElementById('results-section');rs.classList.remove('show');void rs.offsetWidth;rs.classList.add('show');
+        ['wings','engine','brakes','gearbox','suspension'].forEach(function(cp){document.getElementById(cp+'-comment').value='0';updateAdjPreview(cp);});
+        notifyParent('calculated',{track:tn,dry:{fw:bFw,rw:bRw,engine:bEng,brakes:bBrk,gearbox:bGear,suspension:bSus},wet:dw,wetToDry:wd});
+        showToast('Setup calculated successfully','success');
+    }
+
+    function copySetup(sc){
+        var d=sc==='dry-to-wet'?lastResults.dryToWet:lastResults.wetToDry,lb=sc==='dry-to-wet'?'WET':'DRY';
+        var txt='=== '+lb+' SETUP ===\nFW: '+d.fw+'\nRW: '+d.rw+'\nENG: '+d.engine+'\nBRK: '+d.brakes+'\nGEAR: '+d.gearbox+'\nSUS: '+d.suspension;
+        navigator.clipboard.writeText(txt).then(function(){
+            var bi=sc==='dry-to-wet'?'copy-dry-wet':'copy-wet-dry',bt=document.getElementById(bi);bt.classList.add('copied');bt.innerHTML='<i class="fas fa-check"></i> Copied!';
+            setTimeout(function(){bt.classList.remove('copied');bt.innerHTML='<i class="fas fa-copy"></i> Copy '+lb+' Setup';},2000);showToast(lb+' setup copied to clipboard','success');
+        }).catch(function(){showToast('Could not copy to clipboard','error');});
+    }
+
+    function notifyParent(ev,dt){if(window.parent!==window){try{window.parent.postMessage({source:'qsetup',event:ev,data:dt},'*');}catch(e){}}}
+    function goBack(){if(window.parent!==window){try{window.parent.postMessage({source:'qsetup',event:'navigateBack'},'*');}catch(e){window.history.back();}}else{window.history.back();}}
+    window.addEventListener('message',function(e){if(!e.data||e.data.target!=='qsetup')return;switch(e.data.action){case'setTrack':document.getElementById('trackSelector').value=e.data.trackId;updateTrackInfo(e.data.trackId);loadTrackSetup(e.data.trackId);break;case'calculate':calculateSetup();break;case'getSetup':notifyParent('setupData',getCurrentSetup());break;}});
+    function getCurrentSetup(){return{fw:parseInt(document.getElementById('fw-value').value)||0,rw:parseInt(document.getElementById('rw-value').value)||0,engine:parseInt(document.getElementById('engine-value').value)||0,brakes:parseInt(document.getElementById('brakes-value').value)||0,gearbox:parseInt(document.getElementById('gearbox-value').value)||0,suspension:parseInt(document.getElementById('suspension-value').value)||0,trackId:document.getElementById('trackSelector').value};}
+
+    function checkEmbed(){
+        var isE=window.self!==window.top,up=new URLSearchParams(window.location.search);
+        if(isE||up.get('embed')==='true')document.getElementById('navbar').classList.add('visible');
+        var tp=up.get('track');if(tp){var id=parseInt(tp);if(id>0&&trackConstants[id]){document.getElementById('trackSelector').value=id;updateTrackInfo(id);loadTrackSetup(id);}}
+    }
+
+    document.addEventListener('DOMContentLoaded',function(){
+        initTrackSelector();checkEmbed();updateTrackInfo(1);loadTrackSetup(1);
+        compList.forEach(function(comp){
+            var sl=document.getElementById(comp+'-slider'),ni=document.getElementById(comp+'-value');
+            sl.addEventListener('input',function(){ni.value=this.value;syncSlider(comp);});
+            ni.addEventListener('input',function(){var v=parseInt(this.value);if(isNaN(v))v=0;if(v<0)v=0;if(v>999)v=999;this.value=v;sl.value=v;syncSlider(comp);});
+            ni.addEventListener('blur',function(){var v=parseInt(this.value);if(isNaN(v)||v<0)v=0;if(v>999)v=999;this.value=v;sl.value=v;syncSlider(comp);});
+        });
+        ['wings','engine','brakes','gearbox','suspension'].forEach(function(cp){document.getElementById(cp+'-comment').addEventListener('change',function(){updateAdjPreview(cp);});});
+        document.getElementById('calculate-btn').addEventListener('click',calculateSetup);
+        document.getElementById('copy-dry-wet').addEventListener('click',function(){copySetup('dry-to-wet');});
+        document.getElementById('copy-wet-dry').addEventListener('click',function(){copySetup('wet-to-dry');});
+        document.getElementById('back-btn').addEventListener('click',goBack);
+        notifyParent('loaded',{title:'Q Setup Calculator'});
+    });
+    </script>
+</body>
+</html>
