@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mario Molina - Constructor Civil | Diseñador AEC</title>
   <style>
+    /* Agregado para que el scroll al hacer clic en el menú sea suave */
+    html {
+      scroll-behavior: smooth;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -16,6 +21,8 @@
       color: #e0e0e0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       line-height: 1.6;
+      /* Ajuste fino: separación mínima para que no tape el contenido al hacer scroll */
+      padding-top: 40px; 
     }
 
     .container {
@@ -48,6 +55,56 @@
       margin: 8px auto;
       font-weight: 500;
     }
+
+    /* =========================================================
+       NUEVO: Menú estilo HTML clásico (Minimalista y Compacto)
+       ========================================================= */
+    .menu-navegacion {
+      display: flex;
+      justify-content: flex-end; /* Alineado a la derecha */
+      flex-wrap: wrap;
+      background: #1e1e1e;
+      padding: 0 20px; /* Sin padding vertical, ocupa lo mínimo */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      border-bottom: 1px solid #333; /* Línea sutil separadora */
+    }
+
+    .menu-navegacion a {
+      color: #e0e0e0;
+      text-decoration: none;
+      padding: 10px 12px; /* Separación justa para ser visible pero minimalista */
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      border-bottom: 2px solid transparent; /* Para mantener la altura al hacer hover */
+    }
+
+    .menu-navegacion a:hover {
+      background: #2c2c2c;
+      color: #ffffff;
+      border-bottom: 2px solid #42a5f5; /* Subrayado estilo HTML clásico */
+    }
+
+    /* Evita que el menú tape el título de la sección al hacer clic */
+    section[id] {
+      scroll-margin-top: 50px; 
+    }
+
+    /* Ajuste responsivo para celulares */
+    @media (max-width: 768px) {
+      .menu-navegacion {
+        padding: 0 10px;
+      }
+      .menu-navegacion a {
+        padding: 8px 8px;
+        font-size: 0.8rem;
+      }
+    }
+    /* ========================================================= */
 
     .marcas-banner {
       background: #1e1e1e;
@@ -120,6 +177,26 @@
       color: #d0d0d0;
       margin-bottom: 15px;
       text-align: justify;
+    }
+
+    /* NUEVO: Estilos para los botones de "Ver más" */
+    .btn-ver-mas {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 12px 25px;
+      background-color: #42a5f5;
+      color: #121212;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 8px;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      text-align: center;
+    }
+
+    .btn-ver-mas:hover {
+      background-color: #90caf9;
+      color: #121212;
+      transform: translateY(-3px);
     }
 
     /* Galería de proyectos */
@@ -291,6 +368,17 @@
   </style>
 </head>
 <body>
+
+  <!-- Menú HTML clásico: compacto, de lado a lado, alineado a la derecha -->
+  <nav class="menu-navegacion">
+    <a href="index.html">Inicio</a>
+    <a href="#servicios">Servicios</a>
+    <a href="#sobre-mi">Sobre Mí</a>
+    <a href="#proyectos">Proyectos</a>
+    <a href="blog.html">Blog</a>
+    <a href="#contacto">Contacto</a>
+  </nav>
+
   <div class="container">
     <header>
       <h1>Mario Molina</h1>
@@ -322,7 +410,8 @@
       </div>
     </div>
 
-    <section class="section sobre-mi">
+    <!-- Se agregó id="sobre-mi" -->
+    <section class="section sobre-mi" id="sobre-mi">
       <h2>Sobre Mí</h2> 
       <h3>Perfil Profesional</h3>
          <p>Soy Constructor Civil (ISET-BA) con especialización en SIG y Geomática (UBA-FADU), con más de 35 años de experiencia en el diseño, desarrollo y dirección de proyectos de ingeniería y construcción para empresas líderes. 
@@ -335,11 +424,15 @@
          <strong>Tecnologías</strong>: Integro BIM, CAD, CAE, GIS, Geomática y visualización web 3D, para la optimización de proyectos de edificación.<br>
          <strong>Aptitud Legal y Técnica</strong>: Habilitación profesional para la firma de planos, dirección de obra, peritajes, tasaciones y gestión de permisos ante organismos municipales y provinciales.</br>
         <!-- <strong>Mi objetivo</strong> : Transformar tus ideas en proyectos concretos, con la máxima calidad, seguridad y compromiso.</p> -->
+        
+        <!-- NUEVO BOTÓN: Experiencia ampliada -->
+        <a href="sobre_mi.html" class="btn-ver-mas">Experiencia ampliada</a>
     </section>
 
 
 <!-- PROYECTOS -->
-<section class="section-full-dark">
+<!-- Se agregó id="proyectos" -->
+<section class="section-full-dark" id="proyectos">
   <div class="section">
     <h2>Mis Proyectos</h2>
     <div class="galeria-proyectos">
@@ -356,11 +449,15 @@
         <p class="proyecto-etiqueta">🏛️ Proyecto Casa Ayacucho, San Isidro (BA)</p>
       </div>        
     </div>
+    
+    <!-- NUEVO BOTÓN: Ver mas proyectos -->
+    <a href="proyectos.html" class="btn-ver-mas">Ver más proyectos</a>
   </div>
 </section>
 
-  <section class="section">
-      <h2>Construcción Manual y Digital de Proyectos</h2>
+  <!-- Se agregó id="visualizacion-3d" -->
+  <section class="section" id="visualizacion-3d">
+      <h2>Visualización 3D</h2>
       <div class="galeria-proyectos">
         <div class="proyecto-item">
           <img src="https://raw.githubusercontent.com/mariomolina-mm-ar/web/main/images/proyecto_ct_00.jpg" alt="Dibujo en lápiz de proyecto arquitectónico" loading="lazy">
@@ -377,7 +474,8 @@
       </div>
     </section>
 
-    <section class="section">
+    <!-- Se agregó id="servicios" -->
+    <section class="section" id="servicios">
       <h2>Servicios</h2>
       <div class="servicios">
         <div class="servicio-item">
@@ -409,13 +507,14 @@
 
     <div class="cta-section">
       <h2>¡Solicita tu presupuesto sin cargo!</h2>
-      <a href="https://wa.me/5492345457065?text=Hola%20Mario,%20necesito%20información%20sobre%20sus%20servicios"
+      <a href="https://wa.me/5492345446330?text=Hola%20Mario,%20necesito%20información%20sobre%20sus%20servicios"
          class="whatsapp-btn" target="_blank" rel="noopener noreferrer">
         💬 WhatsApp
       </a>
     </div>
 
-    <section class="section">
+    <!-- Se agregó id="contacto" -->
+    <section class="section" id="contacto">
       <h2>Contacto</h2>
       <div class="contacto-info">
         <div class="contacto-item">
