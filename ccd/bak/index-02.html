@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mario Molina - Constructor Civil | Diseñador AEC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* Agregado para que el scroll al hacer clic en el menú sea suave */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* ---- Variables de color (Modo oscuro por defecto) ---- */
+    :root {
+      --bg: #1c1d21;
+      --card: #282930;
+      --text: #c8cad0;
+      --text-muted: #94969e;
+      --accent: #7eaaff;
+      --border: #4a5a78;
+      --hdr-bg: #282930;
+      --tab-hover: #2e2f38;
+      --tab-active-bg: var(--card);
+      
+      /* Heredadas de tu diseño original */
+      --accent-copper: #42a5f5; /* Cambiado a azul para coincidir con el accent */
+      --text-light: #90caf9;
+      --text-dark: #e0e0e0;
+      --wa-green: #25D366;
+      --wa-green-hover: #1ebe57;
+      --wa-dark: #128C7E;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.65;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    /* --- Contenedor general full-width --- */
+    .container {
+      width: 100%;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* --- Header Sticky (Menú Fijo) --- */
+    .wiki-header-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--hdr-bg);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+      backdrop-filter: blur(6px);
+    }
+
+    .wiki-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 12px 24px;
+      gap: 16px;
+      flex-wrap: wrap;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+    .wiki-logo {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      padding-bottom: 10px;
+      white-space: nowrap;
+      transition: color 0.4s;
+      letter-spacing: -0.02em;
+    }
+    .wiki-logo:hover { color: var(--accent); }
+    
+    .wiki-nav { display: flex; gap: 0; flex-shrink: 0; padding-bottom: 0px; }
+    .wiki-tab {
+      display: block;
+      padding: 9px 18px;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      border: 1px solid transparent;
+      border-bottom: none;
+      border-radius: 3px 3px 0 0;
+      background: transparent;
+      transition: color 0.2s, background 0.2s, border-color 0.2s;
+      font-weight: 400;
+      position: relative;
+      top: 1px;
+    }
+    .wiki-tab:hover { color: var(--text); background: var(--tab-hover); }
+    .wiki-tab.active {
+      color: var(--text);
+      background: var(--tab-active-bg);
+      border-color: var(--border);
+      font-weight: 500;
+    }
+
+    /* Evita que el menú tape el título de la sección al hacer clic */
+    section[id] {
+      scroll-margin-top: 70px; 
+    }
+
+    /* --- Hero Header --- */
+    .hero-header {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: white;
+      padding: 60px 20px;
+      border-radius: 2px;
+      text-align: center;
+      margin: 24px 0;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border);
+    }
+    .hero-header h1 {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      font-size: 2.8rem;
+      margin-bottom: 5px;
+      font-weight: 700;
+      line-height: 1.15;
+    }
+    .hero-header h2 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      opacity: 0.95;
+      margin-bottom: 8px;
+      border: none;
+      padding: 0;
+      color: white;
+    }
+    .hero-header h3 {
+      font-size: 1.1rem;
+      font-weight: 400;
+      opacity: 0.9;
+      margin-bottom: 15px;
+    }
+    .hero-header h4 {
+      font-size: 1rem;
+      font-weight: 400;
+      opacity: 0.8;
+    }
+
+    /* --- Marcas Banner --- */
+    .marcas-banner {
+      background: var(--card);
+      padding: 20px 0;
+      border-radius: 2px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+      margin-bottom: 24px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .linea-fija {
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--accent);
+      padding-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+    .linea-animada-container {
+      height: 30px;
+      overflow: hidden;
+      position: relative;
+    }
+    .marcas-scroll {
+      display: flex;
+      width: max-content;
+      animation: scroll-left 20s linear infinite;
+    }
+    .marcas-grupo span {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+      padding: 0 20px;
+    }
+    @keyframes scroll-left {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* --- Secciones y Cards --- */
+    .section-card {
+      background: var(--card);
+      padding: 48px 52px;
+      margin-bottom: 24px;
+      border-radius: 2px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.25);
+      border: 1px solid var(--border);
+      transition: transform 0.3s ease;
+    }
+    .section-card h2 {
+      color: var(--h1-color);
+      font-family: 'Libre Baskerville', Georgia, serif;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border-a);
+      display: inline-block;
+    }
+    .section-card h3 {
+      color: var(--accent);
+      font-size: 1.3rem;
+      margin: 20px 0 10px;
+      font-weight: 600;
+    }
+    .sobre-mi p {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--text);
+      margin-bottom: 15px;
+      text-align: justify;
+    }
+
+    /* Botones */
+    .btn-ver-mas {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 12px 32px;
+      background-color: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 3px;
+      transition: background-color 0.3s ease, transform 0.15s ease;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(51,102,204,.2);
+    }
+    .btn-ver-mas:hover {
+      background-color: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(51,102,204,.3);
+    }
+
+    /* Galería de proyectos */
+    .galeria-proyectos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 25px;
+    }
+    .proyecto-item {
+      background: #2c2c2c;
+      border-radius: 2px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+    }
+    .proyecto-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+    }
+    .proyecto-item img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .proyecto-item:hover img {
+      transform: scale(1.03);
+    }
+    .proyecto-etiqueta {
+      text-align: center;
+      padding: 15px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text);
+      background: #2c2c2c;
+      border-top: 1px solid var(--border);
+    }
+
+    /* SERVICIOS */
+    .servicio-bloque {
+      background: rgba(255,255,255,0.03);
+      padding: 30px;
+      border-radius: 2px;
+      margin-bottom: 24px;
+      border-left: 4px solid var(--accent);
+      transition: background 0.3s;
+    }
+    .servicio-bloque:hover { background: rgba(255,255,255,0.06); }
+    .servicio-bloque h3 { color: var(--text-light); font-size: 1.4rem; margin-bottom: 15px; }
+    .servicio-bloque > p { margin-bottom: 20px; color: var(--text-muted); }
+    .servicio-lista {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .servicio-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+    .servicio-item svg { width: 8px; height: 8px; fill: var(--accent); flex-shrink: 0; }
+    .destacado {
+      margin-top: 25px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 2px;
+      font-weight: 500;
+      color: var(--accent);
+      text-align: center;
+      border: 1px dashed var(--border);
+      font-size: 0.95rem;
+    }
+
+    /* CTA y Botón de WhatsApp */
+    .cta-section {
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: white;
+      padding: 60px 20px;
+      border-radius: 2px;
+      text-align: center;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border);
+    }
+    .cta-section h3 {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      font-family: 'Libre Baskerville', Georgia, serif;
+      font-weight: 700;
+    }
+    .whatsapp-btn {
+      background: var(--wa-green);
+      color: white !important;
+      padding: 15px 40px;
+      font-size: 1.2rem;
+      border-radius: 3px;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      margin: 0 auto;
+    }
+    .whatsapp-btn:hover {
+      background: var(--wa-green-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
+    }
+
+    /* Contacto */
+    .contacto-info {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .contacto-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 1.05rem;
+      color: var(--text);
+    }
+    .contacto-item .icono { font-size: 1.3rem; }
+    .contacto-enlace {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .contacto-enlace:hover { text-decoration: underline; }
+
+    /* Footer */
+    .main-footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 24px;
+      background: var(--card);
+      border-radius: 2px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
+    }
+
+    /* --- WhatsApp flotante --- */
+    .wa-float {
+      position: fixed; bottom: 24px; right: 24px; z-index: 999;
+      width: 58px; height: 58px; border-radius: 50%;
+      background: var(--wa-green); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 18px rgba(37,211,102,0.4);
+      transition: transform 0.2s, box-shadow 0.2s; text-decoration: none;
+    }
+    .wa-float:hover { transform: scale(1.12); box-shadow: 0 6px 28px rgba(37,211,102,0.55); }
+    .wa-float:active { transform: scale(0.95); }
+    .wa-float svg { width: 30px; height: 30px; fill: #fff; }
+
+    /* Responsive */
+    @media (max-width: 860px) {
+      .container { padding: 0 12px; }
+      .section-card { padding: 28px 20px; margin: 12px auto; }
+      .hero-header { padding: 40px 20px; margin: 12px 0; }
+      .hero-header h1 { font-size: 2rem; }
+      .hero-header h2 { font-size: 1.2rem; }
+      .wiki-header { padding: 10px 12px; }
+      .wiki-tab { padding: 8px 12px; font-size: 0.8rem; }
+      .wiki-logo { font-size: 1.1rem; }
+      .cta-section { padding: 40px 15px; }
+      .cta-section h3 { font-size: 1.4rem; }
+    }
+    @media (max-width: 480px) {
+      .wiki-header { flex-direction: column; align-items: flex-start; }
+      .wiki-nav { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .wiki-tab { flex-shrink: 0; }
+      .wa-float { bottom: 18px; right: 18px; width: 52px; height: 52px; }
+      .wa-float svg { width: 26px; height: 26px; }
+      .whatsapp-btn { padding: 12px 25px; font-size: 1rem; }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <!-- Botón flotante WhatsApp -->
+  <a href="https://wa.me/5492345446330?text=Hola%20Mario%2C%20te%20escribo%20desde%20tu%20web.%20Me%20gustar%C3%ADa%20consultarte%20sobre%20un%20proyecto." class="wa-float" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <!-- Menú Fijo Superior -->
+  <div class="wiki-header-wrapper">
+    <header class="wiki-header">
+      <a href="index.html" class="wiki-logo">Diseño y Construcción</a>
+      <nav class="wiki-nav">
+        <a href="index.html" class="wiki-tab active">Inicio</a>
+        <a href="index.html#servicios" class="wiki-tab">Servicios</a>
+        <a href="index.html#proyectos" class="wiki-tab">Proyectos</a>
+        <a href="index.html#sobre-mi" class="wiki-tab">Sobre mí</a>
+        <a href="blog.html" class="wiki-tab">Blog</a>
+        <a href="index.html#contacto" class="wiki-tab">Contacto</a>
+      </nav>
+    </header>
+  </div>
+
+  <div class="container">
+    <!-- Hero Section -->
+    <header class="hero-header">
+      <h1>Mario Molina</h1>
+      <h2>Constructor Civil | Diseñador AEC</h2>
+      <h3>Gestor Digital BIM, CAD, CAE, GIS y Diseño Web 3D/360°</h3>
+      <h4>🌐 mariomolinacc.github.io</h4>
+    </header>
+
+    <!-- Marcas Banner -->
+    <div class="marcas-banner">
+      <div class="linea-fija">35 años de experiencia forjada en compañías lideres como: </div>
+      <div class="linea-animada-container">
+        <div class="marcas-scroll" aria-hidden="true">
+          <div class="marcas-grupo">
+            <span>Arcor</span><span>Philips</span><span>Whirlpool</span>
+            <span>Peabody</span><span>Philco</span><span>MM.Proyectos.AR</span>
+          </div>
+          <div class="marcas-grupo">
+            <span>Arcor</span><span>Philips</span><span>Whirlpool</span>
+            <span>Peabody</span><span>Philco</span><span>MM.Proyectos.AR</span>
+          </div>
+          <div class="marcas-grupo">
+            <span>Arcor</span><span>Philips</span><span>Whirlpool</span>
+            <span>Peabody</span><span>Philco</span><span>MM.Proyectos.AR</span>
+          </div>
+          <div class="marcas-grupo">
+           <span>Arcor</span><span>Philips</span><span>Whirlpool</span>
+           <span>Peabody</span><span>Philco</span><span>MM.Proyectos.AR</span>
+          </div>    
+        </div>
+      </div>
+    </div>
+
+    <!-- Sobre Mi -->
+    <section class="section-card sobre-mi" id="sobre-mi">
+      <h2>Sobre Mí</h2> 
+      <h3>Perfil Profesional</h3>
+      <p>Soy Constructor Civil y Diseñador AEC con integración BIM, CAD, CAE, GIS y Geomática, para la optimización de proyectos de edificación. Incluye el desarrollo web de presentaciones visuales interactivas en 3D/360° y la restauración digital del patrimonio arquitectónico e histórico (HBIM).</p>
+      <p>Profesional con más de 35 años de experiencia en proyectos de ingeniería y construcción, diseño y representaciones visuales. Especialista en la transición tecnológica desde el dibujo tradicional hacia CAD, BIM e inteligencia artificial.</p>
+      <p>Ofrece servicios de comunicación de proyectos mediante tecnologías 3D y plataformas web, además de la recuperación, restauración y digitalización de documentación histórica técnica para arquitectos, ingenieros y empresas del sector.</p>
+      
+      <!-- BOTÓN: Experiencia ampliada -->
+      <a href="sobre_mi.html" class="btn-ver-mas">Experiencia ampliada</a>
+    </section>
+
+    <!-- PROYECTOS -->
+    <section class="section-card" id="proyectos">
+      <h2>Mis Proyectos</h2>
+      <div class="galeria-proyectos">
+        <div class="proyecto-item">
+          <img src="img/proyecto_pe_01.webp" alt="Edificio multifamiliar y comercial - Punta del Este, Uruguay" loading="lazy">
+          <p class="proyecto-etiqueta">🏛️ Edificio multifamiliar y comercial - Punta del Este</p>
+        </div>
+        <div class="proyecto-item">
+          <img src="img/proyecto_df_01.webp" alt="Proyecto Casa Dufaur, San Isidro (BA)" loading="lazy">
+          <p class="proyecto-etiqueta">🏛️ Proyecto Casa Dufaur, San Isidro (BA)</p>
+        </div>
+        <div class="proyecto-item">
+          <img src="img/proyecto_ca_01.webp" alt="Proyecto Casa Ayacucho, San Isidro (BA)" loading="lazy">
+          <p class="proyecto-etiqueta">🏛️ Proyecto Casa Ayacucho, San Isidro (BA)</p>
+        </div>        
+      </div>
+      
+      <!-- BOTÓN: Ver mas proyectos -->
+      <a href="proyectos.html" class="btn-ver-mas">Ver más proyectos</a>
+    </section>
+
+    <!-- Visualizacion 3D -->
+    <section class="section-card" id="visualizacion-3d">
+      <h2>Visualización 3D</h2>
+      <div class="galeria-proyectos">
+        <div class="proyecto-item">
+          <img src="https://raw.githubusercontent.com/mariomolina-mm-ar/web/main/images/proyecto_ct_00.jpg" alt="Dibujo en lápiz de proyecto arquitectónico" loading="lazy">
+          <p class="proyecto-etiqueta">Dibujo en Lápiz</p>
+        </div>
+        <div class="proyecto-item">
+          <img src="https://raw.githubusercontent.com/mariomolina-mm-ar/web/main/images/proyecto_ct_01.jpg" alt="Render diurno de vivienda" loading="lazy">
+          <p class="proyecto-etiqueta">Render de Día</p>
+        </div>
+        <div class="proyecto-item">
+          <img src="https://raw.githubusercontent.com/mariomolina-mm-ar/web/main/images/proyecto_ct_02.jpg" alt="Render diurno de vivienda" loading="lazy">
+          <p class="proyecto-etiqueta">Render de Noche</p>
+        </div>        
+      </div>
+    </section>
+
+    <!-- SERVICIOS -->
+    <section class="section-card" id="servicios">
+      <h2>Mis Servicios</h2>
+      
+      <div class="servicio-bloque">
+        <h3>1. Diseño y Desarrollo Web para Comunicación de Proyectos</h3>
+        <p>Ayudo a arquitectos, ingenieros, desarrolladores, empresas e inversores a comunicar proyectos de manera clara, interactiva y profesional mediante tecnologías BIM, visualización 3D y plataformas web.</p>
+        <div class="servicio-lista">
+          <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Visualización Web 3D y recorridos 360°</div>
+          <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Desarrollo Web interactivo especializado</div>
+          <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Presentaciones digitales para marketing e inversores</div>
+          <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Gemelos Digitales BIM - Auditoría y optimización</div>
+          <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Experiencias interactivas para arquitectura e industria</div>
+        </div>
+      </div>
+
+      <div class="servicio-bloque">
+        <h3>2. Rescate Digital de Patrimonio Profesional</h3>
+        <p>Servicio especializado en la recuperación, restauración y puesta en valor de documentación histórica desarrollada en soporte papel antes de la era digital. Orientado a profesionales y entidades que desean preservar y difundir décadas de trabajo técnico y proyectual.</p>
+        <div class="servicio-lista">
+          <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Digitalización y preservación de documentación histórica</div>
+          <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Restauración de perspectivas dibujadas a mano</div>
+          <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Recuperación de planos en papel vegetal, heliográficos y diazo</div>
+          <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Reentintado digital y vectorización</div>
+          <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Reconstrucción gráfica</div>
+          <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Generación de renders desde documentación histórica</div>
+          <div class="servicio-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg> Preparación de material para portfolios y exposiciones</div>
+        </div>
+        <div class="destacado">
+          Más que una digitalización, el objetivo es rescatar el valor técnico, gráfico e histórico de cada proyecto, permitiendo que obras desarrolladas décadas atrás vuelvan a formar parte activa del patrimonio profesional de sus autores.
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA WhatsApp -->
+    <div class="cta-section">
+      <h3>¡Solicita tu presupuesto sin cargo!</h3>
+      <h3>↓</h3>
+      <a href="https://wa.me/5492345446330?text=Hola%20Mario,%20necesito%20información%20sobre%20sus%20servicios" class="whatsapp-btn" target="_blank" rel="noopener noreferrer">
+        💬 WhatsApp
+      </a>
+    </div>
+
+    <!-- Contacto -->
+    <section class="section-card" id="contacto">
+      <h2>Contacto</h2>
+      <div class="contacto-info">
+        <div class="contacto-item">
+          <span class="icono">📱</span>
+          <div><strong>WhatsApp:</strong> +549 2345 446330</div>
+        </div>
+        <div class="contacto-item">
+          <span class="icono">📧</span>
+          <div><strong>E_mail:</strong> <a href="mailto:molina.aec@gmail.com" target="_blank" rel="noopener noreferrer" class="contacto-enlace"> molina.aec@gmail.com</a></div>
+        </div>
+        <div class="contacto-item">
+          <span class="icono">🌐</span>
+          <div><strong>Mi sitio web:</strong> <a href="https://mariomolinacc.github.io" target="_blank" rel="noopener noreferrer" class="contacto-enlace">mariomolinacc.github.io</a></div>
+        </div>
+        <div class="contacto-item">
+          <span class="icono">🌐</span>
+          <div><strong>Mi pagina web:</strong> <a href="https://bio.site/mmolina" target="_blank" rel="noopener noreferrer" class="contacto-enlace">bio.site/mmolina</a></div>
+        </div>
+        <div class="contacto-item">
+          <span class="icono">📍</span>
+          <div><strong>Oficina:</strong> Calle 11, N°1065, 25 de Mayo, (BA) 🇦🇷</div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="main-footer">
+      <p>&copy; 2026 Mario Molina - Diseño y Construcción - Todos los derechos reservados – Buenos Aires, Argentina 🌎</p>
+    </footer>
+  </div>
+</body>
+</html>
