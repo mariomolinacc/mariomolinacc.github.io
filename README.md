@@ -1,6 +1,6 @@
 # Hola, soy Mario Molina 👋 
 
-— Constructor Civil (ISET-BA · 1986) y especializado en GIS - GeoInformática (UBA · 2004), con más de 35 años de trayectoria en ingeniería, industria e infraestructura. Diseñador CAD/CAE, Gerente de Ingeniería y Director de Obras en multinacionales de consumo masivo y tecnología. Desde 2023 dirige el Estudio ScanLabb.   
+— Constructor Civil (ISET-BA · 1986) especializado en GIS - GeoInformática (UBA · 2004), con más de 35 años de trayectoria en ingeniería, industria e infraestructura. Diseñador CAD/CAE, Gerente de Ingeniería y Director de Obras en multinacionales de consumo masivo y tecnología. Desde 2023 dirige el Estudio ScanLabb.   
 
 Integra tecnologías de diseño y análisis como —BIM, CAD, CAE, impresión 3D y Geomática — para optimizar proyectos, con capacidad para operar en entornos complejos y de alcance global.
 
