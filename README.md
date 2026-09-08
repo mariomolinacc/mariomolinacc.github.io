@@ -1,14 +1,16 @@
 # Hola, soy Mario Molina 👋 
 
-— Constructor Civil —, con más de tres décadas de experiencia en el diseño, desarrollo y dirección de proyectos de ingeniería y construcción, abarcando desde viviendas hasta complejos industriales y logísticos.
+— Constructor Civil (ISET-BA · 1986) y especializado en GIS (UBA · 2004), con más de 35 años de trayectoria en ingeniería, industria e infraestructura. Diseñador CAD/CAE, Gerente de Ingeniería y Director de Obras en multinacionales de consumo masivo y tecnología. Desde 2023 dirige el Estudio ScanLabb.   
 
-Tras iniciar su carrera en estudios de arquitectura y consolidarse en IRIBARNE y Asociados, colaboró como diseñador CAD/CAE en equipos de ingeniería de compañías notables como —Arcor, Philips, Whirlpool, Peabody—, llegando a ser Gerente de Ingeniería y Producción en — Philco—, con responsabilidad sobre equipos multidisciplinarios y operaciones, reportando a la Gerencia General.
+Integra tecnologías de diseño y análisis como —BIM, CAD, CAE, impresión 3D y Geomática — para optimizar proyectos, con capacidad para operar en entornos complejos y de alcance global.
+
+
+Tras iniciar su carrera en oficinas de arquitectura y consolidarse en IRIBARNE y Asociados, colaboró como diseñador CAD/CAE en equipos de ingeniería de compañías notables como — Arcor, Philips, Whirlpool, Peabody —, llegando a ser Gerente de Ingeniería y Producción en — Philco —, con responsabilidad sobre equipos multidisciplinarios y operaciones, reportando a la Gerencia General.
 
 Posteriormente, asesoró a inversores, family offices y empresas globales —entre ellas Daewoo, Sanyo, Newsan y Midas— en reconversión de activos y optimización de infraestructuras.
 
-—Actualmente dirige su propio estudio de Diseño y Construcción—, especializado en proyectos de viviendas, centros  comerciales y logísticos en la provincia de Buenos Aires, brindando soluciones desde el proyecto hasta la dirección técnica de obra.
+—Actualmente dirige el estudio ScanLabb especializado en diseño, digitalización y restauración de planos, mapas y documentación técnica; plataformas web y herramientas propias de visualización 2D/3D orientadas a la gestión documental.
 
-Integra tecnologías de diseño y análisis como —BIM, CAD, CAE, impresión 3D y Geomática — para optimizar proyectos, con capacidad para operar en entornos complejos y de alcance global.
 
 ---
 
