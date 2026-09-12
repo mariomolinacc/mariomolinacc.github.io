@@ -216,6 +216,184 @@
             .wiki-header { flex-direction:column; align-items:flex-start }
             .wiki-nav { width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch } .wiki-tab { flex-shrink:0 }
         }
+      
+ 
+        /* ========================================================
+           NUEVOS ESTILOS: Imágenes Antes/Después, Timeline y Cards
+           ======================================================== */
+
+        /* 1. Bloque de Imágenes Antes y Después */
+        .img-comparison {
+            display: flex;
+            gap: 20px;
+            margin: 30px 0;
+            background: var(--exp-bg);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        .img-comp-item {
+            flex: 1;
+            text-align: center;
+        }
+        .img-comp-item img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid var(--img-bd);
+            box-shadow: var(--sh-ib);
+            transition: transform 0.3s ease;
+        }
+        .img-comp-item img:hover { transform: scale(1.02); }
+        .img-comp-label {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: var(--text-m);
+            font-weight: 600;
+        }
+        .img-comp-label strong { color: var(--accent); }
+
+        /* 2. Línea de Tiempo de Evolución Profesional */
+        .timeline {
+            position: relative;
+            margin: 40px 0;
+            padding: 20px 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            background: var(--border);
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        .timeline-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+        }
+        .timeline-card {
+            flex: 1 1 45%;
+            background: var(--exp-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+            margin-bottom: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: var(--sh-ib);
+        }
+        .timeline-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-color: var(--accent);
+        }
+        .timeline-year {
+            display: inline-block;
+            background: var(--accent);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .timeline-card h4 {
+            color: var(--h1);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        .timeline-card p {
+            font-size: 0.9rem;
+            color: var(--text-m);
+            margin-bottom: 0;
+        }
+
+        /* 3. Tarjetas de Formación y Experiencia */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .info-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: 6px;
+            padding: 20px;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: var(--sh-ib);
+        }
+        .info-card:hover {
+            background: var(--exp-h);
+            transform: translateY(-2px);
+        }
+        .info-card-icon {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .info-card h4 {
+            color: var(--h1);
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+        }
+        .info-card .meta {
+            font-size: 0.8rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .info-card p {
+            font-size: 0.88rem;
+            color: var(--text-m);
+            margin-bottom: 0;
+            line-height: 1.5;
+        }
+        .info-card p strong { color: var(--text); }
+
+        /* Responsive para los nuevos elementos */
+        @media(max-width:860px) {
+            .wiki-wrapper { padding: 0 12px; } 
+            .wiki-container { padding:28px 20px; margin: 12px auto; }
+            h1 { font-size:1.8rem } .infobox { float:none; width:100%; margin:0 0 24px }
+            .infobox-photo { max-height:500px } .toc { width:100%; min-width:unset }
+            .wiki-header { padding: 10px 12px; } .wiki-tab { padding:8px 12px; font-size:.8rem }
+            .wiki-logo { font-size:1.1rem }
+            
+            /* Ajustes responsive nuevos clases */
+            .img-comparison { flex-direction: column; }
+            .timeline::before { left: 0; }
+            .timeline-container { flex-direction: column; }
+            .timeline-card { flex: 1 1 100%; margin-left: 20px; }
+            .timeline-card::before {
+                content: '';
+                position: absolute;
+                left: -24px;
+                top: 20px;
+                width: 12px;
+                height: 12px;
+                background: var(--accent);
+                border-radius: 50%;
+                border: 2px solid var(--card);
+            }
+        }
+        @media(max-width:480px) {
+            body { font-size:14px } h1 { font-size:1.55rem } h2 { font-size:1.15rem }
+            .refs { columns:1; column-gap:0 } .btn { width:100%; text-align:center; padding:12px 20px }
+            .wiki-header { flex-direction:column; align-items:flex-start }
+            .wiki-nav { width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch } .wiki-tab { flex-shrink:0 }
+        }       
+        
+        
+        
     </style>
 </head>
 
@@ -244,7 +422,7 @@
                 <div class="infobox-hd">Información Profesional</div>
                 <table>
                     <tr><th>Nombre</th><td>Mario Molina</td></tr>
-                    <tr><th>Nacimiento</th><td>(1964) Ciudad de Buenos Aires (CABA), Argentina</td></tr>
+                    <tr><th>Nacimiento</th><td>Ciudad de Buenos Aires (CABA), Argentina</td></tr>
                     <tr><th>Nacionalidad</th><td>🇦🇷 Argentino</td></tr>
                     <tr><th>Ocupación</th><td><ul class="occ">
                                <li>Constructor Civil</li>
@@ -275,16 +453,36 @@
             </aside>
 
             <h2 id="biografia"><span class="se"></span>Biografía</h2>
-            <p><strong>Mario Molina</strong> es un <strong> Constructor Civil</strong>, <strong> Diseñador </strong> y 
-            <strong>GeoInformático </strong>argentino, con más de tres décadas de experiencia en proyectos de ingeniería, 
-            diseño y desarrollo tecnológico para empresas multinacionales líderes como <strong>—Arcor, Philips, Whirlpool, 
-            Peabody y Philco—</strong>, además de asesorar y dirigir proyectos de reconversión de activos industriales para 
-            —Daewoo, NewSan y Midas—. </p>
+            <p><strong>Mario Molina</strong> es un <strong> Constructor Civil</strong>, Diseñador y GeoInformático argentino, 
+            con más de tres décadas de experiencia en proyectos de ingeniería, construcción, diseño y desarrollo 
+            para empresas multinacionales líderes como <strong>—Arcor, Philips, Whirlpool, Peabody y Philco—</strong>, además 
+            de asesorar y dirigir proyectos de reconversión de activos industriales para —<strong>Daewoo, NewSan y Midas</strong>—. </p>
             
-            <p>Su perfil integra competencias en GIS, CAD, CAE, BIM, Geomática y Desarrollo Web, permitiéndole gestionar 
-            el ciclo de vida completo de proyectos de edificación, desarrollo tecnológico, infraestructura y productos.</p>
-
-           <h3> Trayectoria </h3>
+            <p> Su trayectoria representa la evolución de la documentación técnica: desde el trabajo manual en tableros de dibujo 
+            y tecnígrafos, utilizando planos de gran formato, hasta la gestión digital de proyectos mediante tecnologías CAD, CAE, 
+            BIM, GIS, GeoInformática y plataformas web de visualización 2D y 3D. </p>
+            
+            <!-- MEJORA 1: Imágenes Antes y Después -->
+            <div class="img-comparison">
+                <div class="img-comp-item">
+                    <img src="img/antes_tablero.jpg" alt="Dibujo técnico manual en tablero">
+                    <div class="img-comp-label"><strong>Ayer:</strong> Tableros de dibujo y tecnígrafos</div>
+                </div>
+                <div class="img-comp-item">
+                    <img src="img/despues_cad.jpg" alt="Pantallas con software CAD, BIM y GIS">
+                    <div class="img-comp-label"><strong>Hoy:</strong> Pantallas CAD, CAE, BIM y GIS</div>
+                </div>
+            </div>
+            
+            <p>Su perfil combina competencias técnicas y de gestión en CAD, CAE, BIM, GIS, geomática, desarrollo web, documentación 
+            técnica y visualización digital, lo que le permite intervenir en distintas etapas del ciclo de vida de proyectos de 
+            edificación, infraestructura, desarrollo tecnológico y productos.</p>
+            
+            <p>Actualmente dirige ScanLabb, un estudio dedicado al diseño, digitalización, restauración y gestión de documentación 
+            técnica, incluyendo planos, mapas y archivos de proyectos. También desarrolla plataformas web y herramientas para la 
+            visualización y consulta de información técnica en 2D y 3D.</p>
+      
+           <h3>Trayectoria </h3>
             <p>Inició su trayectoria laboral como dibujante técnico industrial en los estudios del arquitecto Jorge Luis Vázquez, 
             en 25 de Mayo, provincia de Buenos Aires, entre 1980 y 1982, y de Iribarne y Asociados, en la Ciudad Autónoma de 
             Buenos Aires, entre 1982 y 1986. <br>
@@ -292,19 +490,15 @@
             y la documentación técnica, antes de completar sus estudios superiores en diseño y construcción civil.</p>
             
               <p>Luego de finalizar su formación de constructor civil, desarrolló su carrera en distintos roles vinculados 
-              con la ingeniería y el diseño, entre ellos dibujante proyectista, diseñador, gerente de ingeniería y 
-              director de proyectos de construcción. </p>            
-              
-             <p>Estas experiencias incluyeron proyectos desarrollados en Brasil, Chile, China y Corea del Sur, y 
-             consolidaron su capacidad para resolver desafíos técnicos, logísticos y organizacionales en entornos 
-             multiculturales y equipos interdisciplinarios.</p>
-
-             <p>Actualmente. dirige su estudio especializado en diseño, digitalización y restauración de documentos 
-             técnicos, además del desarrollo de plataformas web.</p>
-
+              con la ingeniería y el diseño, entre ellos: <br></p>
+              <p>  • Dibujante proyectista (plantas industriales y logisticas).<br>
+                • Diseñador   (arquitectónico · mecánico · tecnológico).<br>
+                • Gerente de ingeniería  (civil e industrial).<br>
+                • Director de proyectos de construcción (viviendas, naves industriales y logisticas).<br> 
+                • Asesor técnico para la reconversión de activos  (plantas industriales y logisticas) </p>          
                  
 
-          <p><h3>Formación académica</h3></p>
+         <p><h2>Formación académica</h2></p>
                  
                    <p>🌐<strong> Especialización en Sistemas de Información Geográfica</strong> <br>
                       Escuela de Posgrado, FADU-UBA | 2004</br> 
@@ -331,7 +525,7 @@
                        • Especialización en AutoCAD + AME Solid 3D | AutoDesk, Buenos Aires| Patrocinado por Whirlpool, 1992.</p>
 
            
-            <p><h3>Experiencia profesional</h3></p>
+            <p><h2>Experiencia profesional</h2></p>
             
             <p>Su trayectoria abarca: <br>
                <ul class="wb">
@@ -401,7 +595,7 @@
             <footer
                class="wf"> <p>© 2026 Mario Molina - Diseño y Construcción - Todos los derechos reservados · Buenos Aires, Argentina</p>
                <!-- / <a href="https://mariomolinacc.github.io" target="_blank">🌐 Web Design by MM</a>  /  -->
-               <a href="https://mariomolinacc.github.io" target="_blank" style="color: cyan; text-decoration: none; font-size: 12px; font-family: Arial, sans-serif;">🌐 ScanLabb desarrollo web | update: 2026-09-10 T23:12:00Z</a> 
+               <a href="https://mariomolinacc.github.io" target="_blank" style="color: cyan; text-decoration: none; font-size: 12px; font-family: Arial, sans-serif;">🌐 ScanLabb desarrollo web | update: 2026-09-11 T22:59:00Z</a> 
             </footer>
         
         </div>
@@ -409,4 +603,7 @@
 
 </body>
 </html>
+
+
+
 
