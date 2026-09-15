@@ -395,11 +395,13 @@
     .reveal { opacity: 0; transform: translateY(12px); transition: opacity .5s ease, transform .5s ease; }
     .reveal.visible { opacity: 1; transform: none; }
 
+
+
     /* ========================================================
        NUEVOS ESTILOS: Imágenes Antes/Después y Lightbox
        ======================================================== */
 
-    /* 1. Bloque de Imágenes Antes y Después (Minuaturas verticales) */
+    /* 1. Bloque de Imágenes Antes y Después */
     .img-comparison {
         display: flex;
         gap: 20px;
@@ -415,13 +417,15 @@
     }
     .img-comp-item img {
         width: 100%;
-        height: 350px; 
-        object-fit: cover;
+        height: auto; /* Antes era 350px */
+        max-height: 600px; /* Límite máximo opcional para que no sea gigante */
+        object-fit: contain; /* Antes era cover. Esto evita que se corte */
         border-radius: 6px;
         border: 1px solid #333;
         box-shadow: 0 4px 15px rgba(0,0,0,0.5); 
         transition: transform 0.3s ease;
         cursor: pointer;
+        background-color: #000;
     }
     .img-comp-item img:hover { 
         transform: scale(1.02); 
@@ -443,12 +447,13 @@
         overflow: hidden;
         border: 1px solid #333;
         box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        background-color: #000;
     }
     .zoom-img {
         width: 100%;
         height: auto;
-        max-height: 700px;
-        object-fit: cover;
+        max-height: 700px; /* Límite de alto */
+        object-fit: contain; /* Antes era cover. Mantiene proporción sin cortar */
         display: block;
         cursor: pointer;
         transition: transform 0.3s ease, filter 0.3s ease;
@@ -471,14 +476,19 @@
         border: 1px solid #333;
         box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         background: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 250px; /* Altura mínima para que se vean parejas */
     }
     .formacion-imagenes .zoom-img {
-        max-height: 220px;
-        width: 100%;
-        height: 220px;
+        max-height: 400px;
+        width: auto; /* Cambiado de 100% a auto para que no se deforme */
+        height: auto;
+        margin: 0 auto;
     }
 
-    /* 4. Lightbox (Pantalla Completa) */
+    /* 4. Lightbox (Pantalla Completa) - Este ya estaba bien configurado */
     .lightbox-overlay {
         position: fixed;
         top: 0; left: 0; right: 0; bottom: 0;
@@ -536,12 +546,19 @@
       .timeline::before { left: 8px; }
       .stat-num { font-size: 1.4rem; }
       .footer-right { text-align: left; }
-      .img-comp-item img { height: 250px; }
+      .img-comp-item img { max-height: 450px; }
       .formacion-imagenes { grid-template-columns: 1fr; } 
+    }
+
+
+
     }
   </style>
 </head>
 <body>
+
+
+
 
 <!-- ESTRUCTURA LIGHTBOX -->
 <div class="lightbox-overlay" id="lightbox">
@@ -669,7 +686,7 @@
 
          <!-- IMAGEN APAISADA INDEPENDIENTE -->
           <div class="full-width-img-container">
-              <img src="img/infraestructura_inteligente_01.webp" alt="Experiencia Laboral" class="zoom-img">
+              <img src="img/infraestructura_inteligente.webp" alt="Experiencia Laboral" class="zoom-img">
           </div> 
 
 
@@ -745,17 +762,21 @@
             <p>Inició su trayectoria laboral como dibujante en los estudios del arquitecto Jorge Luis Vázquez, 
             en 25 de Mayo, provincia de Buenos Aires, entre 1980 y 1982, y del Estudio Iribarne y Asociados, en la Ciudad Autónoma de 
             Buenos Aires, entre 1982 y 1986. <br>
-           <p>Esta primera etapa le permitió incorporarse tempranamente al ámbito de la arquitectura, la ingeniería y la documentación 
+           <p>Esta primera etapa le permitió incorporarse tempranamente al ámbito de la arquitectura, ingeniería y la documentación 
             técnica, antes de completar sus estudios superiores en diseño y construcción civil.</p>
             
               
-              <p>Luego de finalizar su formación de constructor civil, desarrolló su carrera en distintos roles vinculados 
+              <p>Luego de finalizar su formación, desarrolló su carrera en distintos roles vinculados 
               con la ingeniería y el diseño, entre ellos: <br></p>
-              <p>  • Dibujante proyectista (plantas industriales y logisticas).<br>
+              <p>  • Proyectista (plantas industriales y logisticas).<br>
                 • Diseñador   (arquitectónico · mecánico · tecnológico).<br>
                 • Gerente de ingeniería  (civil e industrial).<br>
                 • Director de proyectos de construcción (viviendas, naves industriales y logisticas).<br> 
-                • Asesor técnico para la reconversión de activos  (plantas industriales y logisticas) </p>          
+                • Asesor técnico para la reconversión de activos  (plantas industriales y logisticas) </p> 
+                
+              <p>Es constructor civil con especializaciones adquirida en entornos corporativos internacionales para 
+              la gestión de proyectos constructivos, el desarrollo de productos y la asesoría en reconversión de 
+              activos industriales.</p>    
  
  
              <!-- NUEVA IMAGEN APaisADA EN TRAYECTORIA -->
@@ -784,13 +805,15 @@
           </div>
 
           <!-- IMAGEN APAISADA INDEPENDIENTE -->
+  <!-------
           <div class="full-width-img-container">
               <img src="img/formacion_0.webp" alt="Imagen Formación académica" class="zoom-img">
           </div> 
 
+- --------> 
 
           <!-- CONTENEDOR DE 2 O 3 IMÁGENES EN FILA (Apaisadas) -->
-<!------- 
+ 
           <div class="formacion-imagenes">
               <div class="img-col">
                   <img src="img/dti.webp" alt="Imagen apaisada 1" class="zoom-img">
@@ -803,7 +826,6 @@
               </div>
           </div>
 
-- --------> 
 
           <div class="refs">
             <p><strong>Referencias_</strong></p>
