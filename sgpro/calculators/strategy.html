@@ -90,14 +90,14 @@
             display: none;
         }
         
-        .tire-life-section, .strategy-matrix-section, .strategy-section, .fuel-matrix-section, .chart-section {
+        .tire-life-section, .strategy-matrix-section, .fuel-matrix-section, .chart-section {
             background-color: var(--bg-card); padding: 25px; border: 1px solid var(--border-color); border-top: none; margin-bottom: 0;
         }
         
-        .tire-life-title, .strategy-matrix-title, .strategy-title, .fuel-matrix-title, .chart-title {
+        .tire-life-title, .strategy-matrix-title, .chart-title {
             font-size: 1.2em; color: var(--text-main); margin-bottom: 20px; font-weight: 600; text-align: center;
         }
-        .fuel-matrix-title { color: var(--accent-orange); }
+        .strategy-matrix-title { color: var(--accent-blue); }
         .chart-title { color: var(--accent-blue); }
         
         .tire-life-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
@@ -110,24 +110,30 @@
         .tire-life-value { font-size: 1.5em; font-weight: 700; margin-bottom: 4px; color: var(--text-main); }
         .tire-laps { font-size: 0.85em; color: var(--text-muted); }
         
-        .strategy-matrix-table, .strategy-table, .fuel-matrix-table {
+        .strategy-matrix-table {
             width: 100%; border-collapse: separate; border-spacing: 0; background-color: var(--bg-input);
             border-radius: 10px; overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 20px;
         }
         .strategy-matrix-table thead { background-color: var(--accent-blue); color: #fff; }
-        .strategy-table thead { background-color: var(--accent-green); color: #fff; }
-        .fuel-matrix-table thead { background-color: var(--accent-orange); color: #fff; }
-        .strategy-matrix-table th, .strategy-table th, .fuel-matrix-table th { padding: 14px 10px; text-align: center; font-weight: 600; font-size: 0.85em; }
-        .strategy-matrix-table td, .strategy-table td, .fuel-matrix-table td { padding: 11px 10px; text-align: center; border-bottom: 1px solid var(--border-color); font-size: 0.9em; color: var(--text-main); }
-        .strategy-matrix-table tbody tr:hover, .strategy-table tbody tr:hover, .fuel-matrix-table tbody tr:hover { background-color: rgba(255, 255, 255, 0.03); }
+        .strategy-matrix-table th { padding: 14px 10px; text-align: center; font-weight: 600; font-size: 0.85em; }
+        .strategy-matrix-table td { padding: 11px 10px; text-align: center; border-bottom: 1px solid var(--border-color); font-size: 0.9em; color: var(--text-main); }
+        .strategy-matrix-table tbody tr:hover { background-color: rgba(255, 255, 255, 0.03); }
         .strategy-number-cell { text-align: left; font-weight: 600; color: var(--text-main); padding-left: 18px; background-color: rgba(52, 152, 219, 0.1); }
-        .tire-type-cell { text-align: left; font-weight: 600; color: var(--text-main); padding-left: 18px; }
+
+        .fuel-matrix-title { font-size: 1.2em; color: var(--accent-orange); margin-bottom: 20px; font-weight: 600; text-align: center; }
+        .fuel-matrix-table {
+            width: 100%; border-collapse: separate; border-spacing: 0; background-color: var(--bg-input);
+            border-radius: 10px; overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 0;
+        }
+        .fuel-matrix-table thead { background-color: var(--accent-orange); color: #fff; }
+        .fuel-matrix-table th { padding: 14px 10px; text-align: center; font-weight: 600; font-size: 0.85em; }
+        .fuel-matrix-table td { padding: 11px 10px; text-align: center; border-bottom: 1px solid var(--border-color); font-size: 0.9em; color: var(--text-main); }
+        .fuel-matrix-table tbody tr:hover { background-color: rgba(255, 255, 255, 0.03); }
         
         .fuel-highlight { background-color: rgba(230, 126, 34, 0.15) !important; color: var(--accent-orange); font-weight: 700; }
         .not-viable { color: var(--accent-red); font-weight: bold; }
         .viable-icon { color: var(--accent-green); font-weight: bold; font-size: 1.1em; }
         .fuel-laps-detail { font-size: 0.8em; color: var(--text-muted); margin-top: 3px; }
-        .fuel-note { font-size: 0.8em; color: var(--text-muted); margin-top: 10px; text-align: center; font-style: italic; }
 
         .chart-section { border-radius: 0 0 10px 10px; margin-bottom: 0; }
         .chart-controls {
@@ -178,14 +184,6 @@
         </div>
 
         <div class="form-group">
-            <label for="languageSelector">Language / Idioma:</label>
-            <select id="languageSelector">
-                <option value="en" selected>English</option>
-                <option value="es">Español</option>
-            </select>
-        </div>
-
-        <div class="form-group">
             <label for="selectorPista">Select Track / Selecciona Pista:</label>
             <select id="selectorPista"></select>
         </div>
@@ -203,16 +201,6 @@
         <div class="form-group">
             <label for="tempCarrera">Predicted Race Temperature (°C):</label>
             <input type="number" id="tempCarrera" value="30" min="1" max="50">
-        </div>
-
-        <div class="form-group">
-            <label for="distanciaTotal">Total Race Distance (km):</label>
-            <input type="number" id="distanciaTotal" value="305.5" step="0.1">
-        </div>
-
-        <div class="form-group">
-            <label for="distanciaVuelta">Lap Distance (km):</label>
-            <input type="number" id="distanciaVuelta" value="5.555" step="0.001">
         </div>
 
         <div class="form-group">
@@ -303,16 +291,8 @@
                 </table>
             </div>
             
-            <div class="strategy-section">
-                <div class="strategy-title">Pit Strategy Matrix</div>
-                <table class="strategy-table" id="strategyTable">
-                    <thead><tr><th>Tire Type</th><th>Distance (km)</th><th>Max Laps</th><th>1 Stop</th><th>2 Stops</th><th>3 Stops</th><th>4 Stops</th></tr></thead>
-                    <tbody id="strategyTableBody"></tbody>
-                </table>
-            </div>
-
             <div class="fuel-matrix-section">
-                <div class="fuel-matrix-title">Fuel Strategy Matrix (Based on Tyre Strategy)</div>
+                <div class="fuel-matrix-title">3 Strategy Options (Ideal & Alternatives)</div>
                 <table class="fuel-matrix-table">
                     <thead>
                         <tr>
@@ -325,9 +305,6 @@
                     </thead>
                     <tbody id="fuelMatrixBody"></tbody>
                 </table>
-                <div class="fuel-note">
-                    Note: In GPRO you select ONE compound for the entire race. New tyres of the same compound are fitted at each pit stop. Fuel is calculated per stint (max 180L tank).
-                </div>
             </div>
 
             <div class="chart-section">
@@ -353,14 +330,11 @@
     </div>
 
     <footer>
-        Tyres & Fuel Calculador Sauber - V. 0.016 (Dark Mode + Timeline Chart)
+        Tyres & Fuel Calculador Sauber - V. 0.021 (Matrix Restored)
         <p>--</p>
         <div id="footer-text" style="margin-bottom: 5px;">© 2026 All Rights Reserved - Sauber Racing Team - Agosto 2026</div>
         <a href="https://mariomolinacc.github.io" target="_blank" style="color: #777; text-decoration: none;">Design_by_MM</a>
-
     </footer>
-
-
 
     <script>
         const tracksData = [
@@ -571,44 +545,60 @@
                 maxLapsByCompound[comp] = Math.floor(adjTyreLife[comp] / lapDistance);
             }
 
-            let bestStops = 2;
-            let bestTire = 'medium';
             const lapsForStops = (stops) => Math.ceil(totalLaps / (stops + 1));
+            const order = ['xsoft','soft','medium','hard'];
+            
+            let idealTire;
+            if (temp <= 10) idealTire = 'xsoft';
+            else if (temp <= 20) idealTire = 'soft';
+            else if (temp <= 30) idealTire = 'medium';
+            else idealTire = 'hard';
+            
+            let idealIndex = order.indexOf(idealTire);
+            let optionsToShow = [];
 
             if (isRain) {
-                bestStops = 1; bestTire = 'rain';
-                if (maxLapsByCompound.rain < lapsForStops(1)) bestStops = 2;
+                let stops = (maxLapsByCompound.rain < lapsForStops(1)) ? 2 : 1;
+                optionsToShow.push({ comp: 'rain', stops: stops, type: 'ideal' });
             } else {
-                let idealTire;
-                if (temp <= 10) idealTire = 'xsoft';
-                else if (temp <= 20) idealTire = 'soft';
-                else if (temp <= 30) idealTire = 'medium';
-                else idealTire = 'hard';
-
-                let targetStops = 2;
+                // Opción 1: Ideal a 2 paradas (90% de las carreras)
+                let chosenStops = 2;
                 let chosenTire = idealTire;
-
-                if (maxLapsByCompound[idealTire] >= lapsForStops(targetStops)) {
-                    chosenTire = idealTire;
-                } else {
-                    const order = ['xsoft','soft','medium','hard'];
+                
+                if (maxLapsByCompound[idealTire] < lapsForStops(2)) {
                     let found = false;
                     for (let c of order) {
                         if (maxLapsByCompound[c] >= lapsForStops(2)) { chosenTire = c; found = true; break; }
                     }
                     if (!found) {
-                        targetStops = 3;
+                        chosenStops = 3;
+                        chosenTire = idealTire;
                         for (let c of order) {
-                            if (maxLapsByCompound[c] >= lapsForStops(3)) { chosenTire = c; found = true; break; }
+                            if (maxLapsByCompound[c] >= lapsForStops(3)) { chosenTire = c; break; }
                         }
-                        if (!found) { chosenTire = 'hard'; targetStops = 4; }
                     }
                 }
-                bestStops = targetStops;
-                bestTire = chosenTire;
+                optionsToShow.push({ comp: chosenTire, stops: chosenStops, type: 'ideal' });
 
-                if (temp <= 40 && maxLapsByCompound.hard >= totalLaps) {
-                    bestStops = 0; bestTire = 'hard';
+                // Opción 2: 1 Parada con neumático más duro (o el mismo si es Hard)
+                if (idealIndex < order.length - 1) {
+                    let harderTire = order[idealIndex + 1];
+                    if (maxLapsByCompound[harderTire] >= lapsForStops(1)) {
+                        optionsToShow.push({ comp: harderTire, stops: 1, type: '1stop' });
+                    }
+                } else if (idealIndex === order.length - 1) {
+                    // Si el ideal es Hard, comprobamos si da para 1 parada
+                    if (maxLapsByCompound[idealTire] >= lapsForStops(1)) {
+                        optionsToShow.push({ comp: idealTire, stops: 1, type: '1stop' });
+                    }
+                }
+
+                // Opción 3: Caso especial 3 paradas
+                if (chosenStops === 2 && idealIndex > 0) {
+                    let softerTire = order[idealIndex - 1];
+                    if (maxLapsByCompound[softerTire] >= lapsForStops(3)) {
+                        optionsToShow.push({ comp: softerTire, stops: 3, type: '3stop' });
+                    }
                 }
             }
 
@@ -628,6 +618,7 @@
                     </div>`;
             });
 
+            // Restaurar la Matrix de Laps Distribution
             const matrixBody = document.getElementById('strategyMatrixBody');
             matrixBody.innerHTML = '';
             for (let stops = 0; stops <= 4; stops++) {
@@ -645,97 +636,72 @@
                 matrixBody.innerHTML += `<tr>${row}`;
             }
 
-            const stratBody = document.getElementById('strategyTableBody');
-            stratBody.innerHTML = '';
-            compsToShow.forEach(comp => {
-                const maxL = maxLapsByCompound[comp];
-                let row = `<td class="tire-type-cell"><span class="compound-badge ${comp}">${compoundNames[comp]}</span></td>`;
-                row += `<td>${adjTyreLife[comp]} km</td>`;
-                row += `<td>${maxL} laps</td>`;
-                for (let stops = 1; stops <= 4; stops++) {
-                    const needed = lapsForStops(stops);
-                    const viable = maxL >= needed;
-                    row += `<td class="${viable ? 'viable-icon' : 'not-viable'}">${viable ? '&#10003;' : '&#10007;'}</td>`;
-                }
-                stratBody.innerHTML += `<tr>${row}</tr>`;
-            });
-
             const fuelBody = document.getElementById('fuelMatrixBody');
             fuelBody.innerHTML = '';
             chartStrategies = [];
             const fuelPerLap = (lapDistance / pista.fuelKml) * lvlFactor;
             const boostFactor = 1.5;
 
-            const allCompounds = isRain ? ['rain'] : ['xsoft','soft','medium','hard'];
-            allCompounds.forEach(comp => {
-                for (let stops = 0; stops <= 4; stops++) {
-                    const needed = stops === 0 ? totalLaps : lapsForStops(stops);
-                    const maxL = maxLapsByCompound[comp];
-                    if (maxL < needed && stops > 0) continue;
-                    if (stops === 0 && maxL < totalLaps) continue;
-
-                    let stints = [];
-                    let stintLaps = Math.floor(totalLaps / (stops + 1));
-                    let remainder = totalLaps % (stops + 1);
-                    for (let i = 0; i <= stops; i++) {
-                        stints.push(stintLaps + (i < remainder ? 1 : 0));
-                    }
-
-                    let maxFuelNeeded = 0;
-                    let stintFuels = [];
-                    stints.forEach(sl => {
-                        let normalLaps = Math.max(0, sl - boostLaps);
-                        let boostL = Math.min(boostLaps, sl);
-                        let fuel = (normalLaps * fuelPerLap) + (boostL * fuelPerLap * boostFactor) + (fuelMargin * fuelPerLap);
-                        fuel = Math.min(fuel, MAX_FUEL_CAPACITY);
-                        stintFuels.push(Math.ceil(fuel));
-                        if (fuel > maxFuelNeeded) maxFuelNeeded = fuel;
-                    });
-
-                    let totalFuel = Math.ceil(maxFuelNeeded);
-                    let totalPitTime = stops * pitTime;
-                    let overCapacity = totalFuel > MAX_FUEL_CAPACITY;
-
-                    let label = `${stops} Stop${stops !== 1 ? 's' : ''} - ${compoundNames[comp]}`;
-                    let isRec = (stops === bestStops && comp === bestTire);
-
-                    fuelBody.innerHTML += `
-                        <tr class="${isRec ? 'fuel-highlight' : ''}">
-                            <td style="text-align:left; padding-left:15px; font-weight:600;">
-                                ${isRec ? '&#9733; ' : ''}${label}
-                            </td>
-                            <td>${stints.join(' / ')}</td>
-                            <td><strong>${totalFuel} L</strong>
-                                <div class="fuel-laps-detail">${stintFuels.join(' / ')} L per stint</div>
-                            </td>
-                            <td>${totalPitTime.toFixed(1)}s</td>
-                            <td class="${overCapacity ? 'not-viable' : 'viable-icon'}">${overCapacity ? '&#10007; Over 180L' : '&#10003; OK'}</td>
-                        </tr>`;
-
-                    chartStrategies.push({
-                        label: label,
-                        stops: stops,
-                        compound: comp,
-                        stints: stints,
-                        stintFuels: stintFuels,
-                        totalFuel: totalFuel,
-                        totalPitTime: totalPitTime,
-                        overCapacity: overCapacity,
-                        isRec: isRec,
-                        maxLapsCompound: maxL
-                    });
+            optionsToShow.forEach(opt => {
+                const comp = opt.comp;
+                const stops = opt.stops;
+                
+                let stints = [];
+                let stintLaps = Math.floor(totalLaps / (stops + 1));
+                let remainder = totalLaps % (stops + 1);
+                for (let i = 0; i <= stops; i++) {
+                    stints.push(stintLaps + (i < remainder ? 1 : 0));
                 }
-            });
 
-            chartStrategies.sort((a, b) => {
-                if (a.isRec) return -1;
-                if (b.isRec) return 1;
-                return a.stops - b.stops;
+                let maxFuelNeeded = 0;
+                let stintFuels = [];
+                stints.forEach(sl => {
+                    let normalLaps = Math.max(0, sl - boostLaps);
+                    let boostL = Math.min(boostLaps, sl);
+                    let fuel = (normalLaps * fuelPerLap) + (boostL * fuelPerLap * boostFactor) + (fuelMargin * fuelPerLap);
+                    fuel = Math.min(fuel, MAX_FUEL_CAPACITY);
+                    stintFuels.push(Math.ceil(fuel));
+                    if (fuel > maxFuelNeeded) maxFuelNeeded = fuel;
+                });
+
+                let totalFuel = Math.ceil(maxFuelNeeded);
+                let totalPitTime = stops * pitTime;
+                let overCapacity = totalFuel > MAX_FUEL_CAPACITY;
+
+                let labelPrefix = opt.type === 'ideal' ? '★ Ideal: ' : (opt.type === '1stop' ? '1 Stop (Harder): ' : '3 Stops (Special): ');
+                let label = `${stops} Stop${stops !== 1 ? 's' : ''} - ${compoundNames[comp]}`;
+                let isRec = (opt.type === 'ideal');
+
+                fuelBody.innerHTML += `
+                    <tr class="${isRec ? 'fuel-highlight' : ''}">
+                        <td style="text-align:left; padding-left:15px; font-weight:600;">
+                            ${labelPrefix}${label}
+                        </td>
+                        <td>${stints.join(' / ')}</td>
+                        <td><strong>${totalFuel} L</strong>
+                            <div class="fuel-laps-detail">${stintFuels.join(' / ')} L per stint</div>
+                        </td>
+                        <td>${totalPitTime.toFixed(1)}s</td>
+                        <td class="${overCapacity ? 'not-viable' : 'viable-icon'}">${overCapacity ? '&#10007; Over 180L' : '&#10003; OK'}</td>
+                    </tr>`;
+
+                chartStrategies.push({
+                    label: labelPrefix + label,
+                    stops: stops,
+                    compound: comp,
+                    stints: stints,
+                    stintFuels: stintFuels,
+                    totalFuel: totalFuel,
+                    totalPitTime: totalPitTime,
+                    overCapacity: overCapacity,
+                    isRec: isRec,
+                    maxLapsCompound: maxLapsByCompound[comp]
+                });
             });
 
             lastCalcData = {
                 totalLaps, lapDistance, fuelPerLap, boostLaps, boostFactor,
-                pitTime, adjTyreLife, maxLapsByCompound, bestStops, bestTire
+                pitTime, adjTyreLife, maxLapsByCompound
             };
 
             populateChartSelector();
@@ -748,7 +714,7 @@
             chartStrategies.forEach((s, i) => {
                 let opt = document.createElement('option');
                 opt.value = i;
-                opt.textContent = (s.isRec ? '&#9733; ' : '') + s.label + (s.overCapacity ? ' [!]' : '');
+                opt.textContent = s.label + (s.overCapacity ? ' [!]' : '');
                 sel.appendChild(opt);
             });
             const recIdx = chartStrategies.findIndex(s => s.isRec);
@@ -781,13 +747,10 @@
                 for (let i = 0; i < stintLaps; i++) {
                     labels.push(currentLap);
 
-                    // Neumatico: se reinicia al 100% en cada pit (nuevas gomas del mismo compuesto)
-                    // El progreso se mide por vuelta dentro del stint, no por vuelta acumulada
                     let progress = i / maxLapsCompound;
                     let condition = Math.max(0, 100 * (1 - Math.pow(progress, 1.3)));
                     tyreCondition.push(parseFloat(condition.toFixed(1)));
 
-                    // Combustible: se reinicia en cada pit (se reabastece)
                     let fuelAtStart = stintFuels[stintIdx];
                     let totalConsumption = 0;
                     for (let j = 0; j <= i; j++) {
