@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Diseño y Construcción - Proyectos, Planos, Gestión y Dirección de Obras. Viviendas, Oficinas, Comercios y Depósitos." />
+  <title>Diseño y Construcción | ScanLabb</title>
+  <style>
+    /* ========================================================================
+       PROPIEDADES DEL SISTEMA (Heredadas de tu Portal)
+       ======================================================================== */
+    :root {
+      --bg-dark: #050505;
+      --bg-grid: #08090C;
+      --accent-cyan: #00E5FF;
+      --accent-cyan-hover: #5BF2FF;
+      --accent-amber: #fad816;
+      --text-light: #E2E8F0;
+      --text-muted: #94A3B8;
+      --text-dim: #555;
+      --border-dim: #333;
+      --cad-font: 'Lucida Console', 'Courier New', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      line-height: 1.4;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px 15px;
+    }
+
+    body::after { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 9998; background: repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px); opacity: .22; }
+    body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: -1; background-color: var(--bg-grid); background-image: linear-gradient(rgba(0,229,255,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,.03) 1px, transparent 1px); background-size: 20px 20px; }
+
+    .terminal-container { width: 100%; max-width: 900px; z-index: 10; }
+    
+    .boot-screen { font-family: var(--cad-font); color: var(--accent-amber); font-size: 0.75rem; letter-spacing: 1px; margin-bottom: 15px; text-align: center; border-bottom: 1px dashed var(--border-dim); padding-bottom: 10px; }
+    .portal-title { font-family: var(--cad-font); font-size: clamp(1.8rem, 5vw, 2.5rem); background: linear-gradient(0deg, #FFFFFF 0%, var(--accent-cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 4px; text-align: center; margin-bottom: 5px; }
+    .portal-subtitle { font-family: var(--cad-font); color: var(--text-muted); font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; text-align: center; margin-bottom: 30px; }
+    .portal-highlight { color: var(--accent-cyan); font-weight: bold; }
+
+    h2 { 
+      font-family: var(--cad-font); 
+      color: #FFF; 
+      font-size: 1.3rem; 
+      margin: 35px 0 15px 0; 
+      border-bottom: 1px dashed var(--border-dim);
+      padding-bottom: 8px;
+    }
+    
+    p { margin-bottom: 20px; font-size: 0.9rem; color: var(--text-light); }
+    p strong { color: var(--accent-amber); }
+    .wb { list-style: none; font-family: var(--cad-font); font-size: 0.85rem; color: var(--text-muted); margin: 15px 0; }
+    .wb li { margin-bottom: 10px; padding-left: 10px; border-left: 2px solid var(--border-dim); }
+    .wb li strong { color: var(--accent-cyan); }
+
+    .center { text-align: center; margin: 40px 0 20px; }
+    .btn-back {
+      display: inline-block; padding: 10px 25px;
+      background: transparent; color: var(--accent-cyan);
+      font-family: var(--cad-font); font-size: 0.8rem; font-weight: 700;
+      border: 1px solid var(--accent-cyan); 
+      text-transform: uppercase; letter-spacing: 1px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .btn-back:hover { background: var(--accent-cyan); color: #000; box-shadow: 0 0 10px rgba(0, 229, 255, 0.4); }
+
+    /* ========================================================================
+       TARJETA DE SERVICIOS
+       ======================================================================== */
+    .info-card {
+      border: 1px solid var(--border-dim);
+      background: rgba(0,0,0,0.6);
+      padding: 20px;
+      margin-bottom: 30px;
+      transition: border-color 0.3s ease;
+    }
+    .info-card:hover { border-color: var(--accent-cyan); }
+
+    .card-header-service { border-bottom: 1px dashed var(--border-dim); padding-bottom: 10px; margin-bottom: 15px; }
+    .card-header-service h2 { margin: 0 0 5px 0; border: none; padding: 0; }
+    .card-header-service span { font-family: var(--cad-font); font-size: 0.75rem; color: var(--accent-amber); letter-spacing: 1px; text-transform: uppercase; }
+
+    .data-list { list-style: none; font-family: var(--cad-font); font-size: 0.85rem; color: var(--text-light); }
+    .data-list li { margin-bottom: 15px; display: flex; align-items: flex-start; gap: 8px; line-height: 1.6; }
+    .data-list li::before { content: '>'; color: var(--accent-cyan); font-weight: bold; }
+
+    /* ========================================================================
+       IMÁGENES APAISADAS Y ZOOM
+       ======================================================================== */
+    
+    /* Contenedor de imágenes apaisadas (Trayectoria / Formación) */
+    .full-width-img-container {
+        margin: 30px 0;
+        border: 1px solid var(--border-dim);
+        overflow: hidden;
+        position: relative;
+        background: #000;
+        transition: border-color 0.3s ease;
+    }
+    .full-width-img-container:hover {
+        border-color: var(--accent-cyan);
+    }
+    
+    /* 1ra Instancia: Micro-Zoom al pasar el mouse */
+    .zoom-img {
+        width: 100%;
+        height: auto;
+        max-height: 600px;
+        object-fit: cover;
+        display: block;
+        cursor: zoom-in;
+        transition: transform 0.4s ease, filter 0.4s ease;
+    }
+    .zoom-img:hover {
+        transform: scale(1.03);
+        filter: brightness(1.1);
+    }
+
+    /* Etiqueta flotante para indicar que se puede hacer clic */
+    .full-width-img-container::after {
+        content: '[ CLICK_PARA_ZOOM ]';
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        font-family: var(--cad-font);
+        font-size: 0.65rem;
+        color: var(--accent-cyan);
+        background: rgba(0, 0, 0, 0.8);
+        padding: 4px 8px;
+        border: 1px solid var(--accent-cyan);
+        pointer-events: none;
+        opacity: 0.8;
+    }
+
+    /* ========================================================
+       LIGHTBOX (2da Instancia: Visor de imágenes en pantalla completa)
+       ======================================================== */
+    .lightbox-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 10000; /* Sobrepasa el CRT */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .lightbox-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    .lightbox-overlay img {
+        max-width: 95%;
+        max-height: 95%;
+        object-fit: contain;
+        box-shadow: 0 0 25px rgba(0,0,0,0.8);
+        transform: scale(0.95);
+        transition: transform 0.3s ease;
+    }
+    .lightbox-overlay.active img {
+        transform: scale(1);
+    }
+    .lightbox-close {
+        position: absolute;
+        top: 25px;
+        right: 35px;
+        color: #fff;
+        font-size: 40px;
+        font-weight: 300;
+        font-family: 'Arial', sans-serif;
+        cursor: pointer;
+        transition: color 0.2s, transform 0.2s;
+        z-index: 10001;
+        user-select: none;
+    }
+    .lightbox-close:hover {
+        color: var(--accent-cyan);
+        transform: rotate(90deg);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .portal-title { letter-spacing: 2px; }
+      .zoom-img { max-height: 400px; }
+      .lightbox-close { top: 15px; right: 15px; font-size: 30px; }
+    }
+        
+  </style>
+</head>
+<body>
+
+<div class="terminal-container">
+  <div class="boot-screen">
+    &gt; LOADING MODULE [DISEÑO_CONSTRUCCION]... OK<br>&gt; ACCESS GRANTED
+  </div>
+
+  <h1 class="portal-title">Mario Molina</h1>
+  <p class="portal-subtitle">&gt; <span class="portal-highlight"> Diseñador y Constructor Civil <br>
+        especializado en CAD, GIS, BIM y GeoInformática. </span></p>
+
+  <!-- TARJETA DE SERVICIOS -->
+  <div class="info-card">
+    <div class="card-header-service">
+      <h2>Resumen perfil profesional</h2>
+    </div>
+
+    <ul class="data-list">
+        <li>Es un Diseñador, Constructor Civil, Dibujante e Ilustrador arquitectónico argentino, con más de tres 
+         décadas de experiencia en proyectos de ingeniería, arquitectura y diseño para empresas multinacionales líderes como 
+        — Arcor, Philips, Whirlpool, Peabody y Philco —, además de asesorar y dirigir proyectos de reconversión de activos 
+        industriales para —Daewoo, NewSan y Midas—. [1]</li>
+      
+        <li> Su perfil integra diversas tecnologías — CAD, CAE, BIM, GIS, Geoinformática y Desarrollo Web —, combina 
+         competencias técnicas y de gestión que le permiten intervenir con precisión en todas las etapas del ciclo 
+         de vida de proyectos de edificación, infraestructura, desarrollo tecnológico y productos. </li>
+    </ul>
+  </div>
+
+  <h2>Educación</h2>
+  
+  <!-- ---------- NUEVA IMAGEN APaisADA EN FORMACION ---------- -->
+  <div class="full-width-img-container">
+      <img src="img/infografia_formacion.webp" alt="Imagen Formación académica" class="zoom-img">
+  </div> 
+
+ <p>❄️<strong> Formación en Tecnologías de Enfriamiento y Termofísica</strong> <br>
+      Centro de Investigación POLO-UFSC, Universidad Federal de Santa Catarina, SC, Brasil | 2007 <br>
+      Director especialidad: Prof. Ing. Claudio Melo <br>
+      Área de especialización: <br> 
+      Formacion en Tecnologías de Enfriamiento y Termofísica, dirigida a profesionales de ingenieria de desarrollo de electrodomésticos.</p>
+   
+  <p>🌐<strong> Especialización en Sistemas de Información Geográfica</strong> <br>
+      Escuela de Posgrado, FADU-UBA | 2004<br> 
+      Área de especialización: <br>
+      Adquisición y procesamiento de datos geoespaciales, imágenes satelitales y 
+      aéreas, —GNSS— y análisis espacial aplicado a la gestión del territorio. </p>          
+            
+  <p>🏛️<strong> Constructor Civil </strong><br>
+     Instituto Superior de Educación Tecnológica - CABA |Título nacional MEyJ - 1986. <br> 
+     Campo de acción:<br> 
+     El titulo lo habilita para: Diseñar, calcular, dirigir y administrar obras edilicias y sus 
+     instalaciones. Realiza peritajes, tasaciones y brinda asesoramiento, según normativa vigente.</p> 
+                     
+  <p>📐<strong> Dibujante Técnico</strong> <br>
+     Escuela Técnica Nacional, ENET | 25 de Mayo, BA. | 1981. <br>
+     Áreas de competencia: es el nexo entre la ingeniería y la fabricación, trabajando en tres áreas 
+     principales: <br> 
+      <strong>Civil</strong> - crea planos de infraestructura, topografía y redes de servicios. <br> 
+     <strong>Mecánico</strong> - diseño de partes para automotriz, naval y metalmecánica. <br> 
+     <strong>Industrial</strong> - diseño de layouts de plantas, automatización eléctrica y sistemas de tuberías.<br>
+     <strong>Gestión documental</strong>: Administra el sistema de información de la oficina, planta o empresa. </p>       
+     <p>..</p>
+
+  <h2>Experiencia</h2>
+  
+  <!-- ---------- NUEVA IMAGEN APaisADA TRAYECTORIA ---------- -->
+  <div class="full-width-img-container">
+      <img src="img/experiencia_apaisada.webp" alt="Imagen Experiencia y Trayectoria" class="zoom-img">
+  </div> 
+
+  <p>Su trayectoria abarca:</p>
+  <ul class="wb">
+      <li><strong>1988 - 1989:</strong> Proyectista de infraestructura, complejo <strong> Arcor </strong> San Luis  
+        (diseño y construcción de plantas y oficinas industriales).</li>
+      <li><strong>1989 - 1995:</strong> Diseñador de Ingeniería de desarrollo CAD/CAE | <strong> Philips y Whirlpool </strong> 
+      | San Luis.</li>
+      <li><strong>1996 - 2002:</strong> Diseñador de Ingeniería de desarrollo CAD/CAE | <strong> Peabody y Philco </strong> 
+      | Buenos Aires.</li>
+      <li><strong>2002 - 2010:</strong> Asume el rol de Gerente de Ingeniería en Philco, con responsabilidad directa sobre 
+        equipos multidisciplinarios (ingeniería, producción, calidad) y operaciones, reportando a la Gerencia General.</li>
+      <li><strong>2010 - 2022:</strong> Estudio Mario Molina se especializa en el diseño, construcción y asesoría 
+      independiente para inversores, family offices y empresa como Daewoo, Newsan y Midas, en la dirección de proyectos de 
+      reconversión de infraestructura.</li>
+      <li><strong>2023 - Presente:</strong> Lidera ScanLabb, estudio especializado en servicios de diseño, 
+        digitalización y restauración de documentación técnica (planos, mapas), incluyendo desarrollo de plataformas web 
+        y herramientas de visualización.</li>
+  </ul>
+  <p>..</p>
+
+  <div class="center">
+    <a href="index.html" class="btn-back">[ VOLVER_AL_PORTAL ]</a>
+  </div>
+</div>
+
+<!-- ========================================================
+     LIGHTBOX (Estructura del visor de imágenes)
+     ======================================================== -->
+<div class="lightbox-overlay" id="lightbox">
+  <span class="lightbox-close" id="lightboxClose">&times;</span>
+  <img src="" alt="Imagen ampliada" id="lightboxImg">
+</div>
+
+<script>
+  // Script para manejar el Lightbox (Zoom en segunda instancia)
+  document.addEventListener('DOMContentLoaded', () => {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxClose = document.getElementById('lightboxClose');
+    const zoomImages = document.querySelectorAll('.zoom-img');
+
+    // Abrir lightbox al hacer clic en cualquier imagen con clase .zoom-img
+    zoomImages.forEach(img => {
+      img.addEventListener('click', () => {
+        lightboxImg.src = img.src; // Copia la ruta de la imagen clickeada
+        lightbox.classList.add('active');
+      });
+    });
+
+    // Cerrar lightbox al hacer clic en la "X"
+    lightboxClose.addEventListener('click', () => {
+      lightbox.classList.remove('active');
+    });
+
+    // Cerrar lightbox al hacer clic fuera de la imagen (en el fondo oscuro)
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        lightbox.classList.remove('active');
+      }
+    });
+
+    // Cerrar lightbox con la tecla ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+        lightbox.classList.remove('active');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
