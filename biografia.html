@@ -42,21 +42,21 @@
     body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: -1; background-color: var(--bg-grid); background-image: linear-gradient(rgba(0,229,255,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,.03) 1px, transparent 1px); background-size: 20px 20px; }
 
     .terminal-container { width: 100%; max-width: 900px; z-index: 10; }
-    
+
     .boot-screen { font-family: var(--cad-font); color: var(--accent-amber); font-size: 0.75rem; letter-spacing: 1px; margin-bottom: 15px; text-align: center; border-bottom: 1px dashed var(--border-dim); padding-bottom: 10px; }
     .portal-title { font-family: var(--cad-font); font-size: clamp(1.8rem, 5vw, 2.5rem); background: linear-gradient(0deg, #FFFFFF 0%, var(--accent-cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 4px; text-align: center; margin-bottom: 5px; }
     .portal-subtitle { font-family: var(--cad-font); color: var(--text-muted); font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; text-align: center; margin-bottom: 30px; }
     .portal-highlight { color: var(--accent-cyan); font-weight: bold; }
 
-    h2 { 
-      font-family: var(--cad-font); 
-      color: #FFF; 
-      font-size: 1.3rem; 
-      margin: 35px 0 15px 0; 
+    h2 {
+      font-family: var(--cad-font);
+      color: #FFF;
+      font-size: 1.3rem;
+      margin: 35px 0 15px 0;
       border-bottom: 1px dashed var(--border-dim);
       padding-bottom: 8px;
     }
-    
+
     p { margin-bottom: 20px; font-size: 0.9rem; color: var(--text-light); }
     p strong { color: var(--accent-amber); }
     .wb { list-style: none; font-family: var(--cad-font); font-size: 0.85rem; color: var(--text-muted); margin: 15px 0; }
@@ -68,7 +68,7 @@
       display: inline-block; padding: 10px 25px;
       background: transparent; color: var(--accent-cyan);
       font-family: var(--cad-font); font-size: 0.8rem; font-weight: 700;
-      border: 1px solid var(--accent-cyan); 
+      border: 1px solid var(--accent-cyan);
       text-transform: uppercase; letter-spacing: 1px;
       text-decoration: none;
       transition: all 0.2s ease;
@@ -98,7 +98,7 @@
     /* ========================================================================
        IMÁGENES APAISADAS Y ZOOM
        ======================================================================== */
-    
+
     /* Contenedor de imágenes apaisadas (Trayectoria / Formación) */
     .full-width-img-container {
         margin: 30px 0;
@@ -111,7 +111,7 @@
     .full-width-img-container:hover {
         border-color: var(--accent-cyan);
     }
-    
+
     /* 1ra Instancia: Micro-Zoom al pasar el mouse */
     .zoom-img {
         width: 100%;
@@ -193,19 +193,19 @@
         color: var(--accent-cyan);
         transform: rotate(90deg);
     }
-    
+
     /* Responsive */
     @media (max-width: 768px) {
       .portal-title { letter-spacing: 2px; }
       .zoom-img { max-height: 400px; }
       .lightbox-close { top: 15px; right: 15px; font-size: 30px; }
     }
-    
-    
-    
+
+
+
     /* ========================================================
-           NUEVOS ESTILOS: Imágenes Antes/Después, Timeline, Cards y Lightbox
-           ======================================================== */
+       NUEVOS ESTILOS: Imágenes Antes/Después, Timeline, Cards y Lightbox
+       ======================================================== */
 
         /* 1. Bloque de Imágenes Antes y Después */
         .img-comparison {
@@ -338,12 +338,190 @@
             color: var(--text-m);
             margin-bottom: 0;
         }
-    
-    
-        
+
+
+    /* ========================================================================
+       MENÚ LATERAL IZQUIERDO — copiado del index.html (Portal)
+       Escritorio: barra fija de 240px · ≤1000px: se angosta a 205px
+       Móvil (≤768px): vuelve a ser barra superior con hamburguesa
+       ======================================================================== */
+    :root {
+      /* Tokens que usa el menú y no existían en esta página.
+         Los equivalentes se mapean a las variables de tu biografía
+         (mismos valores que en index.html, sin pisar los tuyos). */
+      --color-acento: var(--accent-cyan);
+      --color-acento-hover: var(--accent-cyan-hover);
+      --color-acento-hover-bg: rgba(0, 229, 255, 0.1);
+      --color-fondo-menu: #000000;
+      --color-texto-claro: #FFFFFF;
+      --color-texto-tenue: var(--text-muted);
+      --color-borde-fino: var(--border-dim);
+      --fuente-cad: var(--cad-font);
+      --tamano-texto-nav: 0.9rem;
+      --ancho-logo-nav: 36px;        /* AJUSTABLE: logo del menú lateral */
+      --ancho-nav-lateral: 240px;    /* AJUSTABLE: ancho del menú lateral */
+      --accent-green: #4ADE80;
+    }
+
+    .main-nav {
+      position: fixed; top: 0; left: 0;
+      width: var(--ancho-nav-lateral); height: 100vh; height: 100dvh;
+      z-index: 1000;
+      background-color: var(--color-fondo-menu);
+      padding: 26px 18px 20px;
+      display: flex; flex-direction: column; align-items: stretch;
+      border-right: 1px solid var(--color-acento);
+      box-shadow: 4px 0 15px rgba(0,0,0,0.35);
+      overflow-y: auto;
+      transition: background-color 0.3s ease;
+    }
+
+    .nav-logo-link { display: flex; flex-direction: column; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-img { height: var(--ancho-logo-nav); width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+    .nav-logo-text { font-size: 0.95rem; font-weight: bold; color: var(--color-texto-claro); line-height: 1.35; text-align: center; }
+    .nav-logo-text span { color: var(--color-acento); }
+
+    .nav-separador {
+      height: 1px; margin: 18px 0 12px; opacity: 0.45;
+      background: linear-gradient(90deg, var(--color-acento), transparent);
+    }
+    .nav-etiqueta {
+      font-family: var(--fuente-cad); font-size: 0.65rem;
+      letter-spacing: 2px; color: var(--color-texto-tenue); margin-bottom: 10px;
+    }
+
+    nav ul { list-style: none; display: flex; flex-direction: column; gap: 4px; width: 100%; counter-reset: item-nav; }
+    nav ul li { counter-increment: item-nav; width: 100%; }
+    nav ul a {
+      display: flex; align-items: baseline; gap: 10px;
+      padding: 9px 10px;
+      color: var(--color-texto-claro);
+      font-family: var(--fuente-cad);
+      font-weight: normal;
+      font-size: var(--tamano-texto-nav);
+      letter-spacing: 1px;
+      border-left: 2px solid transparent;
+      text-decoration: none;
+      transition: color 0.2s, background 0.2s, border-color 0.2s, padding-left 0.2s;
+    }
+    nav ul a::before {
+      content: counter(item-nav, decimal-leading-zero);
+      font-size: 0.65rem; color: var(--color-texto-tenue);
+      transition: color 0.2s;
+    }
+    nav ul a:hover {
+      color: var(--color-acento);
+      background: var(--color-acento-hover-bg);
+      border-left-color: var(--color-acento);
+      padding-left: 14px;
+    }
+    nav ul a:hover::before { color: var(--color-acento); }
+
+    /* Página actual resaltada en el menú (Biografia).
+       Es un extra opcional: si no lo querés, borrá estas 2 reglas
+       y el class="nav-actual" del enlace Biografia en el HTML. */
+    nav ul a.nav-actual {
+      color: var(--color-acento);
+      background: var(--color-acento-hover-bg);
+      border-left-color: var(--color-acento);
+    }
+    nav ul a.nav-actual::before { color: var(--color-acento); }
+
+    .menu-icon { display: none; font-size: 2rem; color: var(--color-texto-claro); cursor: pointer; }
+
+    .nav-pie {
+      margin-top: auto; padding-top: 18px;
+      display: flex; flex-direction: column; gap: 4px;
+      font-family: var(--fuente-cad); font-size: 0.62rem;
+      letter-spacing: 1px; color: var(--color-texto-tenue);
+    }
+    .nav-pie .nav-pie-status { color: var(--accent-green); }
+    .nav-pie .nav-pie-version { color: var(--color-acento); }
+
+    /* Contenido principal: se corre a la derecha del menú lateral.
+       (align-self: stretch anula el centrado del body y ocupa el ancho
+       libre; luego .terminal-container se re-centra en ese espacio) */
+    .site-main {
+      margin-left: var(--ancho-nav-lateral);
+      align-self: stretch;
+      display: flex; flex-direction: column; align-items: center;
+      min-height: 100vh;
+    }
+
+    /* Pantallas intermedias: menú lateral más angosto (igual que index.html) */
+    @media (max-width: 1000px) {
+      :root { --ancho-nav-lateral: 205px; }
+      .nav-logo-text { font-size: 0.82rem; }
+    }
+
+    /* Móvil: el menú lateral pasa a barra superior con hamburguesa (igual que index.html) */
+    @media (max-width: 768px) {
+      .main-nav {
+        flex-direction: row; align-items: center;
+        width: 100%; height: 70px; padding: 0 20px;
+        border-right: none;
+        border-bottom: 1px solid var(--color-acento);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        overflow: visible;
+      }
+      .nav-logo-link { flex-direction: row; align-items: center; gap: 10px; }
+      .nav-logo-img { height: 34px; }   /* AJUSTABLE: logo barra superior en celular */
+      .nav-logo-text { font-size: 0.85rem; }
+      .nav-separador, .nav-etiqueta, .nav-pie { display: none; }
+
+      .menu-icon { display: block; margin-left: auto; line-height: 1; }
+      nav ul {
+        display: none; flex-direction: column; gap: 6px;
+        position: absolute; top: 70px; left: 0; width: 100%;
+        background: var(--color-fondo-menu);
+        padding: 16px 20px 20px;
+        border-top: 1px solid var(--color-borde-fino);
+        border-bottom: 1px solid var(--color-acento);
+        box-shadow: 0 12px 22px rgba(0,0,0,0.45);
+      }
+      nav ul.active { display: flex; }
+
+      .site-main { margin-left: 0; margin-top: 70px; }
+    }
   </style>
 </head>
 <body>
+
+<!-- ============================================================
+     MENÚ LATERAL IZQUIERDO (copiado del index.html)
+     En móvil (≤768px) se comporta como barra superior con hamburguesa
+     ============================================================ -->
+<nav class="main-nav">
+  <a href="index.html" class="nav-logo-link">
+    <img src="logos/mi_logo.png" alt="Logo SCANLABB" class="nav-logo-img">
+    <div class="nav-logo-text">Laboratorio <span>Digital</span></div>
+  </a>
+
+  <div class="menu-icon" id="menuToggle">≡</div>
+
+  <div class="nav-separador"></div>
+  <div class="nav-etiqueta">&gt; NAVEGACION_</div>
+
+  <ul id="navMenu">
+    <li><a href="index.html">Inicio</a></li>
+    <li><a href="index.html#servicios">Servicios</a></li>
+    <li><a href="proyectos.html">Proyectos</a></li>
+    <li><a href="biografia.html" class="nav-actual" aria-current="page">Biografia</a></li>
+    <li><a href="index.html#contacto">Contacto</a></li>
+    <li><a href="index.html">Portal</a></li>
+  </ul>
+
+  <div class="nav-pie">
+    <span class="nav-pie-status">&gt; STATUS: ONLINE</span>
+    <span class="nav-pie-version">&gt; VERSION: v1.01</span>
+    <span>&gt; 25 de Mayo · BA · AR</span>
+  </div>
+</nav>
+
+<!-- ============================================================
+     CONTENIDO PRINCIPAL (corrido a la derecha del menú lateral)
+     ============================================================ -->
+<main class="site-main">
 
 <div class="terminal-container">
   <div class="boot-screen">
@@ -359,8 +537,8 @@
     <div class="card-header-service">
       <h2>Resumen perfil profesional</h2>
       
-        <p><strong>Mario Molina </strong> es un diseñador, constructor civil, dibujante e ilustrador arquitectónico argentino, 
-        con más de tres decadas de experiencia en proyectos de ingeniería, construcción e industria  para multinacionales 
+        <p><strong>Mario Molina </strong> es un diseñador y constructor civil, dibujante e ilustrador arquitectónico argentino, 
+        con más de tres décadas de experiencia en proyectos de ingeniería, construcción e industria  para multinacionales 
         como —<strong> Arcor, Philips, Whirlpool, Peabody y Philco </strong>— y ha liderado proyectos de reconversión de activos 
         industriales para firmas como <strong>Daewoo, NewSan y Midas</strong>. </p>
       
@@ -434,7 +612,7 @@
 
   <h2>Educación</h2>
   
-  <!-- ---------- NUEVA IMAGEN APaisADA EN FORMACION ---------- -->
+  <!-- ---------- NUEVA IMAGEN APAISADA EN FORMACIÓN ---------- -->
   <div class="full-width-img-container">
       <img src="img/infografia_formacion.webp" alt="Imagen Formación académica" class="zoom-img">
   </div> 
@@ -471,7 +649,7 @@
 
   <h2>Experiencia</h2>
   
-  <!-- ---------- NUEVA IMAGEN APaisADA TRAYECTORIA ---------- -->
+  <!-- ---------- NUEVA IMAGEN APAISADA TRAYECTORIA ---------- -->
   <div class="full-width-img-container">
       <img src="img/experiencia_apaisada.webp" alt="Imagen Experiencia y Trayectoria" class="zoom-img">
   </div> 
@@ -501,6 +679,11 @@
 </div>
 
 
+</main>
+<!-- ============================================================
+     FIN CONTENIDO PRINCIPAL
+     ============================================================ -->
+
     
 <!-- ---------- BOTON FLOTANTE DE WHATSAPP ---------- -->
 <a href="https://wa.me/5492345446330?text=Hola%20Mario!%20Te%20escribo%20desde%20tu%20portal%20_" 
@@ -523,8 +706,23 @@
 </div>
 
 <script>
-  // Script para manejar el Lightbox (Zoom en segunda instancia)
   document.addEventListener('DOMContentLoaded', () => {
+
+    // =======================================================
+    // MENÚ LATERAL (agregado desde index.html)
+    // En escritorio queda fijo y no necesita toggle;
+    // en móvil (≤768px) el botón ≡ despliega la lista.
+    // =======================================================
+    const menuToggle = document.getElementById('menuToggle');
+    const navMenu = document.getElementById('navMenu');
+    if (menuToggle && navMenu) {
+      menuToggle.addEventListener('click', () => { navMenu.classList.toggle('active'); });
+      document.querySelectorAll('#navMenu a').forEach(link => {
+        link.addEventListener('click', () => { navMenu.classList.remove('active'); });
+      });
+    }
+
+    // Script para manejar el Lightbox (Zoom en segunda instancia)
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightboxImg');
     const lightboxClose = document.getElementById('lightboxClose');
@@ -561,4 +759,3 @@
 
 </body>
 </html>
-

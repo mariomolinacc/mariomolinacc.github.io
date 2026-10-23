@@ -7,6 +7,37 @@
   <style>
     /* =======================================================================
        PANEL MAESTRO PARAMÉTRICO (DESIGN TOKENS)
+       -----------------------------------------------------------------------
+       GUÍA RÁPIDA DE AJUSTES (variables en :root):
+       · Logo menú lateral ........ --ancho-logo-nav              (sección 3)
+       · Logo central del hero .... --ancho-logo-hero            (sección 3)
+       · Visor de imágenes ........ --ratio-renders / --ancho-max-visor /
+                                    --altura-visor-movil         (sección 5)
+       · Título "Mario Molina" .... --tamano-hero-h1              (sección 2)
+       · Subtítulos del hero ...... --tamano-hero-subtitulo-1/-2  (sección 2)
+       · Texto profesión .......... --tamano-hero-profesion       (sección 2)
+       · Títulos de secciones ..... --tamano-titulo-h2            (sección 2)
+       · Color subtítulos hero .... regla .hero-subtitulo > color (buscar abajo)
+       ======================================================================= */
+
+    /* =======================================================================
+       GUÍA RÁPIDA: PROPIEDADES DE VISUALIZACIÓN DE IMÁGENES
+       -----------------------------------------------------------------------
+       Hay DOS sistemas según cómo se inserta la imagen:
+
+       A) IMÁGENES CON ETIQUETA <img>  (logos, tarjetas, galería, renders)
+          · width / height .......... tamaño del "marco" que ocupa la imagen
+          · object-fit: contain ..... la imagen se ve COMPLETA dentro del marco
+                                      (puede dejar franjas vacías a los costados)
+          · object-fit: cover ....... la imagen LLENA el marco y RECORTA lo que
+                                      sobra (nunca se deforma)
+          · aspect-ratio ............ fuerza una proporción fija (ej: 16 / 9)
+
+       B) IMÁGENES DE FONDO con CSS background-image  (visor del hero)
+          · background-size: contain  .... se ve COMPLETA, sin recortes (actual)
+          · background-size: cover ....... llena todo el área y recorta bordes
+          · background-size: 100% 100% ... se estira hasta llenar (deforma)
+          · background-position: center .. qué parte se centra si hay recorte
        ======================================================================= */
     :root {
       /* 1. SISTEMA DE COLORES */
@@ -28,35 +59,35 @@
       --fuente-cad: 'Lucida Console', 'Courier New', monospace;
       --tamano-texto-base: 1rem;
 
-      /* Tamaños para ESCRITORIO (Desktop) */
-      --tamano-hero-h1: 3rem;
-      --tamano-hero-subtitulo: 1.6rem;
-      --tamano-hero-subtitulo-1: 1.4rem;    /*  1.4rem */
-      --tamano-hero-subtitulo-2: 1.15rem;   /*  1.15rem */
+      /* Tamaños para ESCRITORIO (Desktop) — AJUSTABLES: texto del hero */
+      --tamano-hero-h1: 1.7rem;          /* Título "Mario Molina" (antes 2rem · 3rem) */
+      --tamano-hero-subtitulo: 1.1rem;       /*  1.6rem */
+      --tamano-hero-subtitulo-1: 1.15rem;    /* Línea 1 subtítulo (antes 1.4rem) */
+      --tamano-hero-subtitulo-2: 1rem;   /* Línea 2 subtítulo (antes 1.1rem) */
       --tamano-hero-h2: 1.2rem;
-      --tamano-hero-profesion: 1.4rem;
+      --tamano-hero-profesion: 1.1rem;   /* Párrafo profesión (antes 1.4rem) */
       --tamano-titulo-h2: 2.5rem;
-      --tamano-tarjeta-h3: 1.2rem;
+      --tamano-tarjeta-h3: 1.2rem;  /*  1.2rem */
       --tamano-texto-nav: 0.9rem;
       --tamano-texto-banner: 1.1rem;
 
-      /* Tamaños para CELULAR (Mobile) */
-      --tamano-hero-h1-movil: 2.5rem;
+      /* Tamaños para CELULAR (Mobile) — AJUSTABLES */
+      --tamano-hero-h1-movil: 1.9rem;
       --tamano-hero-subtitulo-movil: 1.4rem;
-      --tamano-hero-subtitulo-1-movil: 1.4rem;
+      --tamano-hero-subtitulo-1-movil: 1.2rem;
       --tamano-hero-subtitulo-2-movil: 1rem;
       --tamano-hero-h2-movil: 1.2rem;
-      --tamano-hero-profesion-movil: 1.05rem;
+      --tamano-hero-profesion-movil: 1rem;
       --tamano-titulo-h2-movil: 2rem;
 
       /* 3. MEDIDAS DE IMÁGENES Y ESPACIOS */
-      --altura-hero: 100vh;
+      --altura-hero: 100vh;     /*  100vh */
       --max-ancho-pagina: 1200px;
       --padding-secciones: 80px 40px;
       --margen-entre-tarjetas: 25px;
       --altura-img-proyectos: 175px;
-      --ancho-logo-hero: 180px;
-      --ancho-logo-nav: 50px;
+      --ancho-logo-hero:  300px;      /* AJUSTABLE: logo central del hero (subido de 180px) */
+      --ancho-logo-nav: 36px;        /* AJUSTABLE: logo del menú lateral (bajado de 44px) */
       --ancho-max-grupo-1: 550px;    /*  650px */
       --gap-grupo-1: 15px;
       --ancho-max-grupo-2: 550px;    /*  650px */
@@ -68,6 +99,34 @@
       --sombra-caja-hover: 0 15px 30px rgba(0,0,0,0.5);
       --sombra-flotante: 0 4px 15px rgba(0, 229, 255, 0.4);
       --tamano-grid-fondo: 20px;
+
+      /* 5. NUEVO: NAVEGACIÓN LATERAL + CANVAS CAD */
+      --ancho-nav-lateral: 240px;                       /* Ancho del menú lateral izquierdo */
+      --color-canvas-cad: #070B10;                      /* Fondo del área de dibujo (canvas CAD) */
+      --color-grid-linea: rgba(0, 229, 255, 0.045);     /* Grilla fina del canvas */
+      --color-grid-linea-mayor: rgba(0, 229, 255, 0.09);/* Grilla mayor (cada 5 celdas) */
+      --color-visor-borde: rgba(0, 229, 255, 0.30);     /* Borde del visor de imagen */
+      /* MARCO DEL VISOR DEL HERO → la proporción de tus renders manda:
+         RATIO ... --ratio-renders    (1408÷739 = 1.905 · marco SIEMPRE en la proporción
+                                       exacta de la imagen → cero recortes en cualquier pantalla)
+         ANCHO ... --ancho-max-visor  (tope de ancho; el alto se calcula solo)
+         MÓVIL ... --altura-visor-movil (alto fijo en celular) */
+      --ratio-renders: 1408 / 739;                      /* AJUSTABLE: proporción real de tus imágenes (1408 x 739 px) */
+      --altura-visor-movil: 38vh;                       /* AJUSTABLE: alto del marco del visor en celular */
+      --ancho-max-visor: 1050px;                        /* AJUSTABLE: ANCHO máximo del marco (a 1050px de ancho ⇒ ≈551px de alto) */
+
+      /* 6. NUEVO: MAPEO DE VARIABLES DEL BLOQUE TERMINAL -> TOKENS LOCALES */
+      --accent-cyan: var(--color-acento);
+      --accent-cyan-hover: var(--color-acento-hover);
+      --cad-font: var(--fuente-cad);
+      --border-dim: var(--color-borde-fino);
+      --text-dim: var(--color-texto-tenue);
+      --text-muted: var(--color-texto-tenue);
+      --accent-green: #4ADE80;
+      --accent-amber: #FBBF24;
+      --render-ratio: 1408 / 739;   /* AJUSTABLE: proporción real de tus renders (1408 x 739 px · antes 16/9) */
+      --portal-cursor-visible: inline-block;
+      --portal-highlight-color: var(--color-acento);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -84,81 +143,186 @@
     a { color: var(--color-acento); text-decoration: none; transition: color 0.2s; }
     a:hover { color: var(--color-acento-hover); }
 
+    /* =======================================================================
+       NAVEGACIÓN LATERAL IZQUIERDA (antes barra superior)
+       ======================================================================= */
     .main-nav {
-      position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
-      background-color: var(--color-fondo-menu); padding: 0 40px; height: 70px;
-      display: flex; justify-content: space-between; align-items: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      position: fixed; top: 0; left: 0;
+      width: var(--ancho-nav-lateral); height: 100vh; height: 100dvh;
+      z-index: 1000;
+      background-color: var(--color-fondo-menu);
+      padding: 26px 18px 20px;
+      display: flex; flex-direction: column; align-items: stretch;
+      border-right: 1px solid var(--color-acento);
+      box-shadow: 4px 0 15px rgba(0,0,0,0.35);
+      overflow-y: auto;
       transition: background-color 0.3s ease;
-      border-bottom: 1px solid var(--color-acento);
     }
 
-    .nav-logo-link { display: flex; align-items: center; gap: 12px; }
+    .nav-logo-link { display: flex; flex-direction: column; align-items: center; gap: 10px; }  /* AJUSTABLE: 'center' = logo y texto centrados en el menú */
     .nav-logo-img { height: var(--ancho-logo-nav); width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
-    .nav-logo-text { font-size: 1rem; font-weight: bold; color: var(--color-texto-claro); }
+    .nav-logo-text { font-size: 0.95rem; font-weight: bold; color: var(--color-texto-claro); line-height: 1.35; text-align: center; }
     .nav-logo-text span { color: var(--color-acento); }
 
-    nav ul { list-style: none; display: flex; gap: 30px; }
-    nav a { color: var(--color-texto-claro); font-weight: normal; font-size: var(--tamano-texto-nav); transition: color 0.2s; letter-spacing: 0.5px; }
-    nav a:hover { color: var(--color-acento-hover); }
+    .nav-separador {
+      height: 1px; margin: 18px 0 12px; opacity: 0.45;
+      background: linear-gradient(90deg, var(--color-acento), transparent);
+    }
+    .nav-etiqueta {
+      font-family: var(--fuente-cad); font-size: 0.65rem;
+      letter-spacing: 2px; color: var(--color-texto-tenue); margin-bottom: 10px;
+    }
+
+    nav ul { list-style: none; display: flex; flex-direction: column; gap: 4px; width: 100%; counter-reset: item-nav; }
+    nav ul li { counter-increment: item-nav; width: 100%; }
+    nav ul a {
+      display: flex; align-items: baseline; gap: 10px;
+      padding: 9px 10px;
+      color: var(--color-texto-claro);
+      font-family: var(--fuente-cad);
+      font-weight: normal;
+      font-size: var(--tamano-texto-nav);
+      letter-spacing: 1px;
+      border-left: 2px solid transparent;
+      transition: color 0.2s, background 0.2s, border-color 0.2s, padding-left 0.2s;
+    }
+    nav ul a::before {
+      content: counter(item-nav, decimal-leading-zero);
+      font-size: 0.65rem; color: var(--color-texto-tenue);
+      transition: color 0.2s;
+    }
+    nav ul a:hover {
+      color: var(--color-acento);
+      background: var(--color-acento-hover-bg);
+      border-left-color: var(--color-acento);
+      padding-left: 14px;
+    }
+    nav ul a:hover::before { color: var(--color-acento); }
+
     .menu-icon { display: none; font-size: 2rem; color: var(--color-texto-claro); cursor: pointer; }
 
-    /* --- HERO (ESTILO AFICHE) --- */
+    .nav-pie {
+      margin-top: auto; padding-top: 18px;
+      display: flex; flex-direction: column; gap: 4px;
+      font-family: var(--fuente-cad); font-size: 0.62rem;
+      letter-spacing: 1px; color: var(--color-texto-tenue);
+    }
+    .nav-pie .nav-pie-status { color: var(--accent-green); }
+    .nav-pie .nav-pie-version { color: var(--color-acento); }
+
+    /* CONTENIDO PRINCIPAL: se corre a la derecha del menú lateral */
+    .site-main { margin-left: var(--ancho-nav-lateral); min-height: 100vh; }
+
+    /* Anclas por debajo del menú en modo barra superior (móvil) */
+    #servicios, #contacto, .sobre-mi-section { scroll-margin-top: 80px; }
+
+    /* =======================================================================
+       HERO = ÁREA DE DIBUJO ESTILO CAD (canvas con grilla + visor de imagen)
+       ======================================================================= */
     .hero {
       margin-top: 0;
       min-height: var(--altura-hero);
       height: auto;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      display: flex; flex-direction: column; justify-content: flex-start;
       text-align: center;
       color: var(--color-texto-claro);
-      background-size: cover; /* No afecta al fondo dinámico, pero se mantiene por compatibilidad */
-      background-position: center top;
-      background-attachment: fixed;
       position: relative;
       border-bottom: 5px solid var(--color-acento);
-      padding-top: 70px;
-      padding-bottom: 0;
-      overflow: hidden; 
+      padding: 30px 24px 0;
+      overflow: hidden;
+      /* Canvas CAD: gradiente inferior + grilla fina 20px + grilla mayor 100px */
+      background-color: var(--color-canvas-cad);
+      background-image:
+        linear-gradient(to bottom, rgba(5, 8, 12, 0) 48%, rgba(5, 8, 12, 0.88) 100%),
+        linear-gradient(var(--color-grid-linea) 1px, transparent 1px),
+        linear-gradient(90deg, var(--color-grid-linea) 1px, transparent 1px),
+        linear-gradient(var(--color-grid-linea-mayor) 1px, transparent 1px),
+        linear-gradient(90deg, var(--color-grid-linea-mayor) 1px, transparent 1px);
+      background-size:
+        100% 100%,
+        var(--tamano-grid-fondo) var(--tamano-grid-fondo),
+        var(--tamano-grid-fondo) var(--tamano-grid-fondo),
+        calc(var(--tamano-grid-fondo) * 5) calc(var(--tamano-grid-fondo) * 5),
+        calc(var(--tamano-grid-fondo) * 5) calc(var(--tamano-grid-fondo) * 5);
     }
 
-    /* === NUEVO: FONDO DINÁMICO CON ZOOM === */
+    /* === VISOR DE IMAGEN DINÁMICA ===
+       EL "MARCO" se controla con las variables de la sección 5 en :root:
+       · --ancho-max-visor .. ancho máximo del marco
+       · --ratio-renders .... proporción ancho:alto de tus imágenes (1408/739)
+       Con 'aspect-ratio' el marco queda SIEMPRE en la proporción exacta de
+       tus renders → con 'cover' no se recorta nada en ninguna pantalla. */
     .hero-bg-dinamico {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      /* SOLUCIÓN IMAGEN CORTE: 'contain' muestra el 100% de la imagen apaisada sin recortes */
-      background-size: contain; 
-      background-position: top center;
+      position: relative; z-index: 1;
+      width: 100%; max-width: var(--ancho-max-visor);   /* ancho del marco */
+      aspect-ratio: var(--ratio-renders);               /* alto del marco = ancho ÷ 1.905 (proporción exacta de tus renders) */
+      min-height: 240px;                                /* piso mínimo para pantallas muy chicas */
+      margin: 0 auto;
+      border: 1px solid var(--color-visor-borde);
+      background-color: rgba(0, 0, 0, 0.30);
+      /* background-size AJUSTABLE:
+         'contain'   = imagen completa, sin recortes (ACTUAL)
+         'cover'     = llena el visor y recorta bordes
+         '100% 100%' = estira hasta llenar (puede deformar) */
+      background-size: cover;
+      background-position: center;
       background-repeat: no-repeat;
-      z-index: 0;
-      transition: opacity 2s ease-in-out;
+      transition: opacity 0.6s ease-in-out;
       animation: zoomLento 20s infinite alternate ease-in-out;
+    }
+
+    /* Esquinas de visor tipo CAD */
+    .hero-bg-dinamico::before,
+    .hero-bg-dinamico::after {
+      content: ''; position: absolute; width: 20px; height: 20px;
+      z-index: 2; pointer-events: none;
+    }
+    .hero-bg-dinamico::before {
+      top: -1px; left: -1px;
+      border-top: 2px solid var(--color-acento);
+      border-left: 2px solid var(--color-acento);
+    }
+    .hero-bg-dinamico::after {
+      bottom: -1px; right: -1px;
+      border-bottom: 2px solid var(--color-acento);
+      border-right: 2px solid var(--color-acento);
+    }
+
+    /* Rótulos técnicos del visor */
+    .visor-tag {
+      position: absolute; top: 10px; right: 10px; z-index: 2;
+      font-family: var(--fuente-cad); font-size: 0.6rem; letter-spacing: 1px;
+      color: var(--color-acento); background: rgba(0,0,0,0.75);
+      border: 1px solid rgba(0, 229, 255, 0.4); padding: 3px 8px;
+    }
+    .visor-coords {
+      position: absolute; bottom: 10px; left: 10px; z-index: 2;
+      font-family: var(--fuente-cad); font-size: 0.6rem; letter-spacing: 1px;
+      color: var(--color-texto-tenue); background: rgba(0,0,0,0.6);
+      border: 1px solid var(--color-borde-fino); padding: 3px 8px;
     }
 
     @keyframes zoomLento {
       0% { transform: scale(1); }
-      100% { transform: scale(1); }    /* zoom 1.1 = activado - 1 desactivado  */
+      100% { transform: scale(1); }    /* zoom 1.1 = activado - 1 desactivado (con 'contain' el zoom recortaría la imagen) */
     }
-    
-    .hero::before {
-      content: '';
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(to bottom, rgba(5, 5, 5, var(--opacidad-overlay-hero)) 0%, rgba(5, 5, 5, 0.90) 100%);
-      z-index: 1;
-    }
+
     .hero-content {
       position: relative; z-index: 2;
-      max-width: 900px;
-      padding: 400px 20px 0 20px;       /* Separador sup y logo - Modificado a 300px por ti  - Antes= 10 */
+      max-width: 1000px;
+      padding: 30px 20px 0 20px;
       width: 100%;
+      margin: 0 auto;
     }
 
     .hero-sello { display: flex; flex-direction: column; align-items: center; margin-bottom: 40px; }
-    .hero-logo { width: var(--ancho-logo-hero); margin-bottom: 10px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.7)); }
+    .hero-logo { display: block; width: var(--ancho-logo-hero); margin: 0 auto; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.7)); }  /* AJUSTABLE: 'display:block' quita el hueco invisible · 'margin: 0 auto' = centrado horizontal (los 'auto' reparten el espacio a los costados) */
 
     /* Textos Hero conectados a las variables */
     .hero h1 { font-size: var(--tamano-hero-h1); line-height: 1; margin-bottom: 5px; letter-spacing: 2px; }
-    .hero h3 { font-size: var(--tamano-hero-subtitulo); font-weight: normal; color: var(--color-texto-claro); margin-top: 5px; }
+    .hero h3 { font-size: var(--tamano-hero-subtitulo); font-weight: normal; color: var(--color-texto-claro); margin-top: 0; }  /* AJUSTABLE: margin-top = espacio sobre el subtítulo (bajado de 5px) */
 
-    .hero-subtitulo { line-height: 1.6; }
+    .hero-subtitulo { line-height: 1.6; color: var(--color-acento); }  /* AJUSTABLE: color cyan de los subtítulos (los <span> internos lo heredan) */
     .hero-subtitulo span { display: block; }
     .hero-subtitulo .sub-linea-1 { font-size: var(--tamano-hero-subtitulo-1); font-weight: bold; }
     .hero-subtitulo .sub-linea-2 { font-size: var(--tamano-hero-subtitulo-2); }
@@ -189,22 +353,21 @@
 
     .bim-step-card { position: relative; border-radius: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); transition: transform 0.3s, border-color 0.3s; }
     .bim-step-card:hover { transform: translateY(-5px); border-color: var(--color-acento); }
-    .bim-step-card img { width: 100%; height: auto; display: block; }
+    .bim-step-card img { width: 100%; height: auto; display: block; }  /* 'height: auto' = mantiene la proporción natural de la imagen */
 
+    /* Envoltorio (contiene las grillas comentadas) */
     .bim-flow-wrapper {
-      position: relative; z-index: 2; width: 100%; max-width: 800px; margin: 0 auto; padding-bottom: 100px;
-    }
-    .bim-flow-wrapper::after {
-      content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 200px;
-      background: linear-gradient(to bottom, transparent 0%, rgba(5, 5, 5, 0.85) 100%); z-index: 3; pointer-events: none;
+      position: relative; z-index: 2; width: 100%; max-width: 800px; margin: 0 auto;
     }
 
-    /* BANNER INFERIOR */
+    /* BANNER INFERIOR (tipo barra de estado CAD) */
     .marcas-banner {
-      position: relative; width: 100%; background-color: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(8px); padding: 30px 0; overflow: hidden;
-      border-top: 1px solid var(--color-borde-fino); z-index: 4; margin-top: -80px;
-      display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px;
+      position: relative; width: 100%;
+      background-color: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px); padding: 18px 20px; overflow: hidden;
+      border-top: 1px dashed var(--color-acento); z-index: 4;
+      margin-top: auto; /* se pega al pie del área de dibujo */
+      display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 45px;
     }
     .contacto-banner-item { font-family: var(--fuente-cad); color: var(--color-texto-claro); font-size: var(--tamano-texto-banner); letter-spacing: 1px; }
     .contacto-banner-item span { color: var(--color-acento); }
@@ -249,7 +412,7 @@
       background: rgba(255,255,255,0.04);
       border-bottom: 1px solid var(--color-borde-fino);
     }
-    .portal-card .card-logo { width: 52px; height: 52px; object-fit: contain; flex-shrink: 0; }
+    .portal-card .card-logo { width: 52px; height: 52px; object-fit: contain; flex-shrink: 0; }  /* AJUSTABLE: tamaño del logo en tarjetas · 'contain' = se ve completo */
 
     /* Override del .section h2 para los títulos internos de las tarjetas */
     .portal-card .card-titles h2 {
@@ -311,6 +474,7 @@
     .galeria-proyectos { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
     .proyecto-item { background: var(--color-fondo-secundario); border-radius: 4px; overflow: hidden; box-shadow: var(--sombra-caja); border: 1px solid var(--color-borde-fino); transition: transform 0.3s, box-shadow 0.3s; position: relative; }
     .proyecto-item:hover { transform: translateY(-10px); box-shadow: var(--sombra-caja-hover); border-color: var(--color-acento); }
+    /* GALERÍA: alto fijo del marco (variable --altura-img-proyectos) + 'cover' = recorta para llenar. Cambiá la variable en :root para más/menos alto */
     .proyecto-item img { width: 100%; height: var(--altura-img-proyectos); object-fit: cover; display: block; }
     .proyecto-etiqueta { text-align: center; padding: 20px; font-size: 1.1rem; font-weight: 600; color: var(--color-texto-claro); background: var(--color-fondo-secundario); }
 
@@ -359,43 +523,7 @@
     .wa-float:hover { transform: scale(1.1); color: #fff; }
     .wa-float svg { width: 35px; height: 35px; fill: #fff; }
 
-    @media (max-width: 768px) {
-      .menu-icon { display: block; }
-      nav ul { display: none; flex-direction: column; position: absolute; top: 70px; left: 0; width: 100%; background: var(--color-fondo-menu); padding: 20px; gap: 20px; border-top: 1px solid var(--color-borde-fino); }
-      nav ul.active { display: flex; }
-
-      .hero { background-attachment: scroll; background-position: center; padding-top: 90px; }
-      .hero-content { padding-top: 0; } /* En móvil se resetea para que no haya un espacio enorme */
-      .hero-logo { width: 150px; }
-
-      /* TAMAÑOS DE TEXTO AJUSTABLES PARA MÓVIL */
-      .hero h1 { font-size: var(--tamano-hero-h1-movil); }
-      .hero h3 { font-size: var(--tamano-hero-subtitulo-movil); }
-      .hero-subtitulo .sub-linea-1 { font-size: var(--tamano-hero-subtitulo-1-movil); }
-      .hero-subtitulo .sub-linea-2 { font-size: var(--tamano-hero-subtitulo-2-movil); }
-      .hero h2 { font-size: var(--tamano-hero-h2-movil); }
-      .hero .profesion { font-size: var(--tamano-hero-profesion-movil); }
-      .section h2 { font-size: var(--tamano-titulo-h2-movil); }
-
-      .grid-tipo-proyecto, .grid-tipo-flujo { grid-template-columns: repeat(2, 1fr); }
-
-      .bim-flow-wrapper { padding-bottom: 80px; }
-
-      .nav-logo-text { font-size: 0.85rem; }
-      .nav-logo-img { height: 40px; }
-
-      .sobre-mi-content, .contacto-content { padding: 60px 20px; }
-      .section { padding: 60px 20px; }
-
-      /* ACCESOS / PORTAL CARDS EN MÓVIL */
-      .access-grid { grid-template-columns: 1fr; }
-      .portal-card .card-footer { flex-direction: column; align-items: flex-start; gap: 10px; }
-      .portal-card .enter-btn { width: 100%; text-align: center; }
-    }
-    
-    
-    
-       /* ========================================================================
+    /* ========================================================================
        [2] BOTONES DE ACCESO RÁPIDO — re-mapeados a variables LOCALES
        ======================================================================== */
     .botones-hero {
@@ -417,11 +545,7 @@
     .btn-outline { background: transparent; color: var(--accent-cyan); }
     .btn-outline:hover { background: var(--accent-cyan); color: #000; }
 
-    
-    
-    
-    
-       /* ========================================================================
+    /* ========================================================================
        [3] RENDER APAISADO (ancho completo de la columna)
        ======================================================================== */
     .hero-render {
@@ -433,8 +557,8 @@
     .hero-render:hover { border-color: var(--accent-cyan); }
     .hero-render img {
       display: block; width: 100%; height: auto;
-      aspect-ratio: var(--render-ratio);
-      object-fit: cover;
+      aspect-ratio: var(--render-ratio);   /* AJUSTABLE: proporción del render (ver --render-ratio en :root) */
+      object-fit: cover;                   /* 'cover' = recorta lo que sobra · 'contain' = se ve completa con franjas */
     }
     .hero-render .render-tag {
       position: absolute; top: 8px; left: 8px;
@@ -458,7 +582,6 @@
       color: var(--accent-amber); letter-spacing: 1px;
     }
 
-    
     /* ========================================================================
        [4] ZONA DE CONTACTO
        ======================================================================== */
@@ -483,7 +606,7 @@
     .terminal-footer {
       margin-top: 20px;
       border-top: 1px solid var(--accent-cyan);
-      padding-top: 10px;
+      padding: 10px 20px 40px;
       font-family: var(--cad-font);
       font-size: 0.7rem;
       color: var(--text-dim);
@@ -508,10 +631,71 @@
       background: var(--portal-highlight-color);
     }
 
-    
-    
-    
-    
+    /* =======================================================================
+       PANTALLAS INTERMEDIAS: menú lateral más angosto
+       ======================================================================= */
+    @media (max-width: 1000px) {
+      :root { --ancho-nav-lateral: 205px; }
+      .nav-logo-text { font-size: 0.82rem; }
+    }
+
+    /* =======================================================================
+       MÓVIL: el menú lateral vuelve a ser barra superior con hamburguesa
+       ======================================================================= */
+    @media (max-width: 768px) {
+      .main-nav {
+        flex-direction: row; align-items: center;
+        width: 100%; height: 70px; padding: 0 20px;
+        border-right: none;
+        border-bottom: 1px solid var(--color-acento);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        overflow: visible;
+      }
+      .nav-logo-link { flex-direction: row; align-items: center; gap: 10px; }
+      .nav-logo-img { height: 34px; }   /* AJUSTABLE: logo barra superior en celular (bajado de 40px) */
+      .nav-logo-text { font-size: 0.85rem; }
+      .nav-separador, .nav-etiqueta, .nav-pie { display: none; }
+
+      .menu-icon { display: block; margin-left: auto; line-height: 1; }
+      nav ul {
+        display: none; flex-direction: column; gap: 6px;
+        position: absolute; top: 70px; left: 0; width: 100%;
+        background: var(--color-fondo-menu);
+        padding: 16px 20px 20px;
+        border-top: 1px solid var(--color-borde-fino);
+        border-bottom: 1px solid var(--color-acento);
+        box-shadow: 0 12px 22px rgba(0,0,0,0.45);
+      }
+      nav ul.active { display: flex; }
+
+      .site-main { margin-left: 0; margin-top: 70px; }
+
+      .hero { min-height: 0; padding: 18px 14px 0; }
+      .hero-bg-dinamico { height: var(--altura-visor-movil); min-height: 240px; }
+      .hero-content { padding: 24px 10px 0 10px; }
+      .hero-logo { width: 150px; }   /* AJUSTABLE: logo del hero en celular (subido de 120px) */
+
+      /* TAMAÑOS DE TEXTO AJUSTABLES PARA MÓVIL */
+      .hero h1 { font-size: var(--tamano-hero-h1-movil); }
+      .hero h3 { font-size: var(--tamano-hero-subtitulo-movil); }
+      .hero-subtitulo .sub-linea-1 { font-size: var(--tamano-hero-subtitulo-1-movil); }
+      .hero-subtitulo .sub-linea-2 { font-size: var(--tamano-hero-subtitulo-2-movil); }
+      .hero h2 { font-size: var(--tamano-hero-h2-movil); }
+      .hero .profesion { font-size: var(--tamano-hero-profesion-movil); }
+      .section h2 { font-size: var(--tamano-titulo-h2-movil); }
+
+      .grid-tipo-proyecto, .grid-tipo-flujo { grid-template-columns: repeat(2, 1fr); }
+
+      .marcas-banner { flex-direction: column; gap: 8px; }
+
+      .sobre-mi-content, .contacto-content { padding: 60px 20px; }
+      .section { padding: 60px 20px; }
+
+      /* ACCESOS / PORTAL CARDS EN MÓVIL */
+      .access-grid { grid-template-columns: 1fr; }
+      .portal-card .card-footer { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .portal-card .enter-btn { width: 100%; text-align: center; }
+    }
   </style>
 </head>
 <body>
@@ -520,39 +704,65 @@
   <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
 </a>
 
+<!-- ============================================================
+     MENÚ DE NAVEGACIÓN LATERAL IZQUIERDO
+     (en móvil ≤768px vuelve a ser barra superior con hamburguesa)
+     ============================================================ -->
 <nav class="main-nav">
   <a href="#inicio" class="nav-logo-link">
-    <img src="mi_logo.png" alt="Logo MIM" class="nav-logo-img">
-    <div class="nav-logo-text">Diseño y <span>Construcción</span></div>
+    <img src="logos/mi_logo.png" alt="SCANLABB" class="nav-logo-img">
+    <div class="nav-logo-text">Laboratorio <span>Digital</span></div>
   </a>
+
   <div class="menu-icon" id="menuToggle">≡</div>
+
+  <div class="nav-separador"></div>
+  <div class="nav-etiqueta">&gt; NAVEGACION_</div>
+
   <ul id="navMenu">
     <li><a href="index.html">Inicio</a></li>
     <li><a href="#servicios">Servicios</a></li>
-     <li><a href="proyectos.html">Proyectos</a></li>
+    <li><a href="proyectos.html">Proyectos</a></li>
     <li><a href="biografia.html">Biografia</a></li>
     <li><a href="#contacto">Contacto</a></li>
-    <li><a href="index.html">Portal </a></li>
+    <li><a href="index.html">Portal</a></li>
   </ul>
+
+  <div class="nav-pie">
+    <span class="nav-pie-status">&gt; STATUS: ONLINE</span>
+    <span class="nav-pie-version">&gt; VERSION: v1.01</span>
+    <span>&gt; 25 de Mayo · BA · AR</span>
+  </div>
 </nav>
 
-<!-- HERO FULLSCREEN (ESTILO AFICHE) -->
+
+
+<!-- ============================================================
+     CONTENIDO PRINCIPAL (corrido a la derecha del menú lateral)
+     ============================================================ -->
+<main class="site-main">
+
+<!-- HERO FULLSCREEN = ÁREA DE DIBUJO ESTILO CAD -->
 <section class="hero" id="inicio">
-  <!-- Capa de fondo dinámico con Zoom y Rotación -->
-  <div class="hero-bg-dinamico" id="fondoDinamico" style="background-image: url('proy_mm_01.webp');"></div>
+  <!-- Visor de fondo dinámico: la imagen se ve COMPLETA sobre el canvas con grilla -->
+  <div class="hero-bg-dinamico" id="fondoDinamico" style="background-image: url('proy_mm_01.webp');">
+    <span class="visor-tag">&gt; AREA_3D :: MODELO_01 [1:1]</span>
+    <span class="visor-coords">GRID 20px · SNAP ON · ORTHO</span>
+  </div>
 
   <div class="hero-content">
-      <img src="mi_logo_mm.png" alt="Logo MIM" class="hero-logo">
-      <h1>Mario Molina</h1>
-
+ 
+      <h4> Portal </h4>
+       <img src="logos/scanlabb_digital.png" alt="SCANLABB" class="hero-logo">
+  <!--      <h1>ScanLabb </h1>
+ -->
       <h3 class="hero-subtitulo">
-        <span class="sub-linea-1">Diseñador y Constructor Civil</span>
-        <span class="sub-linea-2">Especialista en CAD, GIS, BIM, GeoInformática y Desarrollo Web</span>
+        <span class="sub-linea-2">Dirige: Mario Molina</span>
+        <span class="sub-linea-2">Servicios de Diseño · Digitalización · Planos · 3D · Desarrollo Web</span>
+        <span class="sub-linea-2">Soluciones para Ingeniería y Arquitectura</span>
+        <span> ·  </span>
       </h3>
 
-        <p class="profesion">Dirige Scalabb Estudio Digital especializado en <br>
-                           Servicios de Diseño · Digitalización · Planos · Desarrollo Web 
-      <p class="profesion"></p>
 
       <h3></h3>
  
@@ -592,13 +802,14 @@
 
   <!-- Envoltorio con gradiente desvanecido -->
   <div class="bim-flow-wrapper"></div>
+  </div>
 
   <!-- BANNER INFERIOR DE CONTACTO (COMO EN EL AFICHE) -->
   <div class="marcas-banner">
     <div class="contacto-banner-item">🌐 <span>mariomolinacc.github.io</span></div>
     <div class="contacto-banner-item">📱 <span>+54 9 2345 44 6330</span></div>
-  </div>
-</section>
+   </div>
+   </section>
 
 
 
@@ -629,9 +840,13 @@
 
 
 <!-- ==================== SERVICIOS / ACCESOS (NUEVOS) ==================== -->
+
+
+    
 <section class="section-full-grey" id="servicios">
   <div class="section">
     <h2>Servicios</h2>
+
 
     <div class="access-grid">
       <!-- ACCESO 1: SCANLABB (Laboratorio Digital) -->
@@ -731,13 +946,13 @@
 
   <!-- [2] BOTONES DE ACCESO RÁPIDO -->
   <div class="botones-hero">
-    <a href="proyectos.html" class="btn btn-outline">+ Mas Renders 3D</a>
-    <a href="bitacora.html" class="btn btn-outline">Bitácora </a>
-    <a href="biografia.html" class="btn btn-outline">Sobre_mi </a>
+    <a href="proyectos.html" class="btn btn-outline">+ Ver proyectos 3D</a>
+  <!--  <a href="bitacora.html" class="btn btn-outline">Bitácora </a>   -->
+    <a href="biografia.html" class="btn btn-outline">Biografía </a>
   </div>
 
   <!-- [4] ZONA DE CONTACTO -->
-  <div class="contact-zone">
+  <div class="contact-zone" id="contacto">
     <span class="cz-label">&gt; CANALES DE CONTACTO: </span>
     <a href="https://wa.me/5492345446330" target="_blank" rel="noopener">[WA] +54 9 2345 44-6330</a>
     <span class="contact-sep">·</span>
@@ -751,12 +966,6 @@
     &gt; DISEÑO Y DIRECCIÓN: MARIO MOLINA · DISEÑADOR · CONSTRUCTOR CIVIL · GEOINFORMÁTICO<br>
     &gt; PORTAL_TERMINAL_v1.01 · ALL SYSTEMS OPERATIONAL<span class="cursor"></span>
   </div>
-</div>
-
-
-
-
-
 
 
 <!-- MIS PROYECTOS -->
@@ -822,6 +1031,9 @@
 
 --> 
 
+</main>
+
+
 
 
 <script>
@@ -833,23 +1045,31 @@
   });
 
   // =======================================================
-  // SCRIPT PARA ROTAR LA IMAGEN DE FONDO CADA 1 MINUTO (60 SEG)
+  // SCRIPT PARA ROTAR LA IMAGEN DE FONDO CADA 10 SEG
+  // (con fundido suave dentro del visor CAD)
   // =======================================================
   const imagenesFondo = [
     'proy_mm_01.webp', // Imagen 1 (la misma que ya tienes)
     'proy_mm_02.webp', // Imagen 2 (agrega los nombres de tus archivos webp)
     'proy_mm_03.webp'  // Imagen 3
   ];
-  
+
+  // Precarga: evita parpadeos cuando cambia la imagen
+  imagenesFondo.forEach(src => { const img = new Image(); img.src = src; });
+
   let indiceFondo = 0;
   const divFondo = document.getElementById('fondoDinamico');
 
   // Si hay más de 1 imagen en el array, activa la rotación
   if (imagenesFondo.length > 1) {
     setInterval(() => {
-      indiceFondo = (indiceFondo + 1) % imagenesFondo.length;
-      divFondo.style.backgroundImage = `url('${imagenesFondo[indiceFondo]}')`;
-    }, 10000); // 60000 milisegundos = 1 minuto
+      divFondo.style.opacity = 0; // fundido de salida
+      setTimeout(() => {
+        indiceFondo = (indiceFondo + 1) % imagenesFondo.length;
+        divFondo.style.backgroundImage = `url('${imagenesFondo[indiceFondo]}')`;
+        divFondo.style.opacity = 1; // fundido de entrada
+      }, 600); // coincide con la transición CSS (0.6s)
+    }, 10000); // 10000 milisegundos = 10 segundos
   }
 </script>
 
