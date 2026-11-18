@@ -1,8 +1,8 @@
 # Hola, soy Mario Molina 👋 
 
-— Diseñador y Constructor Civil (ISET-BA · 1986) especializado en GIS y GeoInformática (UBA · 2004), con más de 35 años de trayectoria en ingeniería, industria e infraestructura. Diseñador CAD/CAE, Gerente de Ingeniería y Director de Obras en multinacionales de consumo masivo y tecnología. Desde 2023 dirige el Estudio ScanLabb.   
+— Diseñador y Constructor Civil especializado en GIS, Geomática, CAD, BIM y Desarrollo Web, con más de 35 años de trayectoria en ingeniería, aquitectura e industria. En su trayectoria, se ha desempeñado como Diseñador civil y tecnológico, Gerente de Ingeniería y Director de Obras en empresas lideres multinacionales. Desde 2023 dirige el Estudio ScanLabb.   
 
-Integra tecnologías de diseño y análisis como —BIM, CAD, CAE, impresión 3D y Geomática — para optimizar proyectos, con capacidad para operar en entornos complejos y de alcance global.
+Integra tecnologías de diseño y análisis como CAD, CAE, BIM, Geomática y Desarrollo Web,  para optimizar proyectos, con capacidad para operar en entornos complejos y de alcance global.
 
 
 Tras iniciar su carrera en oficinas de arquitectura y consolidarse en IRIBARNE y Asociados, colaboró como diseñador CAD/CAE en equipos de ingeniería de compañías notables como — Arcor, Philips, Whirlpool, Peabody —, llegando a ser Gerente de Ingeniería y Producción en — Philco —, con responsabilidad sobre equipos multidisciplinarios y operaciones, reportando a la Gerencia General.
@@ -25,8 +25,8 @@ Posteriormente, asesoró a inversores, family offices y empresas globales —ent
 
 - **Trabaja con estaciones multisistema** (Debian, macOS y Windows). 
 - **Para clientes corporativos** utiliza AutoCAD, Civil 3D, Revit y SAP según cada proyecto. 
-- **Para clientes privados** emplea FreeCAD, BonsaiBIM, QCAD y QGIS sobre Debian, reduciendo costos sin perder precisión. 
-- **Mantiene compatibilidad** con formatos IFC, DWG y RVT, y crea visualizaciones web con HTML, CSS y JavaScript para proyectos arquitectónicos.
+- **Para clientes privados** emplea FreeCAD, IngeCAD. IngeTrazo, RustBIM, QGIS entre otras apps sobre Debian, reduciendo costos sin perder precisión. 
+- **Mantiene compatibilidad** con formatos IFC / DWG y crea plataformas Web para proyectos arquitectónicos y de infraestructuras.
 
 ---
 
