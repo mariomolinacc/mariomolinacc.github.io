@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mm.startnet</title>
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #1a1c1e;
+            --bg-card: #2a2d30;
+            --bg-card-hover: #353840;
+            --text-primary: #e8e6e3;
+            --text-secondary: #a0a0a0;
+            --text-muted: #6b6b6b;
+            --accent: #4a9e8e;
+            --accent-hover: #5cbfad;
+            --accent-glow: rgba(74, 158, 142, 0.15);
+            --border: #333639;
+            --border-light: #3e4245;
+            --gold: #f0d87a;
+            --radius: 8px;
+            --radius-sm: 5px;
+            --shadow: 0 2px 8px rgba(0,0,0,0.3);
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        /* Header */
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(26, 28, 30, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.35rem;
+            color: var(--text-primary);
+            letter-spacing: 1px;
+        }
+
+        .logo:hover { color: var(--accent); }
+
+        /* Contenido */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px 60px;
+        }
+
+        /* Categorías */
+        .category { margin-bottom: 36px; }
+
+        .category-title {
+            font-weight: 300;
+            font-size: 1.1rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-title::before {
+            content: '';
+            display: inline-block;
+            width: 3px;
+            height: 18px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        /* Grid */
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            position: relative;
+        }
+
+        .link-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: var(--transition);
+            transform: translateX(-50%);
+        }
+
+        .link-item:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-light);
+            color: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .link-item:hover::after { width: 60%; }
+        .link-item:active { transform: translateY(0); }
+
+        /* Separador */
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-light), transparent);
+            margin: 8px 0 36px;
+        }
+
+        /* Footer */
+        .site-footer {
+            border-top: 1px solid var(--border);
+            padding: 24px;
+            text-align: center;
+        }
+
+        .site-footer p { font-size: 0.8rem; color: var(--text-muted); }
+        .site-footer a { color: var(--gold); transition: var(--transition); }
+        .site-footer a:hover { color: var(--text-primary); }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .links-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .links-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .link-item { padding: 11px 8px; font-size: 0.82rem; }
+            .main-content { padding: 24px 16px 48px; }
+            .category { margin-bottom: 28px; }
+            .category-title { font-size: 1rem; }
+        }
+
+        @media (max-width: 480px) {
+            .header-inner { padding: 0 16px; height: 54px; }
+            .logo { font-size: 1.15rem; }
+            .links-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .link-item { padding: 13px 10px; font-size: 0.84rem; white-space: normal; line-height: 1.3; }
+            .main-content { padding: 20px 12px 40px; }
+            .category { margin-bottom: 24px; }
+            .category-title { font-size: 0.9rem; letter-spacing: 1.5px; margin-bottom: 12px; padding-bottom: 10px; }
+            .section-divider { margin: 4px 0 24px; }
+        }
+
+        /* Animación de entrada */
+        @media (prefers-reduced-motion: no-preference) {
+            .category {
+                opacity: 0;
+                transform: translateY(16px);
+                animation: fadeInUp 0.5s ease forwards;
+            }
+            @keyframes fadeInUp {
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .category:nth-child(1)  { animation-delay: .05s; }
+            .category:nth-child(2)  { animation-delay: .1s; }
+            .category:nth-child(3)  { animation-delay: .15s; }
+            .category:nth-child(4)  { animation-delay: .2s; }
+            .category:nth-child(5)  { animation-delay: .25s; }
+            .category:nth-child(6)  { animation-delay: .3s; }
+            .category:nth-child(7)  { animation-delay: .35s; }
+            .category:nth-child(8)  { animation-delay: .4s; }
+            .category:nth-child(9)  { animation-delay: .45s; }
+            .category:nth-child(10) { animation-delay: .5s; }
+            .category:nth-child(11) { animation-delay: .55s; }
+            .category:nth-child(12) { animation-delay: .6s; }
+            .category:nth-child(13) { animation-delay: .65s; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .category { opacity: 1; transform: none; animation: none; }
+            .link-item { transition: none; }
+            .link-item:hover { transform: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="#" class="logo">mm.startnet</a>
+        </div>
+    </header>
+
+    <main class="main-content">
+
+        <section class="category">
+            <h2 class="category-title">Web search engines</h2>
+            <div class="links-grid">
+                <a href="https://www.google.com.ar/" target="_blank" class="link-item">Google</a>
+                <a href="https://espanol.yahoo.com/?p=us" target="_blank" class="link-item">Yahoo</a>
+                <a href="http://www.yandex.com/" target="_blank" class="link-item">Yandex</a>
+                <a href="https://duckduckgo.com/" target="_blank" class="link-item">DuckDuckGo</a>
+                <a href="http://www.bing.com/" target="_blank" class="link-item">Bing</a>
+                <a href="https://search.brave.com/" target="_blank" class="link-item">Brave Search</a>
+                <a href="https://www.perplexity.ai/" target="_blank" class="link-item">Perplexity IA</a>
+
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section class="category">
+            <h2 class="category-title">Web Tools</h2>
+            <div class="links-grid">
+                <a href="http://fast.com/" target="_blank" class="link-item">Fast.com</a> 
+                <a href="http://biosite.com/" target="_blank" class="link-item">Bio Site</a>
+                <a href="https://linktr.ee/" target="_blank" class="link-item">Linktree</a>
+                <a href="https://telegra.ph/" target="_blank" class="link-item">Telegra.ph</a>
+                <a href="https://chatgpt.com/" target="_blank" class="link-item">ChatGPT</a>
+                <a href="https://lnk.bio/es/" target="_blank" class="link-item">Lnk Bio</a>
+                <a href="https://www.i2pdf.com/es" target="_blank" class="link-item">PDF Online</a>
+                <a href="https://www.i2text.com/es" target="_blank" class="link-item">Text Online</a>
+            </div>
+         </section>
+
+        <div class="section-divider"></div>
+
+        <section class="category">
+            <h2 class="category-title">E-mail</h2>
+            <div class="links-grid">            
+                <a href="https://mail.google.com/" target="_blank" class="link-item">Gmail</a>
+                <a href="https://mail.aol.com/" target="_blank" class="link-item">AOL Mail</a>
+                <a href="https://mail.yahoo.com/" target="_blank" class="link-item">Yahoo Mail</a>
+                <a href="https://webmail.vivaldi.net/" target="_blank" class="link-item">Vivaldi Mail</a
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section class="category">
+            <h2 class="category-title">Video</h2>
+            <div class="links-grid">            
+                <a href="https://www.youtube.com/" target="_blank" class="link-item">YouTube</a>
+                <a href="https://www.bilibili.tv/" target="_blank" class="link-item">Bilibili.tv</a>
+                <a href="https://rumble.com/" target="_blank" class="link-item">Rumble</a>
+                <a href="https://vimeo.com/es" target="_blank" class="link-item">Vimeo</a>
+                <a href="https://odysee.com/" target="_blank" class="link-item">Odysee</a>
+                <a href="https://pluto.tv/latam" target="_blank" class="link-item">Pluto TV</a>
+              </div>
+        </section>
+
+
+
+
+        <div class="section-divider"></div>
+
+        <section class="category">
+            <h2 class="category-title">Social Networks</h2>
+            <div class="links-grid">
+                <a href="https://bsky.app/" target="_blank" class="link-item">Bluesky</a>
+                <a href="https://www.linkedin.com/" target="_blank" class="link-item">LinkedIn</a>
+                <a href="https://mastodon.online/" target="_blank" class="link-item">Mastodon</a>
+                <a href="https://www.facebook.com/" target="_blank" class="link-item">Facebook</a>
+                <a href="https://twitter.com/" target="_blank" class="link-item">Twitter / X</a>
+                <a href="https://web.whatsapp.com/" target="_blank" class="link-item">Whatsapp Web</a>
+                <a href="https://meet.jit.si/" target="_blank" class="link-item">Jitsi Meet</a>
+                <a href="http://web.telegram.org/" target="_blank" class="link-item">Telegram</a>
+                <a href="https://www.instagram.com/" target="_blank" class="link-item">Instagram</a>
+            </div>
+        </section>
+
+    <div class="section-divider"></div>
+
+        <section class="category">
+            <h2 class="category-title">Translators</h2>
+            <div class="links-grid">
+                <a href="https://translate.google.com/" target="_blank" class="link-item">Google Traductor</a>
+                <a href="http://www.bing.com/translator/" target="_blank" class="link-item">Bing Translator</a>
+                <a href="https://www.deepl.com/translator" target="_blank" class="link-item">DeepL</a>
+
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section class="category">
+            <h2 class="category-title">Maps and Climate</h2>
+            <div class="links-grid">
+                <a href="https://es.wikipedia.org/wiki/Wikipedia:Portada" target="_blank" class="link-item">Wikipedia</a>
+                <a href="https://www.google.com.ar/maps" target="_blank" class="link-item">Google Maps</a>
+                <a href="https://www.bing.com/maps" target="_blank" class="link-item">Bing Maps</a>
+                <a href="https://www.openstreetmap.org/" target="_blank" class="link-item">OpenStreetMap</a>
+                <a href="https://www.ventusky.com/" target="_blank" class="link-item">Ventusky</a>
+                <a href="https://www.windy.com/" target="_blank" class="link-item">Windy</a>
+
+            </div>
+        </section>
+
+       
+
+        <div class="section-divider"></div>
+
+        <section class="category">
+            <h2 class="category-title">Diarios Argentinos</h2>
+            <div class="links-grid">
+                <a href="https://www.minutouno.com/" target="_blank" class="link-item">Minuto Uno</a>
+                <a href="https://www.cronica.com.ar/" target="_blank" class="link-item">Crónica</a>
+                <a href="https://www.datadiario.com/" target="_blank" class="link-item">Data Diario</a>
+                <a href="https://www.iprofesional.com/" target="_blank" class="link-item">iProfesional</a>
+                <a href="https://www.telemundo.com/noticias" target="_blank" class="link-item">Telemundo</a>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section class="category">
+            <h2 class="category-title">Medios Internacionales</h2>
+            <div class="links-grid">
+                <a href="http://spanish.news.cn/" target="_blank" class="link-item">Xinhua</a>
+                <a href="http://cnnespanol.cnn.com/" target="_blank" class="link-item">CNN en Español</a>
+                <a href="https://actualidad.rt.com/" target="_blank" class="link-item">RT</a>
+                <a href="http://www.bbc.com/mundo" target="_blank" class="link-item">BBC Mundo</a>
+                <a href="http://espanol.cntv.cn/" target="_blank" class="link-item">CCTV</a>
+            </div>
+        </section>
+
+
+
+
+         <div class="section-divider"></div>
+
+         <section class="category">
+            <h2 class="category-title">Radio y Local</h2>
+            <div class="links-grid">
+                <a href="http://www.radioarg.com/" target="_blank" class="link-item">Radios Online</a>
+                <a href=" https://www.radios-argentinas.org//" target="_blank" class="link-item">Radios Argentinas</a>
+                <a href="https://ar.cienradios.com/" target="_blank" class="link-item">Cien Radios Online</a> 
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <p>2017 - 2026 Scanlabb.github.io | Mario Molina -Diseño y Disarrollo Web | Design by <a href="https://scanlabb.github.io" target="_blank">scanlabb.github.io</a></p>
+    </footer>
+
+</body>
+</html>
