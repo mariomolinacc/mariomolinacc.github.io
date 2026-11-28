@@ -695,6 +695,374 @@
       .access-grid { grid-template-columns: 1fr; }
       .portal-card .card-footer { flex-direction: column; align-items: flex-start; gap: 10px; }
       .portal-card .enter-btn { width: 100%; text-align: center; }
+
+      /* CONTACTO PORTAL EN MÓVIL */
+      .contacto-portal { padding: 40px 20px; }
+      .contacto-portal-header .cp-status { margin-left: 0; }
+      .contacto-portal-pie { flex-direction: column; align-items: flex-start; }
+    }
+
+    /* ========================================================================
+       [4b] ZONA DE CONTACTO PORTAL — Versión destacada con tarjetas
+       (sigue la estética CAD/terminal de .portal-card con grid de fondo,
+        esquinas cyan, bordes dashed y fuente monoespaciada)
+       ======================================================================== */
+    .contacto-portal {
+      position: relative;
+      background-color: var(--color-fondo-seccion);
+      color: var(--color-texto-claro);
+      padding: 70px 40px 50px;
+      border-top: 1px solid var(--color-acento);
+      overflow: hidden;
+    }
+    /* Grilla CAD de fondo (mismo patrón que el hero) */
+    .contacto-portal::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(var(--color-grid-linea) 1px, transparent 1px),
+        linear-gradient(90deg, var(--color-grid-linea) 1px, transparent 1px),
+        linear-gradient(var(--color-grid-linea-mayor) 1px, transparent 1px),
+        linear-gradient(90deg, var(--color-grid-linea-mayor) 1px, transparent 1px);
+      background-size:
+        var(--tamano-grid-fondo) var(--tamano-grid-fondo),
+        var(--tamano-grid-fondo) var(--tamano-grid-fondo),
+        calc(var(--tamano-grid-fondo) * 5) calc(var(--tamano-grid-fondo) * 5),
+        calc(var(--tamano-grid-fondo) * 5) calc(var(--tamano-grid-fondo) * 5);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .contacto-portal-header {
+      position: relative; z-index: 2;
+      max-width: var(--max-ancho-pagina);
+      margin: 0 auto 35px;
+      display: flex; flex-wrap: wrap; align-items: baseline;
+      gap: 10px 20px;
+      font-family: var(--fuente-cad);
+      letter-spacing: 1px;
+    }
+    .contacto-portal-header .cp-tag {
+      font-size: 0.72rem;
+      color: var(--color-texto-tenue);
+    }
+    .contacto-portal-header .cp-title {
+      font-family: var(--fuente-web);
+      font-size: 1.7rem;
+      font-weight: bold;
+      color: var(--color-texto-claro);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border-bottom: 3px solid var(--color-acento);
+      padding-bottom: 8px;
+    }
+    .contacto-portal-header .cp-status {
+      margin-left: auto;
+      font-size: 0.72rem;
+      color: var(--accent-green);
+    }
+
+    .contacto-portal-grid {
+      position: relative; z-index: 2;
+      max-width: var(--max-ancho-pagina);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 25px;
+    }
+
+    .contacto-portal-card {
+      display: flex; flex-direction: column;
+      background: var(--color-fondo-secundario);
+      border: 1px solid var(--color-borde-fino);
+      border-radius: 6px;
+      overflow: hidden;
+      text-decoration: none;
+      color: var(--color-texto-base);
+      position: relative;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
+    /* Barra lateral cyan que aparece al hover (igual que nav ul a) */
+    .contacto-portal-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 4px; height: 100%;
+      background: var(--color-acento);
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.3s;
+      z-index: 3;
+    }
+    /* Esquina tipo CAD (mismo patrón que .hero-bg-dinamico::after) */
+    .contacto-portal-card::after {
+      content: '';
+      position: absolute; bottom: -1px; right: -1px;
+      width: 20px; height: 20px;
+      border-bottom: 2px solid var(--color-acento);
+      border-right: 2px solid var(--color-acento);
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 3;
+      pointer-events: none;
+    }
+    .contacto-portal-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--color-acento);
+      box-shadow: var(--sombra-caja-hover);
+    }
+    .contacto-portal-card:hover::before { transform: scaleY(1); }
+    .contacto-portal-card:hover::after  { opacity: 1; }
+
+    .cp-card-header {
+      display: flex; align-items: center; gap: 14px;
+      padding: 18px 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid var(--color-borde-fino);
+    }
+    .cp-logo-wrap {
+      width: 56px; height: 56px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      border-radius: 6px;
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      background: rgba(0, 229, 255, 0.08);
+      transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+    }
+    .cp-logo-wrap.wa {
+      border-color: rgba(37, 211, 102, 0.45);
+      background: rgba(37, 211, 102, 0.08);
+    }
+    .cp-logo {
+      width: 34px; height: 34px;
+    }
+    .cp-logo-wrap.wa  .cp-logo { fill: #25D366; }
+    .cp-logo-wrap.web .cp-logo { fill: var(--color-acento); }
+
+    .contacto-portal-card:hover .cp-logo-wrap {
+      border-color: var(--color-acento);
+      background: rgba(0, 229, 255, 0.15);
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.35);
+    }
+    .contacto-portal-card:hover .cp-logo-wrap.wa {
+      border-color: #25D366;
+      background: rgba(37, 211, 102, 0.15);
+      box-shadow: 0 0 12px rgba(37, 211, 102, 0.35);
+    }
+
+    .cp-titles h3 {
+      font-family: var(--fuente-web);
+      font-size: 1.2rem;
+      color: var(--color-texto-claro);
+      margin: 0;
+      line-height: 1.25;
+      letter-spacing: 0.5px;
+    }
+    .cp-titles span {
+      display: block;
+      font-family: var(--fuente-cad);
+      font-size: 0.78rem;
+      color: var(--color-acento);
+      margin-top: 4px;
+      letter-spacing: 1px;
+    }
+
+    .cp-card-body {
+      padding: 22px 20px;
+      flex: 1;
+    }
+    .cp-numero {
+      font-family: var(--fuente-cad);
+      font-size: 1.1rem;
+      color: var(--color-texto-claro);
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      word-break: break-all;
+      border-left: 2px solid var(--color-acento);
+      padding-left: 10px;
+    }
+    .cp-desc {
+      font-size: 0.92rem;
+      color: var(--color-texto-tenue);
+      line-height: 1.55;
+    }
+
+    .cp-card-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 20px;
+      background: rgba(0, 0, 0, 0.35);
+      border-top: 1px solid var(--color-borde-fino);
+      font-family: var(--fuente-cad);
+      font-size: 0.82rem;
+      letter-spacing: 1px;
+    }
+    .cp-action {
+      color: var(--color-acento);
+      font-weight: bold;
+    }
+    .cp-arrow {
+      color: var(--color-acento);
+      font-family: var(--fuente-cad);
+      transition: transform 0.2s;
+    }
+    .contacto-portal-card:hover .cp-arrow {
+      transform: translateX(6px);
+    }
+
+    .contacto-portal-pie {
+      position: relative; z-index: 2;
+      max-width: var(--max-ancho-pagina);
+      margin: 30px auto 0;
+      display: flex; flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px 20px;
+      font-family: var(--fuente-cad);
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+      color: var(--color-texto-tenue);
+      padding-top: 18px;
+      border-top: 1px dashed var(--color-borde-fino);
+    }
+    .contacto-portal-pie .cz-status { color: var(--accent-green); }
+
+    /* ========================================================================
+       OVERRIDE MÓVIL para contacto-portal (va al final para tener prioridad
+       sobre las reglas base de .contacto-portal definidas arriba)
+       ======================================================================== */
+    @media (max-width: 768px) {
+      .contacto-portal { padding: 40px 20px; }
+      .contacto-portal-header { margin-bottom: 25px; }
+      .contacto-portal-header .cp-status { margin-left: 0; }
+      .contacto-portal-pie { flex-direction: column; align-items: flex-start; gap: 6px; }
+      .cp-card-header { padding: 14px 16px; gap: 12px; }
+      .cp-logo-wrap { width: 48px; height: 48px; }
+      .cp-logo { width: 28px; height: 28px; }
+      .cp-titles h3 { font-size: 1.05rem; }
+      .cp-card-body { padding: 18px 16px; }
+      .cp-numero { font-size: 1rem; }
+      .cp-desc { font-size: 0.88rem; }
+      .cp-card-footer { padding: 12px 16px; }
+    }
+
+    /* ========================================================================
+       HERO MEJORADO — Nuevos componentes (reestructuración semántica)
+       ======================================================================== */
+    .hero-pretitle {
+      display: block;
+      font-family: var(--fuente-cad);
+      font-size: 0.72rem;
+      letter-spacing: 3px;
+      color: var(--color-acento);
+      margin: 0 0 8px 0;
+      opacity: 0.85;
+    }
+
+    .hero-title {
+      font-family: var(--fuente-web);
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--color-texto-claro);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin: 0 0 22px 0;
+      line-height: 1.1;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.8);
+    }
+
+    .hero-tagline {
+      font-family: var(--fuente-cad);
+      font-size: 1.05rem;
+      color: var(--color-acento);
+      letter-spacing: 2px;
+      margin: 0 auto 36px auto;
+      padding: 8px 18px;
+      display: inline-block;
+      border-left: 2px solid var(--color-acento);
+      border-right: 2px solid var(--color-acento);
+    }
+
+    .hero-author {
+      margin: 0 0 32px 0;
+      display: flex; flex-direction: column; align-items: center; gap: 5px;
+    }
+    .hero-author .author-name {
+      font-family: var(--fuente-web);
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--color-texto-claro);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+    }
+    .hero-author .author-role {
+      font-family: var(--fuente-cad);
+      font-size: 0.78rem;
+      color: var(--color-acento);
+      letter-spacing: 1px;
+      opacity: 0.95;
+    }
+
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: var(--fuente-cad);
+      font-size: 0.95rem;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--color-fondo-menu);
+      background: var(--color-acento);
+      padding: 14px 32px;
+      border: 1px solid var(--color-acento);
+      transition: background 0.25s, box-shadow 0.25s, transform 0.25s, color 0.25s;
+      text-decoration: none;
+    }
+    .hero-cta:hover {
+      background: var(--color-acento-hover);
+      color: var(--color-fondo-menu);
+      box-shadow: 0 0 24px rgba(0, 229, 255, 0.55);
+      transform: translateY(-2px);
+    }
+    .hero-cta .hero-cta-arrow {
+      display: inline-block;
+      transition: transform 0.25s;
+    }
+    .hero-cta:hover .hero-cta-arrow {
+      transform: translateX(6px);
+    }
+
+    /* Banner de status CAD (reemplaza al banner de contacto en el hero) */
+    .marcas-banner .status-item {
+      font-family: var(--fuente-cad);
+      font-size: 0.78rem;
+      letter-spacing: 1.5px;
+      color: var(--color-texto-tenue);
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .marcas-banner .status-item strong {
+      color: var(--color-acento);
+      font-weight: normal;
+    }
+    .marcas-banner .status-sep {
+      color: var(--color-texto-tenue);
+      opacity: 0.4;
+      font-family: var(--fuente-cad);
+    }
+    .marcas-banner .status-dot {
+      display: inline-block; width: 7px; height: 7px;
+      border-radius: 50%; background: var(--accent-green);
+      box-shadow: 0 0 6px var(--accent-green);
+      animation: blinkStatus 2s infinite;
+    }
+    @keyframes blinkStatus { 0%, 60% { opacity: 1; } 70%, 100% { opacity: 0.3; } }
+
+    /* RESPONSIVE para los nuevos componentes del hero */
+    @media (max-width: 768px) {
+      .hero-pretitle { font-size: 0.65rem; letter-spacing: 2px; }
+      .hero-title { font-size: 1.4rem; letter-spacing: 2px; margin-bottom: 16px; }
+      .hero-tagline { font-size: 0.82rem; letter-spacing: 1px; padding: 6px 12px; margin-bottom: 28px; }
+      .hero-author { margin-bottom: 28px; }
+      .hero-author .author-name { font-size: 1.15rem; letter-spacing: 2px; }
+      .hero-author .author-role { font-size: 0.7rem; }
+      .hero-cta { font-size: 0.82rem; padding: 12px 22px; letter-spacing: 1.5px; }
     }
   </style>
 </head>
@@ -751,73 +1119,42 @@
   </div>
 
   <div class="hero-content">
- 
-      <h4> Portal de <br> Ingeniería, Arquitectura y Construcción</h4>
-       <p style="margin-bottom: 1em;">  <!-- Deja el espacio de un renglon  -->
-       <p style="margin-bottom: 1em;">  <!-- Deja el espacio de un renglon  -->  
-       <img src="logos/lab_digital_web.webp" alt="SCANLABB" class="hero-logo">
 
-            <!--      <h1>ScanLabb </h1>   -->
-            <p style="color: #00FFFF;"> Servicios de Diseño · Planos · Mapas · 3D · Digitalización · Desarrollo Web</p>
-            <p style="color: cyan;"> Soluciones para ingeniería, arquitectura y diseño</p>
-            <p style="margin-bottom: 1em;">  <!-- Deja el espacio de un renglon  -->
+    <!-- Logo central del estudio -->
+    <img src="logos/lab_digital_web.webp" alt="SCANLABB" class="hero-logo">
 
-      <h3 class="hero-subtitulo">
-        <span class="sub-linea-2">Dirige: Mario Molina </span> 
-          <p style="color: white; font-size: 14px; line-height: 1.5;">Diseñador AEC y Constructor Civil</p>
-          <p style="color: white; font-size: 14px; line-height: 1.5;">Planos | Proyectos | Desarrollo Web | Tecnología 3D</p> 
-          <p style="margin-bottom: 1em;"> <!-- Deja el espacio de un renglon  -->
-      </h3>
+    <!-- Etiqueta técnica previa al título -->
+    <span class="hero-pretitle">&gt; PORTAL_AEC_</span>
 
-<!--
-      <h3></h3>
- -->
+    <!-- Título principal H1 -->
+    <h1 class="hero-title">Ingeniería · Arquitectura · Construcción</h1>
 
-<!--
-     
- <h2 class="bim-flow-title">Tipo de proyectos</h2>
+    <!-- Tagline de servicios (unificado) -->
+    <p class="hero-tagline">Planos · 3D · Digitalización · Sistemas · Desarrollo Web</p>
 
---> 
- 
-    <!-- GRUPO 1: TIPO PROYECTO -->
- <!-- 
-    <div class="grid-tipo-proyecto">
-      <div class="bim-step-card"><img src="d01.png" alt="Viviendas"></div>
-      <div class="bim-step-card"><img src="d02.png" alt="Oficinas"></div>
-      <div class="bim-step-card"><img src="d03.png" alt="Comercios"></div>
-      <div class="bim-step-card"><img src="d04.png" alt="Depositos"></div>
-    </div>
-  </div>
---> 
-
- 
-    <!--   <h2 class="bim-flow-title">Flujo de trabajo</h2>  -->
-
-    <!-- GRUPO 2: TIPO FLUJO -->
- <!-- 
-    <div class="grid-tipo-flujo">
-      <div class="bim-step-card"><img src="bim_01.jpg" alt="Diseño Arquitectónico y Estructural"></div>
-      <div class="bim-step-card"><img src="bim_03.jpg" alt="Análisis GIS y Gestión Territorial "></div>
-      <div class="bim-step-card"><img src="bim_02.jpg" alt="Modelado BIM Coordinación 3D       "></div>
-      <div class="bim-step-card"><img src="bim_04.jpg" alt="Documentación Técnica y Presupuestos"></div>
+    <!-- Bloque de autoridad: Mario Molina -->
+    <div class="hero-author">
+        <span class="author-role">Dirige:</span>
+      <span class="author-name">Mario Molina</span>
+        <span class="author-role">Diseñador Digital y Constructor Civil</span>
+        <span class="author-role">Especialista en CAD/GIS/BIM, GeoInformática y Desarrollo Web</span>
     </div>
 
-  <p style="position: relative; z-index: 2;">·</p>
--->
+ 
+ 
+ 
 
-
-  <!-- Envoltorio con gradiente desvanecido -->
-  <div class="bim-flow-wrapper"></div>
   </div>
 
-  <!-- BANNER INFERIOR DE CONTACTO (COMO EN EL AFICHE) -->
+  <!-- BANNER INFERIOR DE STATUS CAD (sin duplicar datos de contacto) -->
   <div class="marcas-banner">
-   <!--    <div class="contacto-banner-item">🌐 <span>mariomolinacc.github.io</span></div>   -->
-      <p style="color: cyan; font-size: 16px; line-height: 1.5;">🌐 mariomolinacc.github.io </p>
-      <p style="color: cyan; font-size: 14px; line-height: 1.5;">📱 +54 9 2345 44 6330 </p>
- <!--   <div class="contacto-banner-item">📱 <span>+54 9 2345 44 6330</span></div>  -->
-   </div>
-   </section>
+    <span class="status-item"><span class="status-dot"></span> SISTEMA: <strong>ONLINE</strong></span>
+    <span class="status-sep">·</span>
+    <span class="status-item">ACTUALIZACIÓN: <strong>2026</strong></span>
+    <span class="status-sep">·</span>
+    <span class="status-item">UBICACIÓN: <strong>BA · AR</strong></span>
+  </div>
+</section>
 
 
 
@@ -986,98 +1323,82 @@
     <a href="biografia.html" class="btn btn-outline">+ Trayectoria </a>
     <a href="#servicios" class="btn btn-outline">+ Servicios </a>
   </div>
-  <p style="margin-bottom: 1em;"> <!-- Deja el espacio de un renglon  -->  
 
   
-  <!-- [4] ZONA DE CONTACTO -->
-   <p style="margin-bottom: 1em;"> <!-- Deja el espacio de un renglon  -->
-    <div class="contact-zone_" id="contacto">
-       <p style="color: grey; font-size: 16px; line-height: 1.5; text-align: center;">CANALES DE CONTACTO: </p>
-       <p style="margin-bottom: 1em;"> <!-- Deja el espacio de un renglon  -->   
-       <p style="color: cyan; font-size: 14px; line-height: 1.5;text-align: center;">📱 +54 9 2345 44 6330 </p>       
-       <p style="color: yellow; font-size: 16px; line-height: 1.5;text-align: center;">🌐 mariomolinacc.github.io</p>
-       <p style="margin-bottom: 1em;"> <!-- Deja el espacio de un renglon  -->
-   </div>
+  <!-- ============================================================
+       [4] ZONA DE CONTACTO — Sección destacada con tarjetas portal
+       (reemplaza a los bloques contact-zone_ / contact-zone previos)
+       ============================================================ -->
+  <section class="contacto-portal" id="contacto">
+    <div class="contacto-portal-header">
+      <span class="cp-tag">&gt; CABLES_DE_CONTACTO_ ::</span>
+      <span class="cp-title">Canales Directos</span>
+      <span class="cp-status">&gt; STATUS: ONLINE</span>
+    </div>
 
-  
-  <div class="contact-zone" id="contacto">
-    <span class="cz-label">&gt; CANALES DE CONTACTO: </span>
-    <a href="https://wa.me/5492345446330" target="_blank" rel="noopener">[WA] +54 9 2345 44-6330</a>
-    <span class="contact-sep">·</span>
-    <a href="https://scanlabb.github.io" target="_blank" rel="noopener">scanlabb.github.io</a>
-    <span class="contact-sep">·</span>
-    <span class="cz-status">STATUS: ONLINE</span>
-  </div>
+    <div class="contacto-portal-grid">
+
+      <!-- Tarjeta WhatsApp -->
+      <a href="https://wa.me/5492345446330?text=Hola%20Mario,%20necesito%20información%20sobre%20sus%20servicios"
+         class="contacto-portal-card" target="_blank" rel="noopener">
+        <div class="cp-card-header">
+          <span class="cp-logo-wrap wa" aria-hidden="true">
+            <svg class="cp-logo" viewBox="0 0 24 24">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+          </span>
+          <div class="cp-titles">
+            <h3>WhatsApp Directo</h3>
+            <span>| Respuesta inmediata</span>
+          </div>
+        </div>
+        <div class="cp-card-body">
+          <p class="cp-numero">+54 9 2345 44-6330</p>
+          <p class="cp-desc">Consultas sobre servicios, presupuestos sin cargo y coordinación de reuniones técnicas. Atención de lunes a viernes.</p>
+        </div>
+        <div class="cp-card-footer">
+          <span class="cp-action">&gt; INICIAR_CHAT_</span>
+          <span class="cp-arrow">→</span>
+        </div>
+      </a>
+
+      <!-- Tarjeta Portal Web ScanLabb -->
+      <a href="https://scanlabb.github.io" class="contacto-portal-card" target="_blank" rel="noopener">
+        <div class="cp-card-header">
+          <span class="cp-logo-wrap web" aria-hidden="true">
+            <svg class="cp-logo" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41C17.93 5.78 20 8.65 20 12c0 2.08-.81 3.98-2.1 5.39z"/>
+            </svg>
+          </span>
+          <div class="cp-titles">
+            <h3>Portal ScanLabb</h3>
+            <span>| Laboratorio Digital</span>
+          </div>
+        </div>
+        <div class="cp-card-body">
+          <p class="cp-numero">scanlabb.github.io</p>
+          <p class="cp-desc">Acceso al portfolio ampliado de digitalización de planos, mapas, documentación técnica y proyectos 3D.</p>
+        </div>
+        <div class="cp-card-footer">
+          <span class="cp-action">&gt; ABRIR_PORTAL_</span>
+          <span class="cp-arrow">→</span>
+        </div>
+      </a>
+
+    </div><!-- /.contacto-portal-grid -->
+
+    <div class="contacto-portal-pie">
+      <span class="cz-label">&gt; ESTUDIO_SCANLABB · Calle 11, N°1065 · 25_DE_MAYO (PBA) · ARGENTINA_</span>
+      <span class="cz-status">&gt; PORTAL_TERMINAL_v1.01 · ALL SYSTEMS OPERATIONAL</span>
+    </div>
+  </section>
+
   
   <div class="terminal-footer">
     &gt; ESTUDIO SCANLABB © <span id="year">2026</span> · DIGITALIZACIÓN Y RESCATE PATRIMONIAL<br>
     &gt; DISEÑO Y DIRECCIÓN: MARIO MOLINA<br>
     &gt; PORTAL_TERMINAL_v1.01 · ALL SYSTEMS OPERATIONAL<span class="cursor"></span>
   </div>
-
-
-<!-- MIS PROYECTOS -->
-
-<!--
-
-<section class="section-full-dark">
-  <div class="section">
-    <h2>Mis Proyectos</h2>
-    <div class="galeria-proyectos">
-      <div class="proyecto-item">
-        <img src="img/proyecto_pe_01.webp" alt="Edificio multifamiliar y comercial - Punta del Este, Uruguay" loading="lazy">
-        <p class="proyecto-etiqueta">🏛️ Edificio multifamiliar y comercial - Punta del Este</p>
-      </div>
-      <div class="proyecto-item">
-        <img src="img/proyecto_df_01.webp" alt="Proyecto Casa Dufaur, San Isidro (BA)" loading="lazy">
-        <p class="proyecto-etiqueta">🏛️ Proyecto Casa Dufaur, San Isidro (BA)</p>
-      </div>
-      <div class="proyecto-item">
-        <img src="img/proyecto_ca_01.webp" alt="Proyecto Casa Ayacucho, San Isidro (BA)" loading="lazy">
-        <p class="proyecto-etiqueta">🏛️ Proyecto Casa Ayacucho, San Isidro (BA)</p>
-      </div>
-  </div>
-</section>
-
---> 
-
-
-
-
-
-<!-- 
-
-<div class="cta-section">
-  <h2>¡Solicita tu presupuesto sin cargo!</h2>
-  <a href="https://wa.me/5492345446330?text=Hola%20Mario,%20necesito%20información%20sobre%20sus%20servicios" class="whatsapp-btn" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
-</div>
-
--->  
-
-
-<!-- CONTACTO -->
-
-<!--
-<section class="contacto-section" id="contacto">
-  <div class="contacto-content">
-    <h2>Contacto</h2>
-    <div class="contacto-info">
-      <div class="contacto-item"><span class="icono">📱</span><div><strong>WhatsApp:</strong> <a href="https://wa.me/5492345446330" target="_blank" class="contacto-enlace">+549 2345 44 6330</a></div></div>
-      <div class="contacto-item"><span class="icono">🌐</span><div><strong>Sitio web:</strong> <a href="https://bio.site/mmolina" target="_blank" class="contacto-enlace">bio.site/mmolina</a></div></div>
-      <div class="contacto-item"><span class="icono">💻</span><div><strong>Github:</strong> <a href="https://mariomolinacc.github.io" target="_blank" class="contacto-enlace">mariomolinacc.github.io</a></div></div>
-      <div class="contacto-item"><span class="icono">📍</span><div><strong>Oficina:</strong> Calle 11, N°1065, 25 de Mayo, (BA) 🇦🇷</div></div>
-    </div>
-  </div>
-</section>
-
-
-
-<footer>
-  <p>&copy; <script>document.write(new Date().getFullYear())</script> Mario Molina | Diseñador y Constructor Civil · Todos los derechos reservados · 25 de Mayo, Buenos Aires · Argentina</p>
-  <a href="https://mariomolinacc.github.io" target="_blank">🌐 Diseño web Scanlabb</a>
-</footer>
-
---> 
 
 </main>
 
@@ -1123,5 +1444,4 @@
 
 </body>
 </html>
-
 
